@@ -87,7 +87,7 @@ export default function Home() {
   const heroRef = useRef(null);
   const journeyRef = useRef(null);
   
-  const [showLoadingScreen, setShowLoadingScreen] = useState(false);
+  const [showLoadingScreen, setShowLoadingScreen] = useState(true);
   const [heroReady, setHeroReady] = useState(false);
   const [showQuestion, setShowQuestion] = useState(true);
 
@@ -124,54 +124,10 @@ export default function Home() {
   const cardBg = useTransform(clampedHero, [0, 0.40], ["#000000", "#000000"]);
   const ambientOpacity = useTransform(clampedHero, [0, 0.35], [1, 0]);
 
-  const heroBgY = useTransform(clampedHero, [0.50, 1.00], ["0vh", "-12vh"]);
-  const heroContentY = useTransform(clampedHero, [0.50, 1.00], ["0vh", "-24vh"]);
-  const nextSectionY = useTransform(clampedHero, [0.50, 1.00], ["100vh", "0vh"]);
-  const nextSectionRadius = useTransform(clampedHero, [0.50, 0.95], ["48px 48px 0px 0px", "0px 0px 0px 0px"]);
-
-  // Lock scroll cleanly when section arrives
-  useEffect(() => {
-    let isLocked = false;
-    const preventScroll = (e) => {
-      if (isLocked) {
-        // Prevent scrolling down, but allow scrolling up if needed
-        if (e.deltaY > 0) e.preventDefault();
-      }
-    };
-
-    const unsubscribe = heroProgressRaw.on("change", (v) => {
-      if (v >= 0.99 && showQuestion) {
-        if (!isLocked) {
-          isLocked = true;
-          window.__lenis?.stop();
-          window.addEventListener("wheel", preventScroll, { passive: false });
-          window.addEventListener("touchmove", preventScroll, { passive: false });
-        }
-      } else {
-        if (isLocked) {
-          isLocked = false;
-          window.__lenis?.start();
-          window.removeEventListener("wheel", preventScroll);
-          window.removeEventListener("touchmove", preventScroll);
-        }
-      }
-    });
-
-    // If they click the button, unlock instantly
-    if (!showQuestion && isLocked) {
-      isLocked = false;
-      window.__lenis?.start();
-      window.removeEventListener("wheel", preventScroll);
-      window.removeEventListener("touchmove", preventScroll);
-    }
-
-    return () => {
-      unsubscribe();
-      window.__lenis?.start();
-      window.removeEventListener("wheel", preventScroll);
-      window.removeEventListener("touchmove", preventScroll);
-    };
-  }, [heroProgressRaw, showQuestion]);
+  const heroBgY = useTransform(clampedHero, [0.50, 0.95], ["0vh", "-12vh"]);
+  const heroContentY = useTransform(clampedHero, [0.50, 0.95], ["0vh", "-24vh"]);
+  const nextSectionY = useTransform(clampedHero, [0.50, 0.95], ["100vh", "0vh"]);
+  const nextSectionRadius = useTransform(clampedHero, [0.50, 0.90], ["48px 48px 0px 0px", "0px 0px 0px 0px"]);
 
   return (
     <>
