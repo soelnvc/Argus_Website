@@ -1,21 +1,19 @@
 "use client";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./DevGrid.module.css";
 
 export default function DevGrid() {
-  // Modes: "50px" | "25px" | "100px" | "off"
-  const [gridSize, setGridSize] = useState(50); // 50px default graph paper boxes
-  const [enabled, setEnabled] = useState(true);
+  const [gridSize, setGridSize] = useState(50);
+  const [gridEnabled, setGridEnabled] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
-  const [toast, setToast] = useState(null);
 
-  // Mouse & Snapping state
+  // Mouse coordinate tracker
   const [mousePos, setMousePos] = useState({ x: 0, y: 0, visible: false });
   const [snapPos, setSnapPos] = useState({ x: 0, y: 0, pctX: "0.0", pctY: "0.0" });
 
   useEffect(() => {
     const handleMouseMove = (e) => {
-      if (!enabled) return;
+      if (!gridEnabled) return;
       const x = e.clientX;
       const y = e.clientY;
 
@@ -40,9 +38,9 @@ export default function DevGrid() {
       window.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseleave", handleMouseLeave);
     };
-  }, [enabled, gridSize]);
+  }, [gridEnabled, gridSize]);
 
-  // Keyboard shortcut [G]
+  // Keyboard shortcut [G] for grid
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (
@@ -54,7 +52,7 @@ export default function DevGrid() {
       }
 
       if (e.key === "g" || e.key === "G") {
-        setEnabled((prev) => !prev);
+        setGridEnabled((prev) => !prev);
       }
     };
 
@@ -62,31 +60,10 @@ export default function DevGrid() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  const copyCoord = useCallback(
-    (e) => {
-      if (!enabled) return;
-      // If clicking inside the dev badge, ignore
-      if (e.target.closest(`.${styles.devBadge}`)) return;
-
-      const text = `X: ${snapPos.x}px, Y: ${snapPos.y}px (${snapPos.pctX}%, ${snapPos.pctY}%)`;
-      navigator.clipboard?.writeText(text);
-
-      setToast(`Copied: ${text}`);
-      setTimeout(() => setToast(null), 2400);
-    },
-    [enabled, snapPos]
-  );
-
-  useEffect(() => {
-    if (!enabled) return;
-    window.addEventListener("click", copyCoord);
-    return () => window.removeEventListener("click", copyCoord);
-  }, [enabled, copyCoord]);
-
   return (
     <>
       {/* 1. Graph Paper Boxes Grid Layer */}
-      {enabled && (
+      {gridEnabled && (
         <div
           className={styles.graphPaperOverlay}
           style={{
@@ -95,15 +72,12 @@ export default function DevGrid() {
           }}
           aria-hidden="true"
         >
-          {/* Subtle sub-grid */}
           <div className={styles.subGrid} />
-          {/* Primary square graph paper boxes */}
           <div className={styles.mainGrid} />
 
           {/* Coordinate Crosshair and Snapped Intersection Marker */}
           {mousePos.visible && (
             <>
-              {/* Full height/width crosshair guides aligned with intersection */}
               <div
                 className={styles.crosshairV}
                 style={{ transform: `translateX(${snapPos.x}px)` }}
@@ -113,7 +87,6 @@ export default function DevGrid() {
                 style={{ transform: `translateY(${snapPos.y}px)` }}
               />
 
-              {/* Glowing Snapped Intersection Point */}
               <div
                 className={styles.snapIntersection}
                 style={{
@@ -124,7 +97,6 @@ export default function DevGrid() {
                 <span className={styles.snapDot} />
               </div>
 
-              {/* Floating Coordinate Tag */}
               <div
                 className={styles.coordTooltip}
                 style={{
@@ -148,22 +120,13 @@ export default function DevGrid() {
                     <span>({snapPos.pctX}%, {snapPos.pctY}%)</span>
                   </div>
                 </div>
-                <div className={styles.coordHint}>Click anywhere to copy</div>
               </div>
             </>
           )}
         </div>
       )}
 
-      {/* 2. Toast Notification on Copy */}
-      {toast && (
-        <div className={styles.toast}>
-          <span className={styles.toastIcon}>✓</span>
-          <span>{toast}</span>
-        </div>
-      )}
-
-      {/* 3. Floating Dev Control Badge */}
+      {/* 2. Floating Dev Control Badge */}
       <div className={styles.devBadge}>
         {collapsed ? (
           <button
@@ -171,18 +134,14 @@ export default function DevGrid() {
             onClick={() => setCollapsed(false)}
             title="Open Graph Grid Controls"
           >
-            ▦ Grid:{" "}
-            <span className={styles.activeModeText}>
-              {enabled ? `${gridSize}px` : "OFF"}
-            </span>
+            ▦ <span className={styles.activeModeText}>GRID</span>
           </button>
         ) : (
           <div className={styles.badgePanel}>
             <div className={styles.badgeHeader}>
               <div className={styles.badgeTitle}>
                 <span className={styles.badgeIcon}>▦</span>
-                <span>Graph Paper Grid</span>
-                <span className={styles.keyHint}>[G]</span>
+                <span>Layout Positioner</span>
               </div>
               <button
                 className={styles.minimizeBtn}
@@ -193,44 +152,67 @@ export default function DevGrid() {
               </button>
             </div>
 
-            <div className={styles.btnRow}>
-              <button
-                className={`${styles.modeBtn} ${enabled && gridSize === 25 ? styles.activeBtn : ""}`}
-                onClick={() => {
-                  setGridSize(25);
-                  setEnabled(true);
-                }}
-              >
-                25px
-              </button>
-              <button
-                className={`${styles.modeBtn} ${enabled && gridSize === 50 ? styles.activeBtn : ""}`}
-                onClick={() => {
-                  setGridSize(50);
-                  setEnabled(true);
-                }}
-              >
-                50px
-              </button>
-              <button
-                className={`${styles.modeBtn} ${enabled && gridSize === 100 ? styles.activeBtn : ""}`}
-                onClick={() => {
-                  setGridSize(100);
-                  setEnabled(true);
-                }}
-              >
-                100px
-              </button>
-              <button
-                className={`${styles.modeBtn} ${!enabled ? styles.offBtn : ""}`}
-                onClick={() => setEnabled(false)}
-              >
-                Off
-              </button>
+            {/* Current Element Coordinates Locked Readout */}
+            <div className={styles.liveCoordBox}>
+              <div className={styles.liveRow}>
+                <span className={styles.liveLabel}>Left Text:</span>
+                <span className={styles.lockedVal}>X: 84px, Y: 262px 🔒</span>
+              </div>
+              <div className={styles.liveRow}>
+                <span className={styles.liveLabel}>Right Heading:</span>
+                <span className={styles.lockedVal}>X: 826px, Y: 44px 🔒</span>
+              </div>
+              <div className={styles.liveRow}>
+                <span className={styles.liveLabel}>Scroll Cue:</span>
+                <span className={styles.lockedVal}>X: 1129px, Y: 269px 🔒</span>
+              </div>
+            </div>
+
+            {/* Grid Size & Toggle Controls */}
+            <div className={styles.controlsSection}>
+              <div className={styles.controlLabel}>
+                <span>Graph Paper</span>
+                <span className={styles.keyHint}>[G]</span>
+              </div>
+              <div className={styles.btnRow}>
+                <button
+                  className={`${styles.modeBtn} ${gridEnabled && gridSize === 25 ? styles.activeBtn : ""}`}
+                  onClick={() => {
+                    setGridSize(25);
+                    setGridEnabled(true);
+                  }}
+                >
+                  25px
+                </button>
+                <button
+                  className={`${styles.modeBtn} ${gridEnabled && gridSize === 50 ? styles.activeBtn : ""}`}
+                  onClick={() => {
+                    setGridSize(50);
+                    setGridEnabled(true);
+                  }}
+                >
+                  50px
+                </button>
+                <button
+                  className={`${styles.modeBtn} ${gridEnabled && gridSize === 100 ? styles.activeBtn : ""}`}
+                  onClick={() => {
+                    setGridSize(100);
+                    setGridEnabled(true);
+                  }}
+                >
+                  100px
+                </button>
+                <button
+                  className={`${styles.modeBtn} ${!gridEnabled ? styles.offBtn : ""}`}
+                  onClick={() => setGridEnabled(false)}
+                >
+                  Off
+                </button>
+              </div>
             </div>
 
             <div className={styles.badgeFooter}>
-              <span>Hover over intersections for coordinates • Click to copy</span>
+              <span>All 3 elements permanently locked in place. Press [G] to toggle graph paper.</span>
             </div>
           </div>
         )}

@@ -30,7 +30,7 @@ export default function Home() {
 
   return (
     <div className={styles.scrollWrapper} ref={containerRef}>
-      {/* Interactive visual development layout grid overlay with toggle */}
+      {/* Interactive Visual Layout Positioner & Grid Overlay */}
       <DevGrid />
 
       {/* Sticky viewport frame that holds the morphing hero */}
@@ -104,24 +104,25 @@ export default function Home() {
             </div>
           </header>
 
-          {/* Center/Lower Content */}
+          {/* Center/Lower Content Container */}
           <div className={styles.content}>
-            {/* Positioned directly above "A" on the vertical Y axis */}
+            {/* Locked Left Content: X: 84px, Y: 262px */}
             <div className={styles.leftContent}>
-              <div className={styles.statusRow}>
-                <span className={styles.statusDot} />
-                <span className={styles.statusTitle}>Indian Industrial Intelligence</span>
-              </div>
+              <p className={styles.statusTitle}>Indian Industrial Intelligence</p>
               <p className={styles.subtext}>Making Workspace Safe</p>
             </div>
 
+            {/* Locked Right Pitch Heading: X: 826px, Y: 44px */}
             <div className={styles.rightContent}>
               <h1 className={styles.pitch}>
                 The hundred-eyed watchman for industrial safety &amp; operational resilience.
               </h1>
-              <div className={styles.scrollCue}>
-                Scroll to expand <span>↓</span>
-              </div>
+            </div>
+
+            {/* Locked Scroll Cue: X: 1129px, Y: 269px */}
+            <div className={styles.scrollCue}>
+              <span>Scroll to expand</span>
+              <span>↓</span>
             </div>
           </div>
         </motion.div>
