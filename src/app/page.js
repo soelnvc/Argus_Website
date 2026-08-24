@@ -1,6 +1,6 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import Nav from "@/components/Nav";
 import LiquidMetalButton from "@/components/LiquidMetalButton";
 import WaveGlow from "@/components/WaveGlow";
@@ -238,29 +238,42 @@ export default function Home() {
             }}
           >
             <div className={styles.nextSectionStage}>
-              {showQuestion && (
-                <>
-                  {/* Massive 3-Line Bold White Heading */}
-                  <div className={styles.bigHeadingWrap}>
-                    <h2 
-                      className={styles.bigHeroHeading}
-                      style={{
-                        fontSize: `${headFontSize}px`,
-                        lineHeight: headLineHeight
-                      }}
-                    >
-                      {headText.split("\n").map((line, idx) => (
-                        <span key={idx}>{line}</span>
-                      ))}
-                    </h2>
-                  </div>
+              <AnimatePresence>
+                {showQuestion && (
+                  <motion.div
+                    key="questionLayer"
+                    initial={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                    exit={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }}
+                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      gap: "20px"
+                    }}
+                  >
+                    {/* Massive 3-Line Bold White Heading */}
+                    <div className={styles.bigHeadingWrap}>
+                      <h2 
+                        className={styles.bigHeroHeading}
+                        style={{
+                          fontSize: `${headFontSize}px`,
+                          lineHeight: headLineHeight
+                        }}
+                      >
+                        {headText.split("\n").map((line, idx) => (
+                          <span key={idx}>{line}</span>
+                        ))}
+                      </h2>
+                    </div>
 
-                  {/* Subtext: "click to know" with 3D character flipping hover */}
-                  <div className={styles.clickToKnowWrap}>
-                    <ClickToKnow onClick={() => setShowQuestion(false)} />
-                  </div>
-                </>
-              )}
+                    {/* Subtext: "click to know" with 3D character flipping hover */}
+                    <div className={styles.clickToKnowWrap}>
+                      <ClickToKnow onClick={() => setShowQuestion(false)} />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </motion.div>
 
