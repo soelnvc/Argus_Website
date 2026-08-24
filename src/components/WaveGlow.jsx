@@ -12,7 +12,6 @@ export default function WaveGlow({ text = "ARGUS" }) {
     const fgCanvas = fgCanvasRef.current;
     if (!bgCanvas || !fgCanvas) return;
 
-    // Initialize WebGL context for both canvases
     function setupGL(canvas) {
       const gl =
         canvas.getContext("webgl2", {
@@ -34,14 +33,13 @@ export default function WaveGlow({ text = "ARGUS" }) {
       }
     `;
 
-    // Master Wave Shader: High Contrast Fiery Plasma Aurora
+    // Master Wave Shader: 50% Pure Black Top + High Saturation Purple/Pink/White Wave
     const fragSrc = `
       precision highp float;
       uniform float uTime;
       uniform vec2 uResolution;
-      uniform float uIsForeground; // 0.0 for ambient background, 1.0 for crisp text fill
+      uniform float uIsForeground; // 0.0 for ambient background glow, 1.0 for crisp text
 
-      // High quality noise & hash
       float hash(vec2 p) {
         return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
       }
@@ -59,76 +57,72 @@ export default function WaveGlow({ text = "ARGUS" }) {
 
       void main() {
         vec2 uv = gl_FragCoord.xy / uResolution.xy;
-        float t = uTime * 0.42; // Organic leisurely wave cycle
+        float t = uTime * 0.48; // Smooth fluid wave undulation
 
-        // Dual-harmonic traveling wave profile matching Midu design (peaks and moving valleys)
-        float w1 = sin(uv.x * 2.6 - t * 0.85) * 0.20;
-        float w2 = cos(uv.x * 4.8 + t * 0.55 + 0.8) * 0.10;
-        float w3 = sin(uv.x * 1.5 + t * 0.35 + 2.1) * 0.16;
-        float n  = (noise(vec2(uv.x * 3.5 + t * 0.2, uv.y * 2.0 + t * 0.1)) - 0.5) * 0.07;
+        // Traveling harmonic wave undulation
+        float w1 = sin(uv.x * 3.14159 * 1.5 - t * 0.9) * 0.048;
+        float w2 = cos(uv.x * 3.14159 * 3.2 + t * 0.6) * 0.024;
+        float w3 = sin(uv.x * 3.14159 * 0.8 + t * 0.35) * 0.035;
+        float n  = (noise(vec2(uv.x * 4.0 + t * 0.2, uv.y * 3.0 + t * 0.1)) - 0.5) * 0.018;
 
-        // Base height anchor near lower third of the card
-        float baseHeight = 0.24;
-        float crestY = baseHeight + w1 + w2 + w3 + n;
+        // Wave elevation offset that undulates the gradient boundary organically
+        float waveOffset = w1 + w2 + w3 + n;
+        float y = uv.y - waveOffset;
 
-        float dist = uv.y - crestY;
+        // Palette Color Stops (Pure Black, Deep Velvet Purple, Electric Purple, Light Purple-Pink, White)
+        vec3 cPureBlack   = vec3(0.015, 0.008, 0.025); // #040206 (50% Pure Black)
+        vec3 cDeepPurple  = vec3(0.22, 0.01, 0.44);    // #380270 (Dark saturated purple)
+        vec3 cMidPurple   = vec3(0.52, 0.02, 0.88);    // #8505e0 (High Saturation electric purple)
+        vec3 cBrightPurp  = vec3(0.70, 0.10, 0.96);    // #b31af5 (Vibrant purple)
+        vec3 cPinkPurple  = vec3(0.92, 0.32, 0.86);    // #eb52dc (Light purple-pink)
+        vec3 cSoftPink    = vec3(0.98, 0.62, 0.86);    // #fa9edb (Radiant pink)
+        vec3 cWhiteBlend  = vec3(1.00, 0.98, 1.00);    // #ffffff (5% White blend)
 
-        float intensity = 0.0;
-        if (dist <= 0.0) {
-          // Inside the fiery body: rich, deep incandescent heat
-          float depth = -dist;
-          intensity = 1.0 + (1.0 - smoothstep(0.0, 0.35, depth)) * 0.35;
-          intensity = mix(intensity, 0.85, smoothstep(0.2, 0.5, depth));
-        } else {
-          // Atmospheric falloff above wave crest
-          intensity = exp(-dist * 4.6) * 1.15;
-          intensity += exp(-dist * 1.8) * 0.35; // Soft secondary bloom
+        vec3 col = cPureBlack;
+
+        // 1. Top 50% (y >= 0.50): 100% Pure Black
+        if (y >= 0.50) {
+          col = cPureBlack;
+        }
+        // 2. Next 10% (0.40 <= y < 0.50): Black blending into Deep Purple
+        else if (y >= 0.40) {
+          float f = (0.50 - y) / 0.10;
+          float easeF = smoothstep(0.0, 1.0, f);
+          col = mix(cPureBlack, cDeepPurple, easeF);
+        }
+        // 3. Next 25% (0.15 <= y < 0.40): 25% Dark-Medium Purple (High Saturation)
+        else if (y >= 0.15) {
+          float f = (0.40 - y) / 0.25;
+          if (f < 0.5) {
+            col = mix(cDeepPurple, cMidPurple, f / 0.5);
+          } else {
+            col = mix(cMidPurple, cBrightPurp, (f - 0.5) / 0.5);
+          }
+        }
+        // 4. Next 10% (0.05 <= y < 0.15): 10% Light Purple-Pink
+        else if (y >= 0.05) {
+          float f = (0.15 - y) / 0.10;
+          col = mix(cBrightPurp, cPinkPurple, f * 0.7);
+          col = mix(col, cSoftPink, smoothstep(0.4, 1.0, f));
+        }
+        // 5. Bottom 5% (0.00 <= y < 0.05): 5% White Blend
+        else {
+          float f = clamp((0.05 - y) / 0.05, 0.0, 1.0);
+          col = mix(cSoftPink, cWhiteBlend, f);
         }
 
-        // Add traveling hot spots along the wave crests (matching the peach hotspots on M and U)
-        float crestHotspot = max(0.0, 1.0 - abs(dist) * 4.5);
-        float crestPeakBoost = max(0.0, w1 + w3) * 1.4;
-        intensity += crestHotspot * crestPeakBoost * 0.65;
-
-        // High Contrast Palette directly matched from reference frames:
-        vec3 cVoid     = vec3(0.03, 0.01, 0.01); // Pure deep card black #080202
-        vec3 cDarkRed  = vec3(0.38, 0.02, 0.00); // Deep rich crimson #610500
-        vec3 cFireRed  = vec3(0.92, 0.10, 0.01); // Vivid fiery red #eb1a02
-        vec3 cOrange   = vec3(1.00, 0.38, 0.12); // Hot flame orange #ff611f
-        vec3 cCoral    = vec3(1.00, 0.62, 0.40); // Incandescent coral #ff9e66
-        vec3 cPeach    = vec3(1.00, 0.85, 0.72); // Creamy warm peach #ffd9b8
-        vec3 cWhiteHot = vec3(1.00, 0.96, 0.92); // White-hot core highlight
-
-        vec3 col = cVoid;
-        if (intensity < 0.20) {
-          col = mix(cVoid, cDarkRed, intensity / 0.20);
-        } else if (intensity < 0.55) {
-          col = mix(cDarkRed, cFireRed, (intensity - 0.20) / 0.35);
-        } else if (intensity < 0.88) {
-          col = mix(cFireRed, cOrange, (intensity - 0.55) / 0.33);
-        } else if (intensity < 1.18) {
-          col = mix(cOrange, cCoral, (intensity - 0.88) / 0.30);
-        } else if (intensity < 1.45) {
-          col = mix(cCoral, cPeach, (intensity - 1.18) / 0.27);
-        } else {
-          col = mix(cPeach, cWhiteHot, clamp((intensity - 1.45) / 0.35, 0.0, 1.0));
-        }
-
-        // Dynamic S-curve contrast boost
-        col = pow(col, vec3(1.22));
+        // Color saturation & richness booster
+        col = pow(col, vec3(1.12));
 
         // Film grain noise for signature analog dither / stipple effect
-        float grain = (hash(gl_FragCoord.xy + fract(uTime * 17.13)) - 0.5) * 0.065;
-        col = clamp(col + vec3(grain * 1.2, grain * 0.4, grain * 0.2), 0.0, 1.0);
+        float grain = (hash(gl_FragCoord.xy + fract(uTime * 19.31)) - 0.5) * 0.05;
+        col = clamp(col + vec3(grain * 0.8, grain * 0.4, grain * 0.9), 0.0, 1.0);
 
         // Alpha calculation
-        float alpha = clamp(intensity * 1.25, 0.0, 1.0);
-        if (uIsForeground > 0.5) {
-          // Foreground text is crisp and fully opaque where color exists
-          alpha = 1.0;
-        } else {
-          // Background fades smoothly at top edges
-          alpha *= smoothstep(1.0, 0.85, uv.y);
+        float alpha = 1.0;
+        if (uIsForeground < 0.5) {
+          // Background atmospheric aura falloff
+          alpha = smoothstep(0.54, 0.46, y);
         }
 
         gl_FragColor = vec4(col, alpha);
@@ -193,7 +187,7 @@ export default function WaveGlow({ text = "ARGUS" }) {
     function render() {
       const elapsed = (performance.now() - startTime) * 0.001;
 
-      // Draw Background Canvas (Atmospheric Glow)
+      // Draw Background Glow Canvas
       if (glBg && bgProg) {
         glBg.useProgram(bgProg.prog);
         glBg.enableVertexAttribArray(bgProg.posLoc);
@@ -207,7 +201,7 @@ export default function WaveGlow({ text = "ARGUS" }) {
         glBg.drawArrays(glBg.TRIANGLES, 0, 6);
       }
 
-      // Draw Foreground Canvas (Clipped to Text)
+      // Draw Foreground Text Canvas
       if (glFg && fgProg) {
         glFg.useProgram(fgProg.prog);
         glFg.enableVertexAttribArray(fgProg.posLoc);
@@ -244,7 +238,7 @@ export default function WaveGlow({ text = "ARGUS" }) {
         zIndex: 1,
       }}
     >
-      {/* 1. Ambient Background Glow (Atmospheric bleeding aura) */}
+      {/* 1. Ambient Background Glow (Atmospheric Purple/Pink Bleed) */}
       <canvas
         ref={bgCanvasRef}
         style={{
@@ -252,13 +246,13 @@ export default function WaveGlow({ text = "ARGUS" }) {
           inset: 0,
           width: "100%",
           height: "100%",
-          filter: "blur(32px)",
-          transform: "scale(1.08)",
-          opacity: 0.92,
+          filter: "blur(28px)",
+          transform: "scale(1.06)",
+          opacity: 0.95,
         }}
       />
 
-      {/* 2. Text-Masked Foreground Canvas (Crisp letters filled with the exact living wave) */}
+      {/* 2. Text-Masked Foreground Canvas (Giant text overflowing the canvas) */}
       <div
         style={{
           position: "absolute",
@@ -279,6 +273,7 @@ export default function WaveGlow({ text = "ARGUS" }) {
             width: "100%",
             height: "100%",
             display: "block",
+            overflow: "visible",
           }}
         >
           <defs>
@@ -286,12 +281,12 @@ export default function WaveGlow({ text = "ARGUS" }) {
               <rect width="100%" height="100%" fill="black" />
               <text
                 x="50%"
-                y="94%"
+                y="96%"
                 textAnchor="middle"
                 fill="white"
                 fontFamily="'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
                 fontWeight="900"
-                fontSize="385"
+                fontSize="490"
                 letterSpacing="-0.045em"
               >
                 {text}
@@ -299,12 +294,12 @@ export default function WaveGlow({ text = "ARGUS" }) {
             </mask>
           </defs>
 
-          {/* ForeignObject embeds the unblurred WebGL canvas masked by the giant text */}
+          {/* ForeignObject with giant overflowing text mask */}
           <foreignObject
             width="100%"
             height="100%"
             mask="url(#argusTextMask)"
-            style={{ width: "100%", height: "100%" }}
+            style={{ width: "100%", height: "100%", overflow: "visible" }}
           >
             <canvas
               ref={fgCanvasRef}
@@ -325,7 +320,7 @@ export default function WaveGlow({ text = "ARGUS" }) {
           inset: 0,
           width: "100%",
           height: "100%",
-          opacity: 0.22,
+          opacity: 0.20,
           mixBlendMode: "overlay",
           pointerEvents: "none",
         }}

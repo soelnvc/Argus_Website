@@ -3,10 +3,10 @@
   height: 100vh;
   min-height: 700px;
   background: 
-    radial-gradient(circle at 85% 15%, rgba(180, 28, 10, 0.14) 0%, transparent 45%),
-    radial-gradient(circle at 15% 85%, rgba(220, 35, 12, 0.18) 0%, transparent 50%),
-    radial-gradient(circle at 50% 50%, rgba(140, 18, 5, 0.08) 0%, transparent 70%),
-    #0c0605;
+    radial-gradient(circle at 85% 15%, rgba(120, 20, 220, 0.10) 0%, transparent 45%),
+    radial-gradient(circle at 15% 85%, rgba(160, 25, 240, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 50% 100%, rgba(90, 10, 180, 0.15) 0%, transparent 60%),
+    #050208;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -21,7 +21,7 @@
   max-width: 1540px;
   height: 100%;
   max-height: 900px;
-  background-color: #060607;
+  background-color: #040206;
   border-radius: 32px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   overflow: hidden;
@@ -34,57 +34,19 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-/* Supplemental ambient noise/grain/radial glow for maximum depth */
+/* Supplemental ambient glow in the purple spectrum */
 .ambientEdgeGlow {
   position: absolute;
   inset: 0;
   pointer-events: none;
   z-index: 1;
   background: radial-gradient(
-    ellipse at 25% 95%,
-    rgba(255, 45, 10, 0.28) 0%,
-    rgba(255, 90, 25, 0.12) 35%,
-    transparent 70%
+    ellipse at 30% 95%,
+    rgba(170, 30, 245, 0.18) 0%,
+    rgba(220, 70, 250, 0.08) 35%,
+    transparent 65%
   );
   mix-blend-mode: screen;
-}
-
-/* Giant background typography */
-.textLayer {
-  position: absolute;
-  bottom: -0.16em;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  text-align: center;
-  pointer-events: none;
-  z-index: 3;
-  user-select: none;
-}
-
-.backgroundTextBase {
-  display: block;
-  font-size: clamp(6.5rem, 23.5vw, 25rem);
-  font-weight: 800;
-  line-height: 0.78;
-  letter-spacing: -0.045em;
-  color: rgba(255, 255, 255, 0.12);
-  white-space: nowrap;
-  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.22);
-}
-
-.backgroundTextGlow {
-  position: absolute;
-  inset: 0;
-  display: block;
-  font-size: clamp(6.5rem, 23.5vw, 25rem);
-  font-weight: 800;
-  line-height: 0.78;
-  letter-spacing: -0.045em;
-  color: #ffffff;
-  mix-blend-mode: overlay;
-  white-space: nowrap;
-  opacity: 0.95;
 }
 
 /* Header layout */
@@ -142,7 +104,7 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  padding: 0 48px 120px 48px;
+  padding: 0 48px 100px 48px;
   box-sizing: border-box;
   pointer-events: none;
 }
@@ -172,8 +134,8 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #ff5233;
-  box-shadow: 0 0 8px #ff5233;
+  background: #d946ef;
+  box-shadow: 0 0 8px #d946ef;
   animation: pulse 2.5s infinite ease-in-out;
 }
 
@@ -253,12 +215,5 @@
   .pitch {
     font-size: 26px;
     margin-bottom: 24px;
-  }
-  .textLayer {
-    bottom: -0.1em;
-  }
-  .backgroundTextBase,
-  .backgroundTextGlow {
-    font-size: clamp(5rem, 26vw, 12rem);
   }
 }
