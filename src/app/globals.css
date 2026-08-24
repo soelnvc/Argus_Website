@@ -1,4 +1,13 @@
 *{box-sizing:border-box;margin:0;padding:0}
+:root {
+  --u: calc(100vw / 1600);
+}
+@media (min-width: 1900px) {
+  :root { --u: calc(1900px / 1600); }
+}
+@media (max-width: 900px) {
+  :root { --u: calc(100vw / 760); }
+}
 html,body{height:100%}
 body{
   background:
