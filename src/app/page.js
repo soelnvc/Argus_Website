@@ -11,17 +11,16 @@ export default function Home() {
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start start", "end start"],
+    offset: ["start start", "end end"],
   });
 
-  // Smooth scroll transformation for the outer curved container merging into full screen
-  // The expansion happens smoothly over the first portion of scrolling (0 -> 0.35)
-  const borderRadius = useTransform(scrollYProgress, [0, 0.32], [32, 0]);
-  const maxWidth = useTransform(scrollYProgress, [0, 0.32], ["1540px", "100vw"]);
-  const maxHeight = useTransform(scrollYProgress, [0, 0.32], ["900px", "100vh"]);
-  const containerPadding = useTransform(scrollYProgress, [0, 0.32], ["24px", "0px"]);
-  const borderOpacity = useTransform(scrollYProgress, [0, 0.28], [0.08, 0]);
-  const shadowOpacity = useTransform(scrollYProgress, [0, 0.32], [0.95, 0]);
+  // Smooth scroll transformation: container merges into full screen across scroll
+  const borderRadius = useTransform(scrollYProgress, [0, 0.8], [32, 0]);
+  const maxWidth = useTransform(scrollYProgress, [0, 0.8], ["1540px", "100vw"]);
+  const maxHeight = useTransform(scrollYProgress, [0, 0.8], ["900px", "100vh"]);
+  const containerPadding = useTransform(scrollYProgress, [0, 0.8], ["24px", "0px"]);
+  const borderOpacity = useTransform(scrollYProgress, [0, 0.65], [0.08, 0]);
+  const shadowOpacity = useTransform(scrollYProgress, [0, 0.8], [0.95, 0]);
 
   return (
     <div className={styles.scrollWrapper} ref={containerRef}>
@@ -105,26 +104,13 @@ export default function Home() {
               <h1 className={styles.pitch}>
                 The hundred-eyed watchman for industrial safety &amp; operational resilience.
               </h1>
-              <a href="#discover" className={styles.scrollCue}>
-                Scroll to explore <span>↓</span>
-              </a>
+              <div className={styles.scrollCue}>
+                Scroll to expand <span>↓</span>
+              </div>
             </div>
           </div>
         </motion.div>
       </motion.div>
-
-      {/* Discovery section beneath hero */}
-      <section className={styles.nextSection} id="discover">
-        <div className={styles.sectionHeader}>
-          <span className={styles.sectionTag}>Autonomous Vision</span>
-          <h2 className={styles.sectionTitle}>
-            Total spatial awareness for high-hazard industrial environments.
-          </h2>
-          <p className={styles.sectionDescription}>
-            Continuous multi-spectral monitoring, predictive anomaly detection, and instant real-time hazard intervention powered by distributed machine vision.
-          </p>
-        </div>
-      </section>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 .scrollWrapper {
   position: relative;
   width: 100%;
-  min-height: 180vh;
+  min-height: 175vh;
   background-color: #050208;
 }
 
@@ -112,7 +112,6 @@
   align-items: center;
   justify-content: flex-end;
   height: 46px;
-  /* Cancel stage's invisible horizontal pad on the far right edge */
   margin-right: -40px;
 }
 
@@ -207,58 +206,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  transition: color 0.2s ease;
-}
-
-.scrollCue:hover {
-  color: rgba(255, 255, 255, 0.8);
-}
-
-/* Next Section for natural continuous scrolling */
-.nextSection {
-  position: relative;
-  z-index: 10;
-  width: 100%;
-  min-height: 100vh;
-  background-color: #040206;
-  padding: 100px 48px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.sectionHeader {
-  text-align: center;
-  max-width: 780px;
-}
-
-.sectionTag {
-  color: #d946ef;
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  margin-bottom: 16px;
-  display: inline-block;
-}
-
-.sectionTitle {
-  color: #fff;
-  font-size: clamp(32px, 4vw, 56px);
-  font-weight: 400;
-  letter-spacing: -0.03em;
-  line-height: 1.1;
-  margin-bottom: 24px;
-}
-
-.sectionDescription {
-  color: rgba(255, 255, 255, 0.60);
-  font-size: 18px;
-  line-height: 1.6;
-  font-weight: 300;
+  user-select: none;
 }
 
 /* Responsive adjustments */
