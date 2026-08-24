@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import Nav from "@/components/Nav";
 import LiquidMetalButton from "@/components/LiquidMetalButton";
 import WaveGlow from "@/components/WaveGlow";
+import ScrollCue from "@/components/ScrollCue";
 import DevGrid from "@/components/DevGrid";
 import styles from "./page.module.css";
 
@@ -96,7 +97,7 @@ export default function Home() {
               <Nav />
             </div>
 
-            {/* Launch Button with exact same 46px height moved to right corner */}
+            {/* Launch Button shifted to right corner */}
             <div className={styles.ctaSlot}>
               <div className={styles.buttonWrapper}>
                 <LiquidMetalButton label="Launch" />
@@ -119,11 +120,8 @@ export default function Home() {
               </h1>
             </div>
 
-            {/* Locked Scroll Cue: X: 1129px, Y: 269px */}
-            <div className={styles.scrollCue}>
-              <span>Scroll to expand</span>
-              <span>↓</span>
-            </div>
+            {/* Interactive Scroll Cue with Character 3D Flip & Light Exposure */}
+            <ScrollCue />
           </div>
         </motion.div>
       </motion.div>

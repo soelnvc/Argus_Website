@@ -8,7 +8,6 @@ function clamp01(v) {
 
 export default function Nav() {
   const dockRef = useRef(null);
-  const itemsRef = useRef([]);
 
   useEffect(() => {
     const root = dockRef.current;
@@ -45,7 +44,6 @@ export default function Nav() {
       on = fineHover();
       specOn = on;
       const isNarrow = window.matchMedia("(max-width: 900px)").matches;
-      // Using window.innerWidth to get the stage equivalent width assuming full viewport width.
       u = window.innerWidth / (isNarrow ? 760 : 1600);
       
       dockItems.forEach(st => {
@@ -69,146 +67,168 @@ export default function Nav() {
       aimMoved = aimSeen;
     }
 
-    function dockRest() {
-      live = false;
-      dirty = true;
+    measureDock();
+
+    function updatePhysics(dt) {
+      if (!on) return;
+      const k = 280, d = 24;
+      let active = false;
+
       dockItems.forEach(st => {
-        st.target = 0;
-        st.el.dataset.near = "false";
+        const diff = st.target - st.v;
+        const a = diff * k - st.vel * d;
+        st.vel += a * dt;
+        st.v += st.vel * dt;
+        if (Math.abs(diff) > 0.001 || Math.abs(st.vel) > 0.001) active = true;
+        else { st.v = st.target; st.vel = 0; }
+      });
+
+      live = active;
+    }
+
+    function applyPhysics() {
+      if (!on) return;
+      dockItems.forEach(st => {
+        const v = Math.max(0, st.v);
+        const wGrow = 40 * u;
+        const hGrow = 16 * u;
+        if (st.w > 0) {
+          st.el.style.width = `${st.w + wGrow * v}px`;
+          st.el.style.height = `${st.h + hGrow * v}px`;
+        }
       });
     }
 
-    function update(time) {
-      const dtRaw = (time - lastTime) / 1000;
-      lastTime = time;
-      const dt = Math.min(dtRaw, 1 / 20); // cap delta time to 50ms
+    function angleLerp(a, b, t) {
+      let d = (b - a) % (Math.PI * 2);
+      if (d < -Math.PI) d += Math.PI * 2;
+      if (d > Math.PI) d -= Math.PI * 2;
+      return a + d * t;
+    }
 
-      if (on) {
-        if (aimSeen && aimMoved && !keyMode) {
-          const rr = root.getBoundingClientRect();
-          if (aimX > rr.left - 48 && aimX < rr.right + 48 && aimY > rr.top - 44 && aimY < rr.bottom + 104) {
+    function updateSpecular(dt) {
+      if (!specOn && !keyMode) return;
+      let any = false;
+
+      specItems.forEach(st => {
+        const r = st.el.getBoundingClientRect();
+        const cx = r.left + r.width / 2;
+        const cy = r.top + r.height / 2;
+        const dx = aimX - cx;
+        const dy = aimY - cy;
+        const dist = Math.hypot(dx, dy);
+
+        if (st.focused) {
+          st.tBr = 1;
+        } else if (aimSeen && dist < st.reach) {
+          const edge = Math.max(0, dist - Math.max(r.width, r.height) / 2);
+          const f = clamp01(1 - edge / (st.reach - Math.max(r.width, r.height) / 2));
+          st.tBr = Math.pow(f, 1.4);
+          st.tAng = Math.atan2(dy, dx) + Math.PI;
+        } else {
+          st.tBr = 0;
+        }
+
+        const t = clamp01(1 - Math.exp(-18 * dt));
+        const angT = clamp01(1 - Math.exp(-22 * dt));
+        st.br += (st.tBr - st.br) * t;
+        st.ang = angleLerp(st.ang, st.tAng, angT);
+
+        if (Math.abs(st.tBr - st.br) > 0.003) any = true;
+
+        st.el.style.setProperty("--spec-angle", `${st.ang.toFixed(3)}rad`);
+        st.el.style.setProperty("--spec-bright", st.br.toFixed(3));
+      });
+
+      specDirty = any;
+    }
+
+    function update(t) {
+      const dt = Math.min((t - lastTime) / 1000, 0.05);
+      lastTime = t;
+
+      if (on && (aimMoved || live)) {
+        if (aimMoved) {
+          aimMoved = false;
+          if (aimSeen) {
+            const dockRect = root.getBoundingClientRect();
+            const pad = 120 * u;
+            const inside =
+              aimX >= dockRect.left - pad &&
+              aimX <= dockRect.right + pad &&
+              aimY >= dockRect.top - pad &&
+              aimY <= dockRect.bottom + pad;
+
+            if (inside) {
+              const reach = 110 * u;
+              dockItems.forEach(st => {
+                const r = st.el.getBoundingClientRect();
+                const cx = r.left + r.width / 2;
+                const cy = r.top + r.height / 2;
+                const d = Math.hypot(aimX - cx, aimY - cy);
+                if (d < reach) {
+                  const f = Math.cos((d / reach) * (Math.PI / 2));
+                  st.target = Math.pow(f, 1.6);
+                  st.el.dataset.near = st.target > 0.35 ? "true" : "false";
+                } else {
+                  st.target = 0;
+                  st.el.dataset.near = "false";
+                }
+              });
+              live = true;
+            } else {
+              dockItems.forEach(st => {
+                st.target = 0;
+                st.el.dataset.near = "false";
+              });
+            }
+          } else {
             dockItems.forEach(st => {
-              const r = st.el.getBoundingClientRect();
-              const prox = clamp01(1 - Math.abs(aimX - (r.left + r.width * 0.5)) / (128 * u));
-              st.target = prox * prox * (3 - 2 * prox);
-              st.el.dataset.near = st.target > 0.08 ? "true" : "false";
+              st.target = 0;
+              st.el.dataset.near = "false";
             });
-            live = true;
-            dirty = true;
-          } else if (live) {
-            dockRest();
           }
         }
 
-        if (dirty) {
-          let moving = false;
-          dockItems.forEach(st => {
-            st.vel += (st.target - st.v) * 190 * dt;
-            st.vel *= Math.exp(-23 * dt);
-            st.v += st.vel * dt;
-            if (Math.abs(st.target - st.v) < 0.001 && Math.abs(st.vel) < 0.004) {
-              st.v = st.target;
-              st.vel = 0;
-            } else {
-              moving = true;
-            }
-
-            const v = Math.min(Math.max(st.v, 0), 1.08);
-            const isMark = st.el.classList.contains(styles['dock-mark']);
-            const ew = isMark ? 14 * u : Math.min(18 * u, st.w * 0.24);
-            const eh = isMark ? 14 * u : 16 * u;
-            
-            st.el.style.width = (st.w + ew * v).toFixed(2) + "px";
-            st.el.style.height = (st.h + eh * v).toFixed(2) + "px";
-            st.el.style.transform = `translateY(${(v * 3.5 * u).toFixed(2)}px)`;
-          });
-          if (!moving) dirty = false;
-        }
+        updatePhysics(dt);
+        applyPhysics();
       }
 
-      if (specOn) {
-        if (aimSeen && aimMoved) {
-          specItems.forEach(st => {
-            const r = st.el.getBoundingClientRect();
-            const cx = r.left + r.width * 0.5;
-            const cy = r.top + r.height * 0.5;
-            const dx = Math.max(r.left - aimX, 0, aimX - r.right);
-            const dy = Math.max(r.top - aimY, 0, aimY - r.bottom);
-            const d = Math.sqrt(dx * dx + dy * dy);
-            
-            st.tAng = d === 0
-              ? Math.atan2(2 / Math.max(r.height, 1), -2 / Math.max(r.width, 1)) +
-                ((aimX - cx) / Math.max(r.width * 0.5, 1)) * 0.30 +
-                ((cy - aimY) / Math.max(r.height * 0.5, 1)) * 0.15
-              : Math.atan2(cy - aimY, aimX - cx);
-              
-            const raw = clamp01(1 - d / (st.reach * u));
-            st.tBr = Math.max(raw * raw * (3 - 2 * raw), st.focused ? 0.9 : 0);
-          });
-          specDirty = true;
-        }
-
-        if (specDirty) {
-          let moving = false;
-          specItems.forEach(st => {
-            const diff = ((st.tAng - st.ang + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
-            st.ang += diff * (1 - Math.exp(-dt * 8));
-            st.br += (st.tBr - st.br) * (1 - Math.exp(-dt * 9));
-            if (Math.abs(diff) < 0.001 && Math.abs(st.tBr - st.br) < 0.002) {
-              st.ang = st.tAng;
-              st.br = st.tBr;
-            } else {
-              moving = true;
-            }
-            st.el.style.setProperty('--spec-angle', st.ang.toFixed(4) + 'rad');
-            st.el.style.setProperty('--spec-bright', (clamp01(st.br) * 0.92).toFixed(3));
-          });
-          if (!moving) specDirty = false;
-        }
+      if (specDirty || aimSeen) {
+        updateSpecular(dt);
       }
 
       rafId = requestAnimationFrame(update);
     }
 
-    measureDock();
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(measureDock);
-    }
-    
     const handleResize = () => measureDock();
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize, { passive: true });
 
     const handlePointerMove = (e) => {
-      if (e.pointerType === "touch") return;
-      aimX = e.clientX; aimY = e.clientY; aimSeen = true; aimMoved = true; keyMode = false;
-      dirty = specDirty = true;
+      aimX = e.clientX;
+      aimY = e.clientY;
+      aimSeen = true;
+      aimMoved = true;
+      specDirty = true;
     };
     window.addEventListener("pointermove", handlePointerMove, { passive: true });
 
     const handlePointerLeave = () => {
       aimSeen = false;
-      dockRest();
-      specItems.forEach(st => { st.tBr = st.focused ? 0.9 : 0; });
+      aimMoved = true;
       specDirty = true;
     };
-    window.addEventListener("pointerleave", handlePointerLeave);
+    window.addEventListener("pointerleave", handlePointerLeave, { passive: true });
 
-    const handleFocusIn = (e) => {
-      const item = e.target.closest('[data-dock]');
-      if (!item || !on) return;
-      const idx = dockItems.findIndex(st => st.el === item);
-      dockItems.forEach((st, i) => {
-        st.target = i === idx ? 1 : Math.abs(i - idx) === 1 ? 0.24 : 0;
-        st.el.dataset.near = st.target > 0.08 ? "true" : "false";
-      });
-      live = false; keyMode = true; dirty = true;
+    const handleFocusIn = () => {
+      keyMode = true;
+      specDirty = true;
     };
     root.addEventListener("focusin", handleFocusIn);
 
     const handleFocusOut = () => {
-      requestAnimationFrame(() => {
-        if (!root.contains(document.activeElement)) { keyMode = false; dockRest(); }
-      });
+      keyMode = false;
+      specDirty = true;
     };
     root.addEventListener("focusout", handleFocusOut);
 
@@ -222,17 +242,12 @@ export default function Nav() {
     const handleClick = (e) => {
       const item = e.target.closest('[data-dock]');
       if (!item) return;
-      e.preventDefault();
-      if (!item.classList.contains(styles['dock-mark'])) {
-        dockItems.forEach(st => st.el.classList.remove(styles['is-active']));
-        item.classList.add(styles['is-active']);
-      }
+      // All items behave identically on click
     };
     root.addEventListener("click", handleClick);
 
-    // Initial play animation (opacity and sliding in)
     root.parentElement.style.opacity = "1";
-    dockItems.forEach((st, i) => {
+    dockItems.forEach((st) => {
       st.el.style.clipPath = "none";
     });
 
@@ -257,13 +272,13 @@ export default function Nav() {
   return (
     <div className={styles['dock-wrap']} style={{ opacity: 0, transition: 'opacity 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) 80ms' }}>
       <nav ref={dockRef} className={`${styles.dock} ${styles['par-dock']}`} style={{ "--pd": 5 }} data-spec aria-label="Primary">
-        <a className={`${styles['dock-item']} ${styles['dock-mark']}`} data-dock data-spec href="#" aria-label="Sylva — home">
+        <a className={`${styles['dock-item']} ${styles['dock-mark']}`} data-dock data-spec href="#" aria-label="Home">
           <svg viewBox="0 0 22 24" aria-hidden="true">
             <path d="M11 1.3c-2.1 0-3.95 1.2-4.75 2.95C3.95 4.55 2.3 6.25 2.3 8.35c0 2.3 1.9 4.2 4.3 4.2h8.8c2.4 0 4.3-1.9 4.3-4.2 0-2.1-1.65-3.8-4-4.1C14.95 2.5 13.1 1.3 11 1.3Z"/>
             <path d="M9.6 12.55h2.8v4.2c1.35.3 2.45 1.15 3.15 2.4-1.35.4-2.4.15-3.15-.4v4.15H9.6v-4.15c-.75.55-1.8.8-3.15.4.7-1.25 1.8-2.1 3.15-2.4v-4.2Z"/>
           </svg>
         </a>
-        <a className={`${styles['dock-item']} ${styles['is-active']}`} data-dock data-spec href="#">
+        <a className={styles['dock-item']} data-dock data-spec href="#">
           <span className={styles.glyph} aria-hidden="true">
             <svg viewBox="0 0 16 16"><path d="M8 14V9"/><path d="M8 9c0-2.4 1.7-4.3 4-4.3.2 2.6-1.6 4.6-4 4.3Z"/><path d="M8 10.5C7.9 8.4 6.4 6.8 4.4 6.8 4.3 8.9 5.9 10.6 8 10.5Z"/></svg>
           </span>
@@ -281,7 +296,7 @@ export default function Nav() {
           </span>
           <span>Journal</span>
         </a>
-        <a className={`${styles['dock-item']} ${styles['dock-item--enter']}`} data-dock data-spec href="#">
+        <a className={styles['dock-item']} data-dock data-spec href="#">
           <span className={styles.glyph} aria-hidden="true">
             <svg viewBox="0 0 16 16"><path d="M6.6 2.5h5.1a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H6.6"/><path d="M2.6 8h6.6"/><path d="m7 5.6 2.4 2.4L7 10.4"/></svg>
           </span>

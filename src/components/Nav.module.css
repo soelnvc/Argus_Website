@@ -9,6 +9,7 @@
   height: auto;
 }
 
+/* Base Navbar: Clean neutral glass translucent styling with NO base color accent */
 .dock {
   pointer-events: auto;
   display: flex;
@@ -17,20 +18,36 @@
   height: calc(46 * var(--u));
   padding: calc(5 * var(--u));
   border-radius: calc(14 * var(--u));
-  border: 1px solid rgba(168, 85, 247, 0.22);
-  /* Dark purple accent with 30% opacity */
+  border: 1px solid rgba(255, 255, 255, 0.10);
   background: 
-    linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 45%),
-    rgba(38, 8, 56, 0.30);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%),
+    rgba(14, 14, 18, 0.55);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   box-shadow: 
-    0 calc(8 * var(--u)) calc(24 * var(--u)) rgba(12, 2, 20, 0.45),
-    inset 0 1px rgba(255, 255, 255, 0.1);
+    0 calc(8 * var(--u)) calc(24 * var(--u)) rgba(0, 0, 0, 0.6),
+    inset 0 1px rgba(255, 255, 255, 0.12);
   isolation: isolate;
   position: relative;
+  transition: 
+    background 0.35s cubic-bezier(0.22, 0.61, 0.36, 1),
+    border-color 0.35s cubic-bezier(0.22, 0.61, 0.36, 1),
+    box-shadow 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
+/* On hover: Entire navbar gets its rich dark purple accent with smooth transition */
+.dock:hover {
+  border-color: rgba(168, 85, 247, 0.35);
+  background: 
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 45%),
+    rgba(38, 8, 56, 0.40);
+  box-shadow: 
+    0 calc(8 * var(--u)) calc(30 * var(--u)) rgba(28, 4, 48, 0.55),
+    0 0 calc(20 * var(--u)) rgba(168, 85, 247, 0.15),
+    inset 0 1px rgba(255, 255, 255, 0.18);
+}
+
+/* Base Nav Items: All completely identical, neutral, subtle glass pills */
 .dock-item {
   position: relative;
   z-index: 6;
@@ -42,10 +59,10 @@
   gap: calc(8 * var(--u));
   padding: 0 calc(13 * var(--u));
   transform-origin: 50% 50%;
-  border: 1px solid transparent;
+  border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: calc(10 * var(--u));
-  background: rgba(255, 255, 255, 0.04);
-  color: rgba(255, 255, 255, 0.60);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.65);
   text-decoration: none;
   cursor: pointer;
   font-family: inherit;
@@ -55,25 +72,32 @@
   text-transform: uppercase;
   white-space: nowrap;
   will-change: width, height, transform;
-  transition: color 0.18s cubic-bezier(0.22, 0.61, 0.36, 1),
+  transition: 
+    color 0.2s cubic-bezier(0.22, 0.61, 0.36, 1),
     border-color 0.2s cubic-bezier(0.22, 0.61, 0.36, 1),
-    background 0.2s cubic-bezier(0.22, 0.61, 0.36, 1);
+    background 0.2s cubic-bezier(0.22, 0.61, 0.36, 1),
+    box-shadow 0.2s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
+/* On hover / proximity: Nav item gets its vibrant purple accent color */
+.dock-item:hover,
 .dock-item[data-near="true"] {
   z-index: 7;
   color: #ffffff;
-  border-color: rgba(192, 132, 252, 0.45);
-  background: rgba(75, 18, 108, 0.45);
-  box-shadow: 0 calc(7 * var(--u)) calc(16 * var(--u)) rgba(15, 2, 25, 0.5);
+  border-color: rgba(217, 70, 239, 0.60);
+  background: 
+    linear-gradient(180deg, rgba(217, 70, 239, 0.35) 0%, rgba(147, 51, 234, 0.45) 100%);
+  box-shadow: 
+    0 calc(6 * var(--u)) calc(18 * var(--u)) rgba(147, 51, 234, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 .dock-item .glyph {
   width: calc(14 * var(--u));
   height: calc(14 * var(--u));
   flex: none;
-  opacity: 0.75;
-  transition: opacity 0.18s cubic-bezier(0.22, 0.61, 0.36, 1);
+  opacity: 0.70;
+  transition: opacity 0.2s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 .dock-item .glyph svg {
@@ -87,49 +111,37 @@
   stroke-linejoin: round;
 }
 
+.dock-item:hover .glyph,
 .dock-item[data-near="true"] .glyph {
   opacity: 1;
 }
 
+/* Home logo button: Identical size and neutral style, gets accent on hover */
 .dock-mark {
   width: calc(36 * var(--u));
   padding: 0;
-  background: #f3e8ff;
-  border-color: #f3e8ff;
-  color: #3b0764;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.85);
   overflow: hidden;
 }
 
 .dock-mark svg {
-  width: 58%;
-  height: 58%;
+  width: 54%;
+  height: 54%;
   display: block;
   fill: currentColor;
 }
 
+.dock-mark:hover,
 .dock-mark[data-near="true"] {
   background: #ffffff;
   border-color: #ffffff;
-  color: #2e0854;
+  color: #581c87;
+  box-shadow: 0 calc(6 * var(--u)) calc(18 * var(--u)) rgba(255, 255, 255, 0.35);
 }
 
-.dock-item.is-active {
-  background: rgba(147, 51, 234, 0.30);
-  border-color: rgba(192, 132, 252, 0.40);
-  color: #ffffff;
-  box-shadow: 0 calc(6 * var(--u)) calc(16 * var(--u)) rgba(20, 2, 35, 0.4);
-}
-
-.dock-item.is-active .glyph {
-  opacity: 1;
-}
-
-.dock-item--enter {
-  color: #ffffff;
-  background: rgba(168, 85, 247, 0.14);
-  border-color: rgba(168, 85, 247, 0.22);
-}
-
+/* Dynamic Specular Rim Reflection */
 .dock[data-spec], .dock-item[data-spec] {
   --spec-angle: 2.4rad;
   --spec-bright: 0;

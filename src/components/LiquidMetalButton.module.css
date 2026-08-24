@@ -1,11 +1,11 @@
 /* The canvas is the stage, so this has to clear the bloom's full reach
    (~4 sigma) or the halo gets cut off against a visible rectangle. */
 .stage {
-  --h: 46px; /* Exactly matching navbar height */
+  --h: 38px; /* Matching dock item / sleek thin navbar height */
   --u: calc(var(--h) / 516);
-  --bw: calc(1407 * var(--u));
+  --bw: calc(1340 * var(--u));
   --bh: var(--h);
-  --pad: calc(900 * var(--u));
+  --pad: calc(750 * var(--u));
   position: relative;
   width: calc(var(--bw) + 2 * var(--pad));
   height: calc(var(--bh) + 2 * var(--pad));
@@ -68,7 +68,7 @@
   color: #fff;
   font-family: inherit;
   font-weight: 500;
-  font-size: calc(207 * var(--u));
+  font-size: calc(205 * var(--u));
   line-height: 1;
   letter-spacing: 0;
   cursor: pointer;
@@ -91,5 +91,5 @@
 
 .lbl {
   display: block;
-  transform: translateY(calc(2 * var(--u)));
+  transform: translateY(calc(1 * var(--u)));
 }
