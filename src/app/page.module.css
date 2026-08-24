@@ -326,3 +326,45 @@
     line-height: 0.96;
   }
 }
+
+/* 3D Journey Section */
+.journeySection {
+  position: relative;
+  width: 100%;
+  height: 1200vh;
+  background-color: #000;
+}
+
+.journeySticky {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1500px;
+}
+
+.cameraContainer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+}
+
+.slideLayer {
+  position: absolute;
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Start far away in Z, come forward */
+  will-change: transform, opacity;
+}
+

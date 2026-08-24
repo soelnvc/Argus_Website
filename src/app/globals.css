@@ -8,13 +8,12 @@
 @media (max-width: 900px) {
   :root { --u: calc(100vw / 760); }
 }
-html,body{height:100%}
+html,body{min-height:100vh; margin: 0; padding: 0;}
 body{
   background:
     radial-gradient(46vmax 32vmax at 50% 47%,
       #191b21 0%, #0e0f13 34%, #050506 62%, #000 88%) #000;
-  display:grid;place-items:center;
-  overflow:hidden;
+  display: block;
   font-family:"Inter",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
   font-optical-sizing:auto;
   -webkit-font-smoothing:antialiased;
