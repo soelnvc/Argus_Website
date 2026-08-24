@@ -1,0 +1,241 @@
+.gridOverlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9990;
+  overflow: hidden;
+}
+
+/* 12-Column Responsive Layout Grid */
+.columnContainer {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 1540px;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 24px;
+  padding: 0 48px;
+  box-sizing: border-box;
+}
+
+.gridCol {
+  position: relative;
+  height: 100%;
+  background: rgba(168, 85, 247, 0.04);
+  border-left: 1px dashed rgba(192, 132, 252, 0.22);
+  border-right: 1px dashed rgba(192, 132, 252, 0.22);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 12px;
+}
+
+.colLabel {
+  font-family: monospace;
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(216, 180, 254, 0.55);
+  background: rgba(30, 8, 48, 0.85);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(192, 132, 252, 0.3);
+}
+
+/* Modular Baseline Grid */
+.baselineGrid {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-size: 100% 24px, 24px 100%;
+  background-image: 
+    linear-gradient(to bottom, rgba(216, 180, 254, 0.04) 1px, transparent 1px),
+    linear-gradient(to right, rgba(216, 180, 254, 0.02) 1px, transparent 1px);
+}
+
+/* Center Crosshair Lines */
+.centerLineV {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: rgba(236, 72, 153, 0.45);
+  box-shadow: 0 0 4px rgba(236, 72, 153, 0.4);
+}
+
+.centerLineH {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: rgba(236, 72, 153, 0.45);
+  box-shadow: 0 0 4px rgba(236, 72, 153, 0.4);
+}
+
+.headerGuide {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 52px;
+  height: 1px;
+  border-top: 1px dashed rgba(56, 189, 248, 0.35);
+}
+
+.contentGuide {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 120px;
+  height: 1px;
+  border-top: 1px dashed rgba(56, 189, 248, 0.35);
+}
+
+/* Floating Dev Badge */
+.devBadge {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  user-select: none;
+}
+
+.collapsedBtn {
+  background: rgba(24, 6, 38, 0.88);
+  border: 1px solid rgba(192, 132, 252, 0.35);
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.collapsedBtn:hover {
+  border-color: rgba(216, 180, 254, 0.6);
+  background: rgba(35, 10, 55, 0.95);
+  transform: translateY(-1px);
+}
+
+.activeModeText {
+  color: #d946ef;
+  font-weight: 600;
+}
+
+.badgePanel {
+  background: rgba(18, 4, 30, 0.92);
+  border: 1px solid rgba(192, 132, 252, 0.32);
+  border-radius: 16px;
+  padding: 12px 14px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 240px;
+  animation: popIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.95) translateY(4px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.badgeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.badgeTitle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.badgeIcon {
+  color: #d946ef;
+  font-size: 14px;
+}
+
+.keyHint {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 11px;
+  font-family: monospace;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 1px 4px;
+  border-radius: 4px;
+}
+
+.minimizeBtn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  font-size: 11px;
+  padding: 4px;
+  line-height: 1;
+  border-radius: 4px;
+  transition: color 0.15s ease;
+}
+
+.minimizeBtn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.btnRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 3px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.modeBtn {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.65);
+  padding: 6px 4px;
+  font-size: 11px;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: center;
+}
+
+.modeBtn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.activeBtn {
+  background: #a855f7 !important;
+  color: #ffffff !important;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(168, 85, 247, 0.4);
+}

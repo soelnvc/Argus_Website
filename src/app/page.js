@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import Nav from "@/components/Nav";
 import LiquidMetalButton from "@/components/LiquidMetalButton";
 import WaveGlow from "@/components/WaveGlow";
+import DevGrid from "@/components/DevGrid";
 import styles from "./page.module.css";
 
 export default function Home() {
@@ -29,6 +30,9 @@ export default function Home() {
 
   return (
     <div className={styles.scrollWrapper} ref={containerRef}>
+      {/* Interactive visual development layout grid overlay with toggle */}
+      <DevGrid />
+
       {/* Sticky viewport frame that holds the morphing hero */}
       <motion.div
         className={styles.stickyContainer}
