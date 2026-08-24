@@ -1,0 +1,17 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000000;
+  z-index: 99999;
+  overflow: hidden;
+}
+
+.introCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  display: block;
+}
