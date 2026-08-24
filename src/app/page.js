@@ -11,7 +11,6 @@ import styles from "./page.module.css";
 
 export default function Home() {
   const containerRef = useRef(null);
-  // false initially until client mounts and checks sessionStorage
   const [showLoadingScreen, setShowLoadingScreen] = useState(false);
   const [heroReady, setHeroReady] = useState(false);
 
@@ -19,17 +18,16 @@ export default function Home() {
     const hasSeenIntro = sessionStorage.getItem("argus_intro_seen");
     if (!hasSeenIntro) {
       setShowLoadingScreen(true);
-      setHeroReady(false); // Hero stays hidden waiting for intro completion
+      setHeroReady(false);
     } else {
       setShowLoadingScreen(false);
-      setHeroReady(true); // Direct access (reloads) -> Hero is ready immediately
+      setHeroReady(true);
     }
   }, []);
 
   const handleLoadingComplete = () => {
     sessionStorage.setItem("argus_intro_seen", "true");
     setShowLoadingScreen(false);
-    // Trigger the staggered hero entry animations right as the black pupil fills container
     setHeroReady(true);
   };
 
@@ -38,22 +36,34 @@ export default function Home() {
     offset: ["start start", "end end"],
   });
 
-  // Smooth scroll transformation: container merges into pure black full screen
-  const borderRadius = useTransform(scrollYProgress, [0, 0.75], [32, 0]);
-  const maxWidth = useTransform(scrollYProgress, [0, 0.75], ["1540px", "100vw"]);
-  const maxHeight = useTransform(scrollYProgress, [0, 0.75], ["900px", "100vh"]);
-  const containerPadding = useTransform(scrollYProgress, [0, 0.75], ["24px", "0px"]);
-  const borderOpacity = useTransform(scrollYProgress, [0, 0.6], [0.08, 0]);
-  const shadowOpacity = useTransform(scrollYProgress, [0, 0.75], [0.95, 0]);
+  // ─── SCROLL PHASE 1: Hero container opens & merges into full screen (0.00 -> 0.45) ───
+  const borderRadius = useTransform(scrollYProgress, [0, 0.45], [32, 0]);
+  const maxWidth = useTransform(scrollYProgress, [0, 0.45], ["1540px", "100vw"]);
+  const maxHeight = useTransform(scrollYProgress, [0, 0.45], ["900px", "100vh"]);
+  const containerPadding = useTransform(scrollYProgress, [0, 0.45], ["24px", "0px"]);
+  const borderOpacity = useTransform(scrollYProgress, [0, 0.38], [0.08, 0]);
+  const shadowOpacity = useTransform(scrollYProgress, [0, 0.45], [0.95, 0]);
 
-  // Transition charcoal/ambient background to pure OLED black (#000000)
-  const stickyBg = useTransform(scrollYProgress, [0, 0.6], ["#050208", "#000000"]);
-  const cardBg = useTransform(scrollYProgress, [0, 0.6], ["#000000", "#000000"]);
-  const ambientOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  const stickyBg = useTransform(scrollYProgress, [0, 0.40], ["#050208", "#000000"]);
+  const cardBg = useTransform(scrollYProgress, [0, 0.40], ["#000000", "#000000"]);
+  const ambientOpacity = useTransform(scrollYProgress, [0, 0.35], [1, 0]);
+
+  // ─── SCROLL PHASE 2: MULTI-LAYER PARALLAX HIERARCHY (0.50 -> 1.00) ───
+  // 1. Slowest: Hero BG WaveGlow shader drifts subtly upwards (-12vh)
+  const heroBgY = useTransform(scrollYProgress, [0.50, 1.00], ["0vh", "-12vh"]);
+
+  // 2. Slow: Hero Contents (Logo, Launch Button, Left text, Right pitch, Scroll Cue) drift upwards (-24vh)
+  const heroContentY = useTransform(scrollYProgress, [0.50, 1.00], ["0vh", "-24vh"]);
+
+  // 3. Fast: New incoming section rises swiftly from bottom to top (100vh -> 0vh)
+  const nextSectionY = useTransform(scrollYProgress, [0.50, 1.00], ["100vh", "0vh"]);
+  const nextSectionRadius = useTransform(scrollYProgress, [0.50, 0.95], ["48px 48px 0px 0px", "0px 0px 0px 0px"]);
+
+  // 4. No Movement: ONLY Navbar stays completely stationary on the foreground
 
   return (
     <>
-      {/* Laser Container Formation + ThreeUI Intro Preloader with Black Pupil Camera Rush */}
+      {/* Laser Container Formation + ThreeUI Intro Preloader */}
       {showLoadingScreen && (
         <LoadingScreen
           duration={4400}
@@ -93,9 +103,15 @@ export default function Home() {
               ),
             }}
           >
-            {/* Dynamic undulating wave shader with integrated text masking & pure black top */}
+            {/* 1. SLOWEST LAYER: Hero BG WaveGlow shader with subtle -12vh parallax */}
             <motion.div
-              style={{ width: "100%", height: "100%", position: "absolute", inset: 0 }}
+              style={{
+                width: "100%",
+                height: "100%",
+                position: "absolute",
+                inset: 0,
+                y: heroBgY,
+              }}
               initial={{ opacity: 0, scale: 0.96 }}
               animate={heroReady ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.96 }}
               transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
@@ -106,82 +122,106 @@ export default function Home() {
             {/* Ambient atmospheric edge glow */}
             <motion.div
               className={styles.ambientEdgeGlow}
-              style={{ opacity: ambientOpacity }}
+              style={{ opacity: ambientOpacity, y: heroBgY }}
               aria-hidden="true"
             />
 
-            {/* Header Bar - Logo, Navbar & Launch Button with entrance reveal */}
-            <motion.header
-              className={styles.header}
-              initial={{ opacity: 0, y: -24 }}
-              animate={heroReady ? { opacity: 1, y: 0 } : { opacity: 0, y: -24 }}
-              transition={{ duration: 0.85, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            {/* 2. SLOW LAYER: Hero Contents (Logo, Launch Button, Left text, Right pitch, Scroll cue) with -24vh parallax */}
+            <motion.div
+              className={styles.heroMovingLayer}
+              style={{
+                y: heroContentY,
+              }}
             >
-              <div className={styles.logoSlot}>
-                <a href="#" className={styles.logo} aria-label="Argus Home">
-                  <svg
-                    className={styles.logoIcon}
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <circle cx="12" cy="12" r="3" fill="currentColor" stroke="none" />
-                    <path d="M2 12c3.5-6 16.5-6 20 0-3.5 6-16.5 6-20 0z" />
-                  </svg>
-                  <span className={styles.logoText}>argus</span>
-                </a>
-              </div>
-
-              {/* Centered Floating Dock Navbar */}
-              <div className={styles.navSlot}>
-                <Nav />
-              </div>
-
-              {/* Launch Button */}
-              <div className={styles.ctaSlot}>
-                <div className={styles.buttonWrapper}>
-                  <LiquidMetalButton label="Launch" />
+              {/* Full 3-Column Header structure: Logo left, Spacer center, Launch right */}
+              <motion.div
+                className={styles.headerLayout}
+                initial={{ opacity: 0, y: -24 }}
+                animate={heroReady ? { opacity: 1, y: 0 } : { opacity: 0, y: -24 }}
+                transition={{ duration: 0.85, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <div className={styles.logoSlot}>
+                  <a href="#" className={styles.logo} aria-label="Argus Home">
+                    <svg
+                      className={styles.logoIcon}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <circle cx="12" cy="12" r="3" fill="currentColor" stroke="none" />
+                      <path d="M2 12c3.5-6 16.5-6 20 0-3.5 6-16.5 6-20 0z" />
+                    </svg>
+                    <span className={styles.logoText}>argus</span>
+                  </a>
                 </div>
+
+                {/* Empty Center Column Slot (matching original 1fr auto 1fr grid) */}
+                <div className={styles.centerSlotSpacer} aria-hidden="true" />
+
+                <div className={styles.ctaSlot}>
+                  <div className={styles.buttonWrapper}>
+                    <LiquidMetalButton label="Launch" />
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Locked text elements inside content area */}
+              <div className={styles.content}>
+                {/* Left Content */}
+                <motion.div
+                  className={styles.leftContent}
+                  initial={{ opacity: 0, x: -28, filter: "blur(8px)" }}
+                  animate={heroReady ? { opacity: 1, x: 0, filter: "blur(0px)" } : { opacity: 0, x: -28, filter: "blur(8px)" }}
+                  transition={{ duration: 0.95, delay: 0.30, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <p className={styles.statusTitle}>Indian Industrial Intelligence</p>
+                  <p className={styles.subtext}>Making Workspace Safe</p>
+                </motion.div>
+
+                {/* Right Pitch Heading */}
+                <motion.div
+                  className={styles.rightContent}
+                  initial={{ opacity: 0, y: 28, filter: "blur(10px)" }}
+                  animate={heroReady ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0, y: 28, filter: "blur(10px)" }}
+                  transition={{ duration: 1.05, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <h1 className={styles.pitch}>
+                    The hundred-eyed watchman for industrial safety &amp; operational resilience.
+                  </h1>
+                </motion.div>
+
+                {/* Scroll Cue */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.88 }}
+                  animate={heroReady ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.88 }}
+                  transition={{ duration: 0.85, delay: 0.65, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <ScrollCue />
+                </motion.div>
               </div>
-            </motion.header>
+            </motion.div>
+          </motion.div>
 
-            {/* Center/Lower Content Container with staggered entrance animations */}
-            <div className={styles.content}>
-              {/* Left Content Entrance */}
-              <motion.div
-                className={styles.leftContent}
-                initial={{ opacity: 0, x: -28, filter: "blur(8px)" }}
-                animate={heroReady ? { opacity: 1, x: 0, filter: "blur(0px)" } : { opacity: 0, x: -28, filter: "blur(8px)" }}
-                transition={{ duration: 0.95, delay: 0.30, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <p className={styles.statusTitle}>Indian Industrial Intelligence</p>
-                <p className={styles.subtext}>Making Workspace Safe</p>
-              </motion.div>
+          {/* 3. FAST LAYER: Blank black section with curved top corners rising from bottom (z-index: 30) */}
+          <motion.div
+            className={styles.nextBlankSection}
+            style={{
+              y: nextSectionY,
+              borderRadius: nextSectionRadius,
+            }}
+          />
 
-              {/* Right Pitch Heading Entrance */}
-              <motion.div
-                className={styles.rightContent}
-                initial={{ opacity: 0, y: 28, filter: "blur(10px)" }}
-                animate={heroReady ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0, y: 28, filter: "blur(10px)" }}
-                transition={{ duration: 1.05, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <h1 className={styles.pitch}>
-                  The hundred-eyed watchman for industrial safety &amp; operational resilience.
-                </h1>
-              </motion.div>
-
-              {/* Scroll Cue Entrance */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.88 }}
-                animate={heroReady ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.88 }}
-                transition={{ duration: 0.85, delay: 0.65, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <ScrollCue />
-              </motion.div>
-            </div>
+          {/* 4. ONLY NAVBAR: Fixed across top width with exact horizontal center alignment (z-index: 100) */}
+          <motion.div
+            className={styles.standaloneNavbarWrap}
+            initial={{ opacity: 0, y: -24 }}
+            animate={heroReady ? { opacity: 1, y: 0 } : { opacity: 0, y: -24 }}
+            transition={{ duration: 0.85, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <Nav />
           </motion.div>
         </motion.div>
       </div>
