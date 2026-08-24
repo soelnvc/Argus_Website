@@ -1,4 +1,4 @@
-.gridOverlay {
+.graphPaperOverlay {
   position: fixed;
   inset: 0;
   width: 100vw;
@@ -8,95 +8,199 @@
   overflow: hidden;
 }
 
-/* 12-Column Responsive Layout Grid */
-.columnContainer {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 1540px;
-  height: 100%;
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 24px;
-  padding: 0 48px;
-  box-sizing: border-box;
-}
-
-.gridCol {
-  position: relative;
-  height: 100%;
-  background: rgba(168, 85, 247, 0.04);
-  border-left: 1px dashed rgba(192, 132, 252, 0.22);
-  border-right: 1px dashed rgba(192, 132, 252, 0.22);
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding-top: 12px;
-}
-
-.colLabel {
-  font-family: monospace;
-  font-size: 10px;
-  font-weight: 600;
-  color: rgba(216, 180, 254, 0.55);
-  background: rgba(30, 8, 48, 0.85);
-  padding: 2px 6px;
-  border-radius: 4px;
-  border: 1px solid rgba(192, 132, 252, 0.3);
-}
-
-/* Modular Baseline Grid */
-.baselineGrid {
+/* Fine Sub-grid (every 10px / 5px) */
+.subGrid {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  background-size: 100% 24px, 24px 100%;
+  background-size: var(--sub-size, 10px) var(--sub-size, 10px);
   background-image: 
-    linear-gradient(to bottom, rgba(216, 180, 254, 0.04) 1px, transparent 1px),
-    linear-gradient(to right, rgba(216, 180, 254, 0.02) 1px, transparent 1px);
+    linear-gradient(to right, rgba(168, 85, 247, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(168, 85, 247, 0.035) 1px, transparent 1px);
 }
 
-/* Center Crosshair Lines */
-.centerLineV {
+/* Primary Graph Paper Boxes (50px x 50px) */
+.mainGrid {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-size: var(--grid-size, 50px) var(--grid-size, 50px);
+  background-image: 
+    linear-gradient(to right, rgba(192, 132, 252, 0.15) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(192, 132, 252, 0.15) 1px, transparent 1px);
+}
+
+/* Snapped Intersection Crosshair Lines */
+.crosshairV {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 50%;
+  left: 0;
   width: 1px;
-  background: rgba(236, 72, 153, 0.45);
-  box-shadow: 0 0 4px rgba(236, 72, 153, 0.4);
+  background: rgba(217, 70, 239, 0.45);
+  box-shadow: 0 0 6px rgba(217, 70, 239, 0.5);
+  pointer-events: none;
+  transition: transform 0.04s ease-out;
 }
 
-.centerLineH {
+.crosshairH {
   position: absolute;
   left: 0;
   right: 0;
-  top: 50%;
+  top: 0;
   height: 1px;
-  background: rgba(236, 72, 153, 0.45);
-  box-shadow: 0 0 4px rgba(236, 72, 153, 0.4);
+  background: rgba(217, 70, 239, 0.45);
+  box-shadow: 0 0 6px rgba(217, 70, 239, 0.5);
+  pointer-events: none;
+  transition: transform 0.04s ease-out;
 }
 
-.headerGuide {
+/* Snapped Intersection Point Marker */
+.snapIntersection {
   position: absolute;
+  top: 0;
   left: 0;
-  right: 0;
-  top: 52px;
-  height: 1px;
-  border-top: 1px dashed rgba(56, 189, 248, 0.35);
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.04s ease-out;
 }
 
-.contentGuide {
+.snapRing {
   position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid #d946ef;
+  box-shadow: 0 0 12px rgba(217, 70, 239, 0.8), inset 0 0 6px rgba(217, 70, 239, 0.4);
+  animation: reticlePulse 1.8s infinite ease-in-out;
+}
+
+@keyframes reticlePulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.2); opacity: 0.65; }
+}
+
+.snapDot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 8px #ffffff;
+}
+
+/* Floating Hover Tooltip with Coordinates */
+.coordTooltip {
+  position: absolute;
+  top: 0;
   left: 0;
-  right: 0;
-  bottom: 120px;
-  height: 1px;
-  border-top: 1px dashed rgba(56, 189, 248, 0.35);
+  background: rgba(14, 2, 24, 0.94);
+  border: 1px solid rgba(217, 70, 239, 0.5);
+  border-radius: 10px;
+  padding: 8px 12px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.8), 0 0 14px rgba(217, 70, 239, 0.25);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  pointer-events: none;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  white-space: nowrap;
+  z-index: 9995;
+  transition: transform 0.02s linear;
+}
+
+.coordHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #d946ef;
+}
+
+.coordDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #d946ef;
+  box-shadow: 0 0 6px #d946ef;
+}
+
+.coordValues {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.coordCol {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.coordLabel {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 11px;
+}
+
+.coordVal {
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.coordColPct {
+  color: rgba(216, 180, 254, 0.7);
+  font-size: 10.5px;
+}
+
+.coordHint {
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 9px;
+  font-family: -apple-system, sans-serif;
+  letter-spacing: 0.02em;
+}
+
+/* Toast notification */
+.toast {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(20, 3, 34, 0.95);
+  border: 1px solid rgba(217, 70, 239, 0.6);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(217, 70, 239, 0.4);
+  backdrop-filter: blur(20px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  animation: toastFade 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.toastIcon {
+  color: #d946ef;
+  font-weight: 800;
+}
+
+@keyframes toastFade {
+  from { opacity: 0; transform: translate(-50%, -10px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
 }
 
 /* Floating Dev Badge */
@@ -110,8 +214,8 @@
 }
 
 .collapsedBtn {
-  background: rgba(24, 6, 38, 0.88);
-  border: 1px solid rgba(192, 132, 252, 0.35);
+  background: rgba(20, 3, 34, 0.90);
+  border: 1px solid rgba(192, 132, 252, 0.4);
   color: #fff;
   padding: 8px 14px;
   border-radius: 999px;
@@ -128,8 +232,8 @@
 }
 
 .collapsedBtn:hover {
-  border-color: rgba(216, 180, 254, 0.6);
-  background: rgba(35, 10, 55, 0.95);
+  border-color: rgba(217, 70, 239, 0.8);
+  background: rgba(30, 6, 50, 0.95);
   transform: translateY(-1px);
 }
 
@@ -139,17 +243,17 @@
 }
 
 .badgePanel {
-  background: rgba(18, 4, 30, 0.92);
-  border: 1px solid rgba(192, 132, 252, 0.32);
+  background: rgba(16, 2, 28, 0.94);
+  border: 1px solid rgba(192, 132, 252, 0.35);
   border-radius: 16px;
   padding: 12px 14px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   display: flex;
   flex-direction: column;
   gap: 10px;
-  min-width: 240px;
+  min-width: 250px;
   animation: popIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -209,7 +313,7 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 4px;
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(0, 0, 0, 0.45);
   padding: 3px;
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.05);
@@ -238,4 +342,16 @@
   color: #ffffff !important;
   font-weight: 600;
   box-shadow: 0 2px 8px rgba(168, 85, 247, 0.4);
+}
+
+.offBtn {
+  background: rgba(239, 68, 68, 0.2) !important;
+  color: #fca5a5 !important;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.badgeFooter {
+  color: rgba(255, 255, 255, 0.38);
+  font-size: 9.5px;
+  line-height: 1.3;
 }
