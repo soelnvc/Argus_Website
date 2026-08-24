@@ -8,7 +8,7 @@
 .stickyContainer {
   position: sticky;
   top: 0;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   display: flex;
   align-items: center;
@@ -60,7 +60,7 @@
   mix-blend-mode: screen;
 }
 
-/* Hero Moving Layer: Holds Logo, Launch button, and Text contents with slow parallax (-24vh) */
+/* Hero Moving Layer */
 .heroMovingLayer {
   position: absolute;
   inset: 0;
@@ -210,11 +210,70 @@
 .nextBlankSection {
   position: absolute;
   inset: 0;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   background-color: #000000;
   z-index: 30;
   will-change: transform, border-radius;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Stage filling screen from below navbar (top: 102px) to bottom with 40px padding */
+.nextSectionStage {
+  position: absolute;
+  top: 102px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 32px 48px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 20px;
+  pointer-events: auto;
+  transform: translateY(-10px);
+}
+
+.bigHeadingWrap {
+  width: 100%;
+  max-width: 1400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  will-change: transform, clip-path, opacity;
+}
+
+.bigHeroHeading {
+  font-size: clamp(68px, 10.5vw, 150px);
+  font-weight: 900;
+  line-height: 0.92;
+  letter-spacing: -0.045em;
+  color: #ffffff;
+  margin: 0;
+  text-align: center;
+  text-transform: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
+}
+
+.bigHeroHeading span {
+  display: block;
+  white-space: nowrap;
+}
+
+.clickToKnowWrap {
+  display: flex;
+  justify-content: center;
+  will-change: transform, opacity;
 }
 
 /* ─── ONLY NAVBAR: Top-most foreground (z-index: 100), permanently centered across full width ─── */
@@ -258,5 +317,12 @@
   .pitch {
     font-size: 26px;
     margin-bottom: 24px;
+  }
+  .nextSectionStage {
+    padding: 24px 16px;
+  }
+  .bigHeroHeading {
+    font-size: clamp(48px, 12vw, 84px);
+    line-height: 0.96;
   }
 }

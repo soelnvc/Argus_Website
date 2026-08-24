@@ -2,7 +2,11 @@
 import React, { useState, useEffect } from "react";
 import styles from "./DevGrid.module.css";
 
-export default function DevGrid() {
+export default function DevGrid({
+  headText, setHeadText,
+  headFontSize, setHeadFontSize,
+  headLineHeight, setHeadLineHeight
+}) {
   const [gridSize, setGridSize] = useState(50);
   const [gridEnabled, setGridEnabled] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
@@ -210,6 +214,37 @@ export default function DevGrid() {
                 </button>
               </div>
             </div>
+
+            {/* Text Editor Controls (Only if props are passed) */}
+            {setHeadText && (
+              <div className={styles.controlsSection} style={{ marginTop: '4px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '12px' }}>
+                <div className={styles.controlLabel}>
+                  <span>Head Text Editor</span>
+                </div>
+                <textarea 
+                  value={headText} 
+                  onChange={e => setHeadText(e.target.value)} 
+                  style={{ 
+                    width: '100%', height: '60px', background: 'rgba(0,0,0,0.5)', 
+                    color: 'white', border: '1px solid rgba(192, 132, 252, 0.4)', 
+                    borderRadius: '6px', padding: '6px', fontSize: '12px',
+                    fontFamily: 'inherit', resize: 'none', outline: 'none'
+                  }}
+                  title="Use Enter for new lines"
+                />
+                
+                <div style={{ display: 'flex', justifySelf: 'stretch', justifyContent: 'space-between', alignItems: 'center', marginTop: '8px' }}>
+                  <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)' }}>Size ({headFontSize}px)</span>
+                  <input type="range" min="40" max="250" value={headFontSize} onChange={e => setHeadFontSize(Number(e.target.value))} style={{ width: '120px', cursor: 'pointer' }}/>
+                </div>
+                
+                <div style={{ display: 'flex', justifySelf: 'stretch', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px' }}>
+                  <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)' }}>Line Height ({headLineHeight})</span>
+                  <input type="range" min="0.5" max="2.0" step="0.01" value={headLineHeight} onChange={e => setHeadLineHeight(Number(e.target.value))} style={{ width: '120px', cursor: 'pointer' }}/>
+                </div>
+              </div>
+            )}
+
 
             <div className={styles.badgeFooter}>
               <span>All 3 elements permanently locked in place. Press [G] to toggle graph paper.</span>

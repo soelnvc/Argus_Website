@@ -1,0 +1,82 @@
+.clickToKnowBtn {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.44);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  user-select: none;
+  cursor: pointer;
+  pointer-events: auto;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: color 0.25s ease;
+  font-family: inherit;
+}
+
+.clickToKnowBtn:hover {
+  color: #ffffff;
+}
+
+.charContainer {
+  display: inline-flex;
+  align-items: center;
+  perspective: 600px;
+}
+
+.char {
+  display: inline-block;
+  transform-style: preserve-3d;
+  will-change: transform, filter, color, text-shadow;
+  transition: color 0.3s ease, filter 0.3s ease, text-shadow 0.3s ease;
+}
+
+/* Character flipping animation with exposure pulse */
+.flipping {
+  animation: flipExposure 0.65s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  animation-delay: calc(var(--char-index) * 0.038s);
+}
+
+@keyframes flipExposure {
+  0% {
+    transform: rotateX(0deg);
+    color: rgba(255, 255, 255, 0.44);
+    filter: brightness(1) drop-shadow(0 0 0 rgba(255, 255, 255, 0));
+    text-shadow: none;
+  }
+  35% {
+    transform: rotateX(-90deg);
+    color: #ffffff;
+    filter: brightness(2.2) drop-shadow(0 0 8px rgba(235, 82, 220, 0.9));
+    text-shadow: 0 0 12px rgba(255, 255, 255, 1), 0 0 20px rgba(217, 70, 239, 0.8);
+  }
+  65% {
+    transform: rotateX(-270deg);
+    color: #ffffff;
+    filter: brightness(1.7) drop-shadow(0 0 6px rgba(217, 70, 239, 0.7));
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.9);
+  }
+  100% {
+    transform: rotateX(-360deg);
+    color: #ffffff;
+    filter: brightness(1);
+    text-shadow: 0 0 4px rgba(255, 255, 255, 0.4);
+  }
+}
+
+.arrow {
+  display: inline-block;
+  font-size: 15px;
+  line-height: 1;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s ease, filter 0.3s ease;
+}
+
+.arrowGlow {
+  transform: translateX(4px);
+  color: #ffffff;
+  filter: drop-shadow(0 0 8px rgba(217, 70, 239, 0.9));
+}

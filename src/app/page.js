@@ -5,6 +5,7 @@ import Nav from "@/components/Nav";
 import LiquidMetalButton from "@/components/LiquidMetalButton";
 import WaveGlow from "@/components/WaveGlow";
 import ScrollCue from "@/components/ScrollCue";
+import ClickToKnow from "@/components/ClickToKnow";
 import DevGrid from "@/components/DevGrid";
 import LoadingScreen from "@/components/LoadingScreen";
 import styles from "./page.module.css";
@@ -13,6 +14,12 @@ export default function Home() {
   const containerRef = useRef(null);
   const [showLoadingScreen, setShowLoadingScreen] = useState(false);
   const [heroReady, setHeroReady] = useState(false);
+  const [showQuestion, setShowQuestion] = useState(true);
+
+  // Dev tools state for heading text
+  const [headText, setHeadText] = useState("Why do we\nneed Argus");
+  const [headFontSize, setHeadFontSize] = useState(219);
+  const [headLineHeight, setHeadLineHeight] = useState(1.15);
 
   useEffect(() => {
     const hasSeenIntro = sessionStorage.getItem("argus_intro_seen");
@@ -38,7 +45,7 @@ export default function Home() {
 
   // ─── SCROLL PHASE 1: Hero container opens & merges into full screen (0.00 -> 0.45) ───
   const borderRadius = useTransform(scrollYProgress, [0, 0.45], [32, 0]);
-  const maxWidth = useTransform(scrollYProgress, [0, 0.45], ["1540px", "100vw"]);
+  const maxWidth = useTransform(scrollYProgress, [0, 0.45], ["1540px", "100%"]);
   const maxHeight = useTransform(scrollYProgress, [0, 0.45], ["900px", "100vh"]);
   const containerPadding = useTransform(scrollYProgress, [0, 0.45], ["24px", "0px"]);
   const borderOpacity = useTransform(scrollYProgress, [0, 0.38], [0.08, 0]);
@@ -48,18 +55,32 @@ export default function Home() {
   const cardBg = useTransform(scrollYProgress, [0, 0.40], ["#000000", "#000000"]);
   const ambientOpacity = useTransform(scrollYProgress, [0, 0.35], [1, 0]);
 
-  // ─── SCROLL PHASE 2: MULTI-LAYER PARALLAX HIERARCHY (0.50 -> 1.00) ───
+  // ─── SCROLL PHASE 2: MULTI-LAYER PARALLAX (0.50 -> 1.00) ───
   // 1. Slowest: Hero BG WaveGlow shader drifts subtly upwards (-12vh)
   const heroBgY = useTransform(scrollYProgress, [0.50, 1.00], ["0vh", "-12vh"]);
 
   // 2. Slow: Hero Contents (Logo, Launch Button, Left text, Right pitch, Scroll Cue) drift upwards (-24vh)
   const heroContentY = useTransform(scrollYProgress, [0.50, 1.00], ["0vh", "-24vh"]);
 
-  // 3. Fast: New incoming section rises swiftly from bottom to top (100vh -> 0vh)
+  // 3. Fast: New incoming section rises swiftly to top (100vh -> 0vh) where it settles permanently at 1.00
   const nextSectionY = useTransform(scrollYProgress, [0.50, 1.00], ["100vh", "0vh"]);
   const nextSectionRadius = useTransform(scrollYProgress, [0.50, 0.95], ["48px 48px 0px 0px", "0px 0px 0px 0px"]);
 
-  // 4. No Movement: ONLY Navbar stays completely stationary on the foreground
+  // Lock scroll when the second section settles
+  useEffect(() => {
+    const unsubscribe = scrollYProgress.onChange((v) => {
+      // If we've reached the settled state and the question is still active, lock the scroll
+      if (v >= 0.99 && showQuestion) {
+        document.body.style.overflow = "hidden";
+      } else {
+        document.body.style.overflow = "unset";
+      }
+    });
+    return () => {
+      unsubscribe();
+      document.body.style.overflow = "unset";
+    };
+  }, [scrollYProgress, showQuestion]);
 
   return (
     <>
@@ -73,7 +94,11 @@ export default function Home() {
 
       <div className={styles.scrollWrapper} ref={containerRef}>
         {/* Interactive Visual Layout Positioner & Grid Overlay */}
-        <DevGrid />
+        <DevGrid 
+          headText={headText} setHeadText={setHeadText}
+          headFontSize={headFontSize} setHeadFontSize={setHeadFontSize}
+          headLineHeight={headLineHeight} setHeadLineHeight={setHeadLineHeight}
+        />
 
         {/* Sticky viewport frame that holds the morphing hero */}
         <motion.div
@@ -133,7 +158,7 @@ export default function Home() {
                 y: heroContentY,
               }}
             >
-              {/* Full 3-Column Header structure: Logo left, Spacer center, Launch right */}
+              {/* Header Elements: Logo left, Launch right */}
               <motion.div
                 className={styles.headerLayout}
                 initial={{ opacity: 0, y: -24 }}
@@ -158,7 +183,6 @@ export default function Home() {
                   </a>
                 </div>
 
-                {/* Empty Center Column Slot (matching original 1fr auto 1fr grid) */}
                 <div className={styles.centerSlotSpacer} aria-hidden="true" />
 
                 <div className={styles.ctaSlot}>
@@ -205,16 +229,42 @@ export default function Home() {
             </motion.div>
           </motion.div>
 
-          {/* 3. FAST LAYER: Blank black section with curved top corners rising from bottom (z-index: 30) */}
+          {/* ─── 3. FAST LAYER: Blank black section with massive bold white text (z-index: 30) ─── */}
           <motion.div
             className={styles.nextBlankSection}
             style={{
               y: nextSectionY,
               borderRadius: nextSectionRadius,
             }}
-          />
+          >
+            <div className={styles.nextSectionStage}>
+              {showQuestion && (
+                <>
+                  {/* Massive 3-Line Bold White Heading */}
+                  <div className={styles.bigHeadingWrap}>
+                    <h2 
+                      className={styles.bigHeroHeading}
+                      style={{
+                        fontSize: `${headFontSize}px`,
+                        lineHeight: headLineHeight
+                      }}
+                    >
+                      {headText.split("\n").map((line, idx) => (
+                        <span key={idx}>{line}</span>
+                      ))}
+                    </h2>
+                  </div>
 
-          {/* 4. ONLY NAVBAR: Fixed across top width with exact horizontal center alignment (z-index: 100) */}
+                  {/* Subtext: "click to know" with 3D character flipping hover */}
+                  <div className={styles.clickToKnowWrap}>
+                    <ClickToKnow onClick={() => setShowQuestion(false)} />
+                  </div>
+                </>
+              )}
+            </div>
+          </motion.div>
+
+          {/* 4. ONLY NAVBAR: Fixed on absolute top-most foreground (z-index: 100) */}
           <motion.div
             className={styles.standaloneNavbarWrap}
             initial={{ opacity: 0, y: -24 }}
