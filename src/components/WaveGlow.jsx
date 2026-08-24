@@ -33,7 +33,7 @@ export default function WaveGlow({ text = "ARGUS" }) {
       }
     `;
 
-    // Master Wave Shader: 50% Pure Black Top + High Saturation Purple/Pink/White Wave
+    // Master Wave Shader: Upper 50% 100% Pure Pristine Black, Lower Half High Saturation Wave
     const fragSrc = `
       precision highp float;
       uniform float uTime;
@@ -69,8 +69,8 @@ export default function WaveGlow({ text = "ARGUS" }) {
         float waveOffset = w1 + w2 + w3 + n;
         float y = uv.y - waveOffset;
 
-        // Palette Color Stops (Pure Black, Deep Velvet Purple, Electric Purple, Light Purple-Pink, White)
-        vec3 cPureBlack   = vec3(0.015, 0.008, 0.025); // #040206 (50% Pure Black)
+        // 100% Absolute Pure Zero Black for upper 50%
+        vec3 cPureBlack   = vec3(0.0, 0.0, 0.0);       // #000000 Pure Black
         vec3 cDeepPurple  = vec3(0.22, 0.01, 0.44);    // #380270 (Dark saturated purple)
         vec3 cMidPurple   = vec3(0.52, 0.02, 0.88);    // #8505e0 (High Saturation electric purple)
         vec3 cBrightPurp  = vec3(0.70, 0.10, 0.96);    // #b31af5 (Vibrant purple)
@@ -80,7 +80,7 @@ export default function WaveGlow({ text = "ARGUS" }) {
 
         vec3 col = cPureBlack;
 
-        // 1. Top 50% (y >= 0.50): 100% Pure Black
+        // 1. Top 50% (y >= 0.50): 100% Pure Pitch Black (no grain, no charcoal tint)
         if (y >= 0.50) {
           col = cPureBlack;
         }
@@ -114,15 +114,16 @@ export default function WaveGlow({ text = "ARGUS" }) {
         // Color saturation & richness booster
         col = pow(col, vec3(1.12));
 
-        // Film grain noise for signature analog dither / stipple effect
-        float grain = (hash(gl_FragCoord.xy + fract(uTime * 19.31)) - 0.5) * 0.05;
+        // Film grain noise ONLY applied to the illuminated gradient zone (y < 0.48), fading to zero in pure black
+        float grainMask = smoothstep(0.50, 0.38, y);
+        float grain = (hash(gl_FragCoord.xy + fract(uTime * 19.31)) - 0.5) * 0.045 * grainMask;
         col = clamp(col + vec3(grain * 0.8, grain * 0.4, grain * 0.9), 0.0, 1.0);
 
         // Alpha calculation
         float alpha = 1.0;
         if (uIsForeground < 0.5) {
           // Background atmospheric aura falloff
-          alpha = smoothstep(0.54, 0.46, y);
+          alpha = smoothstep(0.52, 0.44, y);
         }
 
         gl_FragColor = vec4(col, alpha);
@@ -313,16 +314,18 @@ export default function WaveGlow({ text = "ARGUS" }) {
         </svg>
       </div>
 
-      {/* 3. Subtle Film Grain Dither Overlay */}
+      {/* 3. Subtle Film Grain Dither Overlay restricted only to the lower gradient zone */}
       <svg
         style={{
           position: "absolute",
           inset: 0,
           width: "100%",
           height: "100%",
-          opacity: 0.20,
+          opacity: 0.18,
           mixBlendMode: "overlay",
           pointerEvents: "none",
+          maskImage: "linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 32%, rgba(0,0,0,0) 48%)",
+          WebkitMaskImage: "linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 32%, rgba(0,0,0,0) 48%)",
         }}
       >
         <filter id="noiseFilter">

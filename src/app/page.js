@@ -14,13 +14,18 @@ export default function Home() {
     offset: ["start start", "end end"],
   });
 
-  // Smooth scroll transformation: container merges into full screen across scroll
-  const borderRadius = useTransform(scrollYProgress, [0, 0.8], [32, 0]);
-  const maxWidth = useTransform(scrollYProgress, [0, 0.8], ["1540px", "100vw"]);
-  const maxHeight = useTransform(scrollYProgress, [0, 0.8], ["900px", "100vh"]);
-  const containerPadding = useTransform(scrollYProgress, [0, 0.8], ["24px", "0px"]);
-  const borderOpacity = useTransform(scrollYProgress, [0, 0.65], [0.08, 0]);
-  const shadowOpacity = useTransform(scrollYProgress, [0, 0.8], [0.95, 0]);
+  // Smooth scroll transformation: container merges into pure black full screen
+  const borderRadius = useTransform(scrollYProgress, [0, 0.75], [32, 0]);
+  const maxWidth = useTransform(scrollYProgress, [0, 0.75], ["1540px", "100vw"]);
+  const maxHeight = useTransform(scrollYProgress, [0, 0.75], ["900px", "100vh"]);
+  const containerPadding = useTransform(scrollYProgress, [0, 0.75], ["24px", "0px"]);
+  const borderOpacity = useTransform(scrollYProgress, [0, 0.6], [0.08, 0]);
+  const shadowOpacity = useTransform(scrollYProgress, [0, 0.75], [0.95, 0]);
+
+  // Transition charcoal/ambient background to pure OLED black (#000000)
+  const stickyBg = useTransform(scrollYProgress, [0, 0.6], ["#050208", "#000000"]);
+  const cardBg = useTransform(scrollYProgress, [0, 0.6], ["#000000", "#000000"]);
+  const ambientOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   return (
     <div className={styles.scrollWrapper} ref={containerRef}>
@@ -29,15 +34,17 @@ export default function Home() {
         className={styles.stickyContainer}
         style={{
           padding: containerPadding,
+          backgroundColor: stickyBg,
         }}
       >
-        {/* Animated Hero Card that smoothly expands to full screen on first scroll */}
+        {/* Animated Hero Card that smoothly expands to full screen on scroll */}
         <motion.div
           className={styles.heroCardMotion}
           style={{
             borderRadius,
             maxWidth,
             maxHeight,
+            backgroundColor: cardBg,
             borderWidth: "1px",
             borderStyle: "solid",
             borderColor: useTransform(
@@ -50,11 +57,15 @@ export default function Home() {
             ),
           }}
         >
-          {/* Dynamic undulating wave shader with integrated text masking & film grain */}
+          {/* Dynamic undulating wave shader with integrated text masking & pure black top */}
           <WaveGlow text="ARGUS" />
 
-          {/* Ambient atmospheric edge glow */}
-          <div className={styles.ambientEdgeGlow} aria-hidden="true" />
+          {/* Ambient atmospheric edge glow that fades out to pure black on transition */}
+          <motion.div
+            className={styles.ambientEdgeGlow}
+            style={{ opacity: ambientOpacity }}
+            aria-hidden="true"
+          />
 
           {/* Header Bar - Logo, Navbar & Launch Button aligned on exact vertical center */}
           <header className={styles.header}>
