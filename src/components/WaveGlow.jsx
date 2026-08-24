@@ -1,39 +1,47 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-export default function WaveGlow() {
-  const canvasRef = useRef(null);
+export default function WaveGlow({ text = "ARGUS" }) {
+  const bgCanvasRef = useRef(null);
+  const fgCanvasRef = useRef(null);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    setMounted(true);
+    const bgCanvas = bgCanvasRef.current;
+    const fgCanvas = fgCanvasRef.current;
+    if (!bgCanvas || !fgCanvas) return;
 
-    const gl = canvas.getContext("webgl2", {
-      alpha: true,
-      antialias: true,
-      powerPreference: "high-performance",
-    }) || canvas.getContext("webgl", { alpha: true });
+    // Initialize WebGL context for both canvases
+    function setupGL(canvas) {
+      const gl =
+        canvas.getContext("webgl2", {
+          alpha: true,
+          antialias: true,
+          powerPreference: "high-performance",
+        }) || canvas.getContext("webgl", { alpha: true });
+      return gl;
+    }
 
-    if (!gl) return;
+    const glBg = setupGL(bgCanvas);
+    const glFg = setupGL(fgCanvas);
+    if (!glBg || !glFg) return;
 
     const vertSrc = `
       attribute vec2 position;
-      varying vec2 vUv;
       void main() {
-        vUv = position * 0.5 + 0.5;
         gl_Position = vec4(position, 0.0, 1.0);
       }
     `;
 
-    // High contrast undulating wave fragment shader
+    // Master Wave Shader: High Contrast Fiery Plasma Aurora
     const fragSrc = `
       precision highp float;
-      varying vec2 vUv;
       uniform float uTime;
       uniform vec2 uResolution;
-      uniform vec2 uMouse;
+      uniform float uIsForeground; // 0.0 for ambient background, 1.0 for crisp text fill
 
-      // Smooth noise helpers
+      // High quality noise & hash
       float hash(vec2 p) {
         return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
       }
@@ -51,210 +59,288 @@ export default function WaveGlow() {
 
       void main() {
         vec2 uv = gl_FragCoord.xy / uResolution.xy;
-        float aspect = uResolution.x / uResolution.y;
-        float t = uTime * 0.55;
+        float t = uTime * 0.42; // Organic leisurely wave cycle
 
-        // Wave profile calculations: multiple harmonic waves for realistic liquid crests
-        // Peak on left, dip in middle, secondary crest on right (matching Midu design)
-        float waveBase = 0.22;
-        
-        // Primary sweeping swell
-        float w1 = sin(uv.x * 2.8 - t * 0.8) * 0.16;
-        // Secondary harmonic undulation
-        float w2 = cos(uv.x * 5.2 + t * 0.6) * 0.08;
-        // Slow breathing crest
-        float w3 = sin(uv.x * 1.4 + t * 0.35 + 1.2) * 0.22;
-        // Organic noise modulation
-        float n = (noise(vec2(uv.x * 3.0 + t * 0.2, t * 0.15)) - 0.5) * 0.09;
+        // Dual-harmonic traveling wave profile matching Midu design (peaks and moving valleys)
+        float w1 = sin(uv.x * 2.6 - t * 0.85) * 0.20;
+        float w2 = cos(uv.x * 4.8 + t * 0.55 + 0.8) * 0.10;
+        float w3 = sin(uv.x * 1.5 + t * 0.35 + 2.1) * 0.16;
+        float n  = (noise(vec2(uv.x * 3.5 + t * 0.2, uv.y * 2.0 + t * 0.1)) - 0.5) * 0.07;
 
-        // Mouse subtle interaction
-        float mouseDist = length(uv - uMouse);
-        float mouseLift = exp(-mouseDist * 3.0) * 0.08;
+        // Base height anchor near lower third of the card
+        float baseHeight = 0.24;
+        float crestY = baseHeight + w1 + w2 + w3 + n;
 
-        // Left-biased elevation like the reference photo (strong crest on left, valley in center, rise on right)
-        float leftBias = (1.0 - smoothstep(0.0, 0.65, uv.x)) * 0.24;
-        float rightRise = smoothstep(0.65, 1.0, uv.x) * 0.16;
+        float dist = uv.y - crestY;
 
-        float crestY = waveBase + w1 + w2 + w3 + n + leftBias + rightRise + mouseLift;
-
-        // Distance from current pixel to wave ridge
-        float distToCrest = uv.y - crestY;
-
-        // Core intensity: high contrast exponential falloff
         float intensity = 0.0;
-        if (distToCrest <= 0.0) {
-          // Below the crest: deep saturated hot belly
-          intensity = 1.0 - smoothstep(-0.45, 0.0, distToCrest) * 0.18;
-          intensity = pow(intensity, 1.4);
+        if (dist <= 0.0) {
+          // Inside the fiery body: rich, deep incandescent heat
+          float depth = -dist;
+          intensity = 1.0 + (1.0 - smoothstep(0.0, 0.35, depth)) * 0.35;
+          intensity = mix(intensity, 0.85, smoothstep(0.2, 0.5, depth));
         } else {
-          // Above the crest: blazing atmospheric aurora falloff
-          intensity = exp(-distToCrest * 4.2);
-          // Add a second softer volumetric halo
-          intensity += exp(-distToCrest * 1.8) * 0.45;
+          // Atmospheric falloff above wave crest
+          intensity = exp(-dist * 4.6) * 1.15;
+          intensity += exp(-dist * 1.8) * 0.35; // Soft secondary bloom
         }
 
-        // Secondary ambient wave layered underneath for depth & rich contrast
-        float crestY2 = crestY * 0.75 + 0.1 * sin(uv.x * 3.5 + t * 0.9);
-        float dist2 = abs(uv.y - crestY2);
-        float intensity2 = exp(-dist2 * 3.5) * 0.4;
+        // Add traveling hot spots along the wave crests (matching the peach hotspots on M and U)
+        float crestHotspot = max(0.0, 1.0 - abs(dist) * 4.5);
+        float crestPeakBoost = max(0.0, w1 + w3) * 1.4;
+        intensity += crestHotspot * crestPeakBoost * 0.65;
 
-        float totalEnergy = clamp(intensity + intensity2, 0.0, 1.5);
+        // High Contrast Palette directly matched from reference frames:
+        vec3 cVoid     = vec3(0.03, 0.01, 0.01); // Pure deep card black #080202
+        vec3 cDarkRed  = vec3(0.38, 0.02, 0.00); // Deep rich crimson #610500
+        vec3 cFireRed  = vec3(0.92, 0.10, 0.01); // Vivid fiery red #eb1a02
+        vec3 cOrange   = vec3(1.00, 0.38, 0.12); // Hot flame orange #ff611f
+        vec3 cCoral    = vec3(1.00, 0.62, 0.40); // Incandescent coral #ff9e66
+        vec3 cPeach    = vec3(1.00, 0.85, 0.72); // Creamy warm peach #ffd9b8
+        vec3 cWhiteHot = vec3(1.00, 0.96, 0.92); // White-hot core highlight
 
-        // High contrast color palette:
-        // 0.0 = Pure Black (#050505)
-        // 0.2 = Deep Maroon Crimson (#520600)
-        // 0.5 = Saturated Fiery Vermilion (#e61e00)
-        // 0.85 = Neon Flame Orange-Coral (#ff5a26)
-        // 1.15 = Warm Glowing Peach (#ff9f7d)
-        // 1.4 = Incandescent White-Hot (#fff1ec)
-
-        vec3 cDark     = vec3(0.02, 0.01, 0.01);
-        vec3 cCrimson  = vec3(0.48, 0.03, 0.01);
-        vec3 cFire     = vec3(0.95, 0.12, 0.01);
-        vec3 cCoral    = vec3(1.00, 0.38, 0.16);
-        vec3 cPeach    = vec3(1.00, 0.68, 0.52);
-        vec3 cHotWhite = vec3(1.00, 0.96, 0.92);
-
-        vec3 col = cDark;
-        if (totalEnergy < 0.25) {
-          col = mix(cDark, cCrimson, totalEnergy / 0.25);
-        } else if (totalEnergy < 0.65) {
-          col = mix(cCrimson, cFire, (totalEnergy - 0.25) / 0.40);
-        } else if (totalEnergy < 0.95) {
-          col = mix(cFire, cCoral, (totalEnergy - 0.65) / 0.30);
-        } else if (totalEnergy < 1.25) {
-          col = mix(cCoral, cPeach, (totalEnergy - 0.95) / 0.30);
+        vec3 col = cVoid;
+        if (intensity < 0.20) {
+          col = mix(cVoid, cDarkRed, intensity / 0.20);
+        } else if (intensity < 0.55) {
+          col = mix(cDarkRed, cFireRed, (intensity - 0.20) / 0.35);
+        } else if (intensity < 0.88) {
+          col = mix(cFireRed, cOrange, (intensity - 0.55) / 0.33);
+        } else if (intensity < 1.18) {
+          col = mix(cOrange, cCoral, (intensity - 0.88) / 0.30);
+        } else if (intensity < 1.45) {
+          col = mix(cCoral, cPeach, (intensity - 1.18) / 0.27);
         } else {
-          col = mix(cPeach, cHotWhite, clamp((totalEnergy - 1.25) / 0.25, 0.0, 1.0));
+          col = mix(cPeach, cWhiteHot, clamp((intensity - 1.45) / 0.35, 0.0, 1.0));
         }
 
-        // Contrast booster curve (S-curve)
-        col = pow(col, vec3(1.25));
+        // Dynamic S-curve contrast boost
+        col = pow(col, vec3(1.22));
 
-        // Smooth fade to card edge
-        float edgeFade = smoothstep(0.0, 0.05, uv.x) * smoothstep(1.0, 0.95, uv.x) * smoothstep(1.0, 0.9, uv.y);
-        
-        // Output with rich alpha
-        float alpha = clamp(totalEnergy * 1.3, 0.0, 1.0) * edgeFade;
+        // Film grain noise for signature analog dither / stipple effect
+        float grain = (hash(gl_FragCoord.xy + fract(uTime * 17.13)) - 0.5) * 0.065;
+        col = clamp(col + vec3(grain * 1.2, grain * 0.4, grain * 0.2), 0.0, 1.0);
+
+        // Alpha calculation
+        float alpha = clamp(intensity * 1.25, 0.0, 1.0);
+        if (uIsForeground > 0.5) {
+          // Foreground text is crisp and fully opaque where color exists
+          alpha = 1.0;
+        } else {
+          // Background fades smoothly at top edges
+          alpha *= smoothstep(1.0, 0.85, uv.y);
+        }
 
         gl_FragColor = vec4(col, alpha);
       }
     `;
 
-    function compileShader(type, src) {
-      const shader = gl.createShader(type);
-      gl.shaderSource(shader, src);
-      gl.compileShader(shader);
-      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        console.error(gl.getShaderInfoLog(shader));
-        gl.deleteShader(shader);
-        return null;
+    function createProgram(gl) {
+      const vs = gl.createShader(gl.VERTEX_SHADER);
+      gl.shaderSource(vs, vertSrc);
+      gl.compileShader(vs);
+
+      const fs = gl.createShader(gl.FRAGMENT_SHADER, fragSrc);
+      gl.shaderSource(fs, fragSrc);
+      gl.compileShader(fs);
+
+      const prog = gl.createProgram();
+      gl.attachShader(prog, vs);
+      gl.attachShader(prog, fs);
+      gl.linkProgram(prog);
+
+      const buf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.bufferData(
+        gl.ARRAY_BUFFER,
+        new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]),
+        gl.STATIC_DRAW
+      );
+
+      const posLoc = gl.getAttribLocation(prog, "position");
+      const uTimeLoc = gl.getUniformLocation(prog, "uTime");
+      const uResLoc = gl.getUniformLocation(prog, "uResolution");
+      const uIsFgLoc = gl.getUniformLocation(prog, "uIsForeground");
+
+      return { gl, prog, buf, posLoc, uTimeLoc, uResLoc, uIsFgLoc };
+    }
+
+    const bgProg = createProgram(glBg);
+    const fgProg = createProgram(glFg);
+
+    function resizeCanvas(canvas, gl) {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = Math.floor(canvas.clientWidth * dpr);
+      const h = Math.floor(canvas.clientHeight * dpr);
+      if (canvas.width !== w || canvas.height !== h) {
+        canvas.width = w;
+        canvas.height = h;
+        gl.viewport(0, 0, w, h);
       }
-      return shader;
     }
-
-    const vert = compileShader(gl.VERTEX_SHADER, vertSrc);
-    const frag = compileShader(gl.FRAGMENT_SHADER, fragSrc);
-    if (!vert || !frag) return;
-
-    const program = gl.createProgram();
-    gl.attachShader(program, vert);
-    gl.attachShader(program, frag);
-    gl.linkProgram(program);
-
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-      console.error(gl.getProgramInfoLog(program));
-      return;
-    }
-
-    // Geometry setup
-    const posBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
-    gl.bufferData(
-      gl.ARRAY_BUFFER,
-      new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]),
-      gl.STATIC_DRAW
-    );
-
-    const posLoc = gl.getAttribLocation(program, "position");
-    const uTimeLoc = gl.getUniformLocation(program, "uTime");
-    const uResLoc = gl.getUniformLocation(program, "uResolution");
-    const uMouseLoc = gl.getUniformLocation(program, "uMouse");
-
-    let animationFrameId;
-    let mouse = { x: 0.3, y: 0.3, targetX: 0.3, targetY: 0.3 };
 
     function resize() {
-      if (!canvas) return;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const displayWidth = Math.floor(canvas.clientWidth * dpr);
-      const displayHeight = Math.floor(canvas.clientHeight * dpr);
-
-      if (canvas.width !== displayWidth || canvas.height !== displayHeight) {
-        canvas.width = displayWidth;
-        canvas.height = displayHeight;
-        gl.viewport(0, 0, canvas.width, canvas.height);
-      }
+      if (bgCanvas && glBg) resizeCanvas(bgCanvas, glBg);
+      if (fgCanvas && glFg) resizeCanvas(fgCanvas, glFg);
     }
 
-    const handleMouseMove = (e) => {
-      if (!canvas) return;
-      const rect = canvas.getBoundingClientRect();
-      mouse.targetX = (e.clientX - rect.left) / rect.width;
-      mouse.targetY = 1.0 - (e.clientY - rect.top) / rect.height;
-    };
-
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
     window.addEventListener("resize", resize);
     resize();
 
+    let animId;
     const startTime = performance.now();
 
     function render() {
-      const now = performance.now();
-      const elapsed = (now - startTime) * 0.001;
+      const elapsed = (performance.now() - startTime) * 0.001;
 
-      resize();
+      // Draw Background Canvas (Atmospheric Glow)
+      if (glBg && bgProg) {
+        glBg.useProgram(bgProg.prog);
+        glBg.enableVertexAttribArray(bgProg.posLoc);
+        glBg.bindBuffer(glBg.ARRAY_BUFFER, bgProg.buf);
+        glBg.vertexAttribPointer(bgProg.posLoc, 2, glBg.FLOAT, false, 0, 0);
 
-      mouse.x += (mouse.targetX - mouse.x) * 0.05;
-      mouse.y += (mouse.targetY - mouse.y) * 0.05;
+        glBg.uniform1f(bgProg.uTimeLoc, elapsed);
+        glBg.uniform2f(bgProg.uResLoc, bgCanvas.width, bgCanvas.height);
+        glBg.uniform1f(bgProg.uIsFgLoc, 0.0);
 
-      gl.useProgram(program);
-      gl.enableVertexAttribArray(posLoc);
-      gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
-      gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+        glBg.drawArrays(glBg.TRIANGLES, 0, 6);
+      }
 
-      gl.uniform1f(uTimeLoc, elapsed);
-      gl.uniform2f(uResLoc, canvas.width, canvas.height);
-      gl.uniform2f(uMouseLoc, mouse.x, mouse.y);
+      // Draw Foreground Canvas (Clipped to Text)
+      if (glFg && fgProg) {
+        glFg.useProgram(fgProg.prog);
+        glFg.enableVertexAttribArray(fgProg.posLoc);
+        glFg.bindBuffer(glFg.ARRAY_BUFFER, fgProg.buf);
+        glFg.vertexAttribPointer(fgProg.posLoc, 2, glFg.FLOAT, false, 0, 0);
 
-      gl.drawArrays(gl.TRIANGLES, 0, 6);
+        glFg.uniform1f(fgProg.uTimeLoc, elapsed);
+        glFg.uniform2f(fgProg.uResLoc, fgCanvas.width, fgCanvas.height);
+        glFg.uniform1f(fgProg.uIsFgLoc, 1.0);
 
-      animationFrameId = requestAnimationFrame(render);
+        glFg.drawArrays(glFg.TRIANGLES, 0, 6);
+      }
+
+      animId = requestAnimationFrame(render);
     }
 
     render();
 
     return () => {
-      cancelAnimationFrame(animationFrameId);
-      window.removeEventListener("mousemove", handleMouseMove);
+      cancelAnimationFrame(animId);
       window.removeEventListener("resize", resize);
     };
   }, []);
 
   return (
-    <canvas
-      ref={canvasRef}
+    <div
       style={{
         position: "absolute",
         inset: 0,
         width: "100%",
         height: "100%",
+        overflow: "hidden",
         pointerEvents: "none",
         zIndex: 1,
-        filter: "blur(22px)",
-        transform: "scale(1.08)",
       }}
-    />
+    >
+      {/* 1. Ambient Background Glow (Atmospheric bleeding aura) */}
+      <canvas
+        ref={bgCanvasRef}
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          filter: "blur(32px)",
+          transform: "scale(1.08)",
+          opacity: 0.92,
+        }}
+      />
+
+      {/* 2. Text-Masked Foreground Canvas (Crisp letters filled with the exact living wave) */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          alignItems: "flex-end",
+          justifyContent: "center",
+        }}
+      >
+        <svg
+          viewBox="0 0 1600 900"
+          preserveAspectRatio="xMidYMax meet"
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            display: "block",
+          }}
+        >
+          <defs>
+            <mask id="argusTextMask">
+              <rect width="100%" height="100%" fill="black" />
+              <text
+                x="50%"
+                y="94%"
+                textAnchor="middle"
+                fill="white"
+                fontFamily="'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+                fontWeight="900"
+                fontSize="385"
+                letterSpacing="-0.045em"
+              >
+                {text}
+              </text>
+            </mask>
+          </defs>
+
+          {/* ForeignObject embeds the unblurred WebGL canvas masked by the giant text */}
+          <foreignObject
+            width="100%"
+            height="100%"
+            mask="url(#argusTextMask)"
+            style={{ width: "100%", height: "100%" }}
+          >
+            <canvas
+              ref={fgCanvasRef}
+              style={{
+                width: "100%",
+                height: "100%",
+                display: "block",
+              }}
+            />
+          </foreignObject>
+        </svg>
+      </div>
+
+      {/* 3. Subtle Film Grain Dither Overlay */}
+      <svg
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          opacity: 0.22,
+          mixBlendMode: "overlay",
+          pointerEvents: "none",
+        }}
+      >
+        <filter id="noiseFilter">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.85"
+            numOctaves="3"
+            stitchTiles="stitch"
+          />
+          <feColorMatrix type="saturate" values="0" />
+        </filter>
+        <rect width="100%" height="100%" filter="url(#noiseFilter)" />
+      </svg>
+    </div>
   );
 }

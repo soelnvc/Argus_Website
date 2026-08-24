@@ -7,17 +7,11 @@ export default function Home() {
   return (
     <main className={styles.main}>
       <div className={styles.heroContainer}>
-        {/* Dynamic undulating wave shader */}
-        <WaveGlow />
+        {/* Dynamic undulating wave shader with integrated text masking & film grain */}
+        <WaveGlow text="ARGUS" />
         
         {/* Ambient atmospheric edge glow */}
         <div className={styles.ambientEdgeGlow} aria-hidden="true" />
-
-        {/* Giant high-contrast typography in the background */}
-        <div className={styles.textLayer} aria-hidden="true">
-          <span className={styles.backgroundTextBase}>ARGUS</span>
-          <span className={styles.backgroundTextGlow}>ARGUS</span>
-        </div>
 
         {/* Header Bar */}
         <header className={styles.header}>
