@@ -1,7 +1,7 @@
 /* The canvas is the stage, so this has to clear the bloom's full reach
    (~4 sigma) or the halo gets cut off against a visible rectangle. */
 .stage {
-  --h: 52px; /* a normal control height */
+  --h: 46px; /* Exactly matching navbar height */
   --u: calc(var(--h) / 516);
   --bw: calc(1407 * var(--u));
   --bh: var(--h);

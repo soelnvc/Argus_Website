@@ -1,73 +1,130 @@
+"use client";
+import React, { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import Nav from "@/components/Nav";
 import LiquidMetalButton from "@/components/LiquidMetalButton";
 import WaveGlow from "@/components/WaveGlow";
 import styles from "./page.module.css";
 
 export default function Home() {
+  const containerRef = useRef(null);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+  });
+
+  // Smooth scroll transformation for the outer curved container merging into full screen
+  // The expansion happens smoothly over the first portion of scrolling (0 -> 0.35)
+  const borderRadius = useTransform(scrollYProgress, [0, 0.32], [32, 0]);
+  const maxWidth = useTransform(scrollYProgress, [0, 0.32], ["1540px", "100vw"]);
+  const maxHeight = useTransform(scrollYProgress, [0, 0.32], ["900px", "100vh"]);
+  const containerPadding = useTransform(scrollYProgress, [0, 0.32], ["24px", "0px"]);
+  const borderOpacity = useTransform(scrollYProgress, [0, 0.28], [0.08, 0]);
+  const shadowOpacity = useTransform(scrollYProgress, [0, 0.32], [0.95, 0]);
+
   return (
-    <main className={styles.main}>
-      <div className={styles.heroContainer}>
-        {/* Dynamic undulating wave shader with integrated text masking & film grain */}
-        <WaveGlow text="ARGUS" />
-        
-        {/* Ambient atmospheric edge glow */}
-        <div className={styles.ambientEdgeGlow} aria-hidden="true" />
+    <div className={styles.scrollWrapper} ref={containerRef}>
+      {/* Sticky viewport frame that holds the morphing hero */}
+      <motion.div
+        className={styles.stickyContainer}
+        style={{
+          padding: containerPadding,
+        }}
+      >
+        {/* Animated Hero Card that smoothly expands to full screen on first scroll */}
+        <motion.div
+          className={styles.heroCardMotion}
+          style={{
+            borderRadius,
+            maxWidth,
+            maxHeight,
+            borderWidth: "1px",
+            borderStyle: "solid",
+            borderColor: useTransform(
+              borderOpacity,
+              (v) => `rgba(255, 255, 255, ${v})`
+            ),
+            boxShadow: useTransform(
+              shadowOpacity,
+              (v) => `0 40px 120px -20px rgba(0, 0, 0, ${v})`
+            ),
+          }}
+        >
+          {/* Dynamic undulating wave shader with integrated text masking & film grain */}
+          <WaveGlow text="ARGUS" />
 
-        {/* Header Bar - Logo, Navbar & Launch Button aligned on the exact same vertical center line */}
-        <header className={styles.header}>
-          <div className={styles.logoSlot}>
-            <a href="#" className={styles.logo} aria-label="Argus Home">
-              {/* Argus Eye / Watchman Geometric Vector */}
-              <svg
-                className={styles.logoIcon}
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="12" cy="12" r="3" fill="currentColor" stroke="none" />
-                <path d="M2 12c3.5-6 16.5-6 20 0-3.5 6-16.5 6-20 0z" />
-              </svg>
-              <span className={styles.logoText}>argus</span>
-            </a>
-          </div>
+          {/* Ambient atmospheric edge glow */}
+          <div className={styles.ambientEdgeGlow} aria-hidden="true" />
 
-          {/* Centered Floating Dock Navbar with 30% Dark Purple Accent */}
-          <div className={styles.navSlot}>
-            <Nav />
-          </div>
+          {/* Header Bar - Logo, Navbar & Launch Button aligned on exact vertical center */}
+          <header className={styles.header}>
+            <div className={styles.logoSlot}>
+              <a href="#" className={styles.logo} aria-label="Argus Home">
+                <svg
+                  className={styles.logoIcon}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="12" cy="12" r="3" fill="currentColor" stroke="none" />
+                  <path d="M2 12c3.5-6 16.5-6 20 0-3.5 6-16.5 6-20 0z" />
+                </svg>
+                <span className={styles.logoText}>argus</span>
+              </a>
+            </div>
 
-          {/* Action CTA Button */}
-          <div className={styles.ctaSlot}>
-            <div className={styles.buttonWrapper}>
-              <LiquidMetalButton label="Launch" />
+            {/* Centered Floating Dock Navbar with 30% Dark Purple Accent */}
+            <div className={styles.navSlot}>
+              <Nav />
+            </div>
+
+            {/* Launch Button with exact same 46px height moved to right corner */}
+            <div className={styles.ctaSlot}>
+              <div className={styles.buttonWrapper}>
+                <LiquidMetalButton label="Launch" />
+              </div>
+            </div>
+          </header>
+
+          {/* Center/Lower Content */}
+          <div className={styles.content}>
+            {/* Positioned directly above "A" on the vertical Y axis */}
+            <div className={styles.leftContent}>
+              <div className={styles.statusRow}>
+                <span className={styles.statusDot} />
+                <span className={styles.statusTitle}>Indian Industrial Intelligence</span>
+              </div>
+              <p className={styles.subtext}>Making Workspace Safe</p>
+            </div>
+
+            <div className={styles.rightContent}>
+              <h1 className={styles.pitch}>
+                The hundred-eyed watchman for industrial safety &amp; operational resilience.
+              </h1>
+              <a href="#discover" className={styles.scrollCue}>
+                Scroll to explore <span>↓</span>
+              </a>
             </div>
           </div>
-        </header>
+        </motion.div>
+      </motion.div>
 
-        {/* Center/Lower Content */}
-        <div className={styles.content}>
-          {/* Positioned directly above "A" on the Y-axis */}
-          <div className={styles.leftContent}>
-            <div className={styles.statusRow}>
-              <span className={styles.statusDot} />
-              <span className={styles.statusTitle}>Indian Industrial Intelligence</span>
-            </div>
-            <p className={styles.subtext}>Making Workspace Safe</p>
-          </div>
-
-          <div className={styles.rightContent}>
-            <h1 className={styles.pitch}>
-              The hundred-eyed watchman for industrial safety &amp; operational resilience.
-            </h1>
-            <a href="#discover" className={styles.scrollCue}>
-              Scroll to explore <span>↓</span>
-            </a>
-          </div>
+      {/* Discovery section beneath hero */}
+      <section className={styles.nextSection} id="discover">
+        <div className={styles.sectionHeader}>
+          <span className={styles.sectionTag}>Autonomous Vision</span>
+          <h2 className={styles.sectionTitle}>
+            Total spatial awareness for high-hazard industrial environments.
+          </h2>
+          <p className={styles.sectionDescription}>
+            Continuous multi-spectral monitoring, predictive anomaly detection, and instant real-time hazard intervention powered by distributed machine vision.
+          </p>
         </div>
-      </div>
-    </main>
+      </section>
+    </div>
   );
 }

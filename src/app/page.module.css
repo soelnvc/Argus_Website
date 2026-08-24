@@ -1,37 +1,37 @@
-.main {
+.scrollWrapper {
+  position: relative;
+  width: 100%;
+  min-height: 180vh;
+  background-color: #050208;
+}
+
+.stickyContainer {
+  position: sticky;
+  top: 0;
   width: 100vw;
   height: 100vh;
-  min-height: 700px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
   background: 
     radial-gradient(circle at 85% 15%, rgba(120, 20, 220, 0.10) 0%, transparent 45%),
     radial-gradient(circle at 15% 85%, rgba(160, 25, 240, 0.12) 0%, transparent 50%),
     radial-gradient(circle at 50% 100%, rgba(90, 10, 180, 0.15) 0%, transparent 60%),
     #050208;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  overflow: hidden;
-  box-sizing: border-box;
 }
 
-.heroContainer {
+.heroCardMotion {
   position: relative;
   width: 100%;
-  max-width: 1540px;
   height: 100%;
-  max-height: 900px;
   background-color: #040206;
-  border-radius: 32px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  box-shadow: 
-    0 40px 120px -20px rgba(0, 0, 0, 0.95),
-    0 0 0 1px rgba(255, 255, 255, 0.03),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  will-change: transform, border-radius, max-width, max-height;
+  transform-origin: center center;
 }
 
 /* Supplemental ambient glow in the purple spectrum */
@@ -49,7 +49,7 @@
   mix-blend-mode: screen;
 }
 
-/* Header layout - Logo, Navbar & Launch Button on the exact same vertical center line */
+/* Header layout - Logo, Navbar & Launch Button aligned on exact vertical center */
 .header {
   position: relative;
   z-index: 10;
@@ -65,7 +65,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  height: 48px;
+  height: 46px;
 }
 
 .logo {
@@ -97,22 +97,23 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 48px;
+  height: 46px;
 }
 
 .ctaSlot {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  height: 48px;
+  height: 46px;
 }
 
 .buttonWrapper {
   display: flex;
   align-items: center;
-  justify-content: center;
-  transform: scale(0.82);
-  transform-origin: right center;
+  justify-content: flex-end;
+  height: 46px;
+  /* Cancel stage's invisible horizontal pad on the far right edge */
+  margin-right: -40px;
 }
 
 /* Content layout */
@@ -144,7 +145,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  color: rgba(255, 255, 255, 0.90);
+  color: rgba(255, 255, 255, 0.92);
   font-size: 13.5px;
   font-weight: 500;
   letter-spacing: -0.01em;
@@ -177,7 +178,7 @@
   font-size: 13px;
   font-weight: 400;
   letter-spacing: -0.01em;
-  padding-left: 14px; /* visually align under text next to the dot */
+  padding-left: 14px;
 }
 
 .rightContent {
@@ -213,23 +214,64 @@
   color: rgba(255, 255, 255, 0.8);
 }
 
+/* Next Section for natural continuous scrolling */
+.nextSection {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #040206;
+  padding: 100px 48px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.sectionHeader {
+  text-align: center;
+  max-width: 780px;
+}
+
+.sectionTag {
+  color: #d946ef;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 16px;
+  display: inline-block;
+}
+
+.sectionTitle {
+  color: #fff;
+  font-size: clamp(32px, 4vw, 56px);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 24px;
+}
+
+.sectionDescription {
+  color: rgba(255, 255, 255, 0.60);
+  font-size: 18px;
+  line-height: 1.6;
+  font-weight: 300;
+}
+
 /* Responsive adjustments */
 @media (max-width: 1024px) {
-  .main {
-    padding: 12px;
-    height: auto;
-    min-height: 100vh;
-  }
-  .heroContainer {
-    min-height: 680px;
-    border-radius: 24px;
-  }
   .header {
     padding: 24px;
     grid-template-columns: 1fr auto;
   }
   .navSlot {
     display: none;
+  }
+  .buttonWrapper {
+    margin-right: 0;
   }
   .content {
     flex-direction: column-reverse;
