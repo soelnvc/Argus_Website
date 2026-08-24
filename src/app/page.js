@@ -11,23 +11,26 @@ import styles from "./page.module.css";
 
 export default function Home() {
   const containerRef = useRef(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [hasMounted, setHasMounted] = useState(false);
+  // false initially until client mounts and checks sessionStorage
+  const [showLoadingScreen, setShowLoadingScreen] = useState(false);
+  const [heroReady, setHeroReady] = useState(false);
 
   useEffect(() => {
-    setHasMounted(true);
-    // Check sessionStorage: only triggers on first land / opening in new session.
-    // Page reloads and navigation inside the session will NOT trigger it again.
-    // Closing the browser tab/window and reopening clears sessionStorage and triggers it fresh.
     const hasSeenIntro = sessionStorage.getItem("argus_intro_seen");
     if (!hasSeenIntro) {
-      setIsLoading(true);
+      setShowLoadingScreen(true);
+      setHeroReady(false); // Hero stays hidden waiting for intro completion
+    } else {
+      setShowLoadingScreen(false);
+      setHeroReady(true); // Direct access (reloads) -> Hero is ready immediately
     }
   }, []);
 
   const handleLoadingComplete = () => {
-    setIsLoading(false);
     sessionStorage.setItem("argus_intro_seen", "true");
+    setShowLoadingScreen(false);
+    // Trigger the staggered hero entry animations right as the black pupil fills container
+    setHeroReady(true);
   };
 
   const { scrollYProgress } = useScroll({
@@ -51,7 +54,7 @@ export default function Home() {
   return (
     <>
       {/* Laser Container Formation + ThreeUI Intro Preloader with Black Pupil Camera Rush */}
-      {hasMounted && isLoading && (
+      {showLoadingScreen && (
         <LoadingScreen
           duration={4400}
           onComplete={handleLoadingComplete}
@@ -93,9 +96,9 @@ export default function Home() {
             {/* Dynamic undulating wave shader with integrated text masking & pure black top */}
             <motion.div
               style={{ width: "100%", height: "100%", position: "absolute", inset: 0 }}
-              initial={{ opacity: isLoading ? 0 : 1, scale: isLoading ? 0.96 : 1 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={heroReady ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.96 }}
+              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
             >
               <WaveGlow text="ARGUS" />
             </motion.div>
@@ -110,9 +113,9 @@ export default function Home() {
             {/* Header Bar - Logo, Navbar & Launch Button with entrance reveal */}
             <motion.header
               className={styles.header}
-              initial={{ opacity: isLoading ? 0 : 1, y: isLoading ? -20 : 0 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: isLoading ? 0.15 : 0, ease: [0.16, 1, 0.3, 1] }}
+              initial={{ opacity: 0, y: -24 }}
+              animate={heroReady ? { opacity: 1, y: 0 } : { opacity: 0, y: -24 }}
+              transition={{ duration: 0.85, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
             >
               <div className={styles.logoSlot}>
                 <a href="#" className={styles.logo} aria-label="Argus Home">
@@ -150,9 +153,9 @@ export default function Home() {
               {/* Left Content Entrance */}
               <motion.div
                 className={styles.leftContent}
-                initial={{ opacity: isLoading ? 0 : 1, x: isLoading ? -24 : 0, filter: isLoading ? "blur(6px)" : "blur(0px)" }}
-                animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-                transition={{ duration: 0.9, delay: isLoading ? 0.35 : 0, ease: [0.16, 1, 0.3, 1] }}
+                initial={{ opacity: 0, x: -28, filter: "blur(8px)" }}
+                animate={heroReady ? { opacity: 1, x: 0, filter: "blur(0px)" } : { opacity: 0, x: -28, filter: "blur(8px)" }}
+                transition={{ duration: 0.95, delay: 0.30, ease: [0.16, 1, 0.3, 1] }}
               >
                 <p className={styles.statusTitle}>Indian Industrial Intelligence</p>
                 <p className={styles.subtext}>Making Workspace Safe</p>
@@ -161,9 +164,9 @@ export default function Home() {
               {/* Right Pitch Heading Entrance */}
               <motion.div
                 className={styles.rightContent}
-                initial={{ opacity: isLoading ? 0 : 1, y: isLoading ? 24 : 0, filter: isLoading ? "blur(8px)" : "blur(0px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                transition={{ duration: 1.0, delay: isLoading ? 0.45 : 0, ease: [0.16, 1, 0.3, 1] }}
+                initial={{ opacity: 0, y: 28, filter: "blur(10px)" }}
+                animate={heroReady ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0, y: 28, filter: "blur(10px)" }}
+                transition={{ duration: 1.05, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
               >
                 <h1 className={styles.pitch}>
                   The hundred-eyed watchman for industrial safety &amp; operational resilience.
@@ -172,9 +175,9 @@ export default function Home() {
 
               {/* Scroll Cue Entrance */}
               <motion.div
-                initial={{ opacity: isLoading ? 0 : 1, scale: isLoading ? 0.9 : 1 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8, delay: isLoading ? 0.65 : 0, ease: [0.16, 1, 0.3, 1] }}
+                initial={{ opacity: 0, scale: 0.88 }}
+                animate={heroReady ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.88 }}
+                transition={{ duration: 0.85, delay: 0.65, ease: [0.16, 1, 0.3, 1] }}
               >
                 <ScrollCue />
               </motion.div>
