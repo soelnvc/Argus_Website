@@ -16,6 +16,7 @@ import LoadingScreen from "@/components/LoadingScreen";
 import CCTVFrame from "@/components/CCTVFrame";
 import ScrollToKnow from "@/components/ScrollToKnow";
 import HowArgusSolvesIt from "@/components/HowArgusSolvesIt";
+import NextBlackSection from "@/components/NextBlackSection";
 import styles from "./page.module.css";
 
 const SLIDES_DATA = [
@@ -451,9 +452,10 @@ export default function Home() {
         </motion.div>
       </div>
 
-      {/* --- 3D JOURNEY & HOW ARGUS SOLVES IT SECTION --- */}
+      {/* --- 3D JOURNEY, HOW ARGUS SOLVES IT, & NEXT BLACK SECTION --- */}
       <JourneyContainer journeyRef={journeyRef} />
       <HowArgusSolvesIt />
+      <NextBlackSection />
     </>
   );
 }

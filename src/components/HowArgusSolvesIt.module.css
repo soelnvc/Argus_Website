@@ -1,7 +1,7 @@
 .solvesSection {
   position: relative;
   width: 100%;
-  height: 400vh; /* Scroll runway for continuous 4-card sequence */
+  height: 450vh; /* Scroll runway for continuous 4-card sequence + exit overlap */
   color: #ffffff;
   margin-top: -64px; /* Underlaps smoothly behind the 64px rounded bottom of the black section */
   z-index: 10;

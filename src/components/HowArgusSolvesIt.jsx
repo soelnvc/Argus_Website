@@ -300,40 +300,40 @@ function ContinuousScrollCard({ step, idx, progress }) {
 
   if (idx === 0) {
     yTransformConfig = {
-      input: [0, 0.33],
+      input: [0, 0.22],
       output: ["0%", "-140%"],
     };
     opacityTransformConfig = {
-      input: [0, 0.32, 0.33],
-      output: [1, 1, 0],
+      input: [0, 1],
+      output: [1, 1],
     };
   } else if (idx === 1) {
     yTransformConfig = {
-      input: [0, 0.33, 0.66],
+      input: [0, 0.22, 0.44],
       output: ["140%", "0%", "-140%"],
     };
     opacityTransformConfig = {
-      input: [0, 0.33, 0.65, 0.66],
-      output: [0, 1, 1, 0],
+      input: [0, 0.22, 1],
+      output: [0, 1, 1],
     };
   } else if (idx === 2) {
     yTransformConfig = {
-      input: [0.33, 0.66, 0.99],
+      input: [0.22, 0.44, 0.66],
       output: ["140%", "0%", "-140%"],
     };
     opacityTransformConfig = {
-      input: [0.32, 0.33, 0.66, 0.98, 0.99],
-      output: [0, 0, 1, 1, 0],
+      input: [0.22, 0.44, 1],
+      output: [0, 1, 1],
     };
   } else {
     // idx === 3
     yTransformConfig = {
-      input: [0.66, 1.0],
-      output: ["140%", "0%"],
+      input: [0.44, 0.66, 1.0],
+      output: ["140%", "0%", "0%"],
     };
     opacityTransformConfig = {
-      input: [0.65, 0.66, 1.0],
-      output: [0, 0, 1],
+      input: [0.44, 0.66, 1.0],
+      output: [0, 1, 1],
     };
   }
 
@@ -377,11 +377,12 @@ export default function HowArgusSolvesIt() {
   });
 
   const bgParallaxY = useTransform(scrollYProgress, [0, 1], ["0%", "8%"]);
+  const exitSlowY = useTransform(scrollYProgress, [0.72, 1.0], ["0vh", "-12vh"]);
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    if (latest < 0.17) setActiveStep(0);
-    else if (latest < 0.5) setActiveStep(1);
-    else if (latest < 0.83) setActiveStep(2);
+    if (latest < 0.16) setActiveStep(0);
+    else if (latest < 0.38) setActiveStep(1);
+    else if (latest < 0.60) setActiveStep(2);
     else setActiveStep(3);
   });
 
@@ -393,7 +394,10 @@ export default function HowArgusSolvesIt() {
           style={{ y: bgParallaxY }}
         />
 
-        <div className={styles.sectionContainer}>
+        <motion.div
+          className={styles.sectionContainer}
+          style={{ y: exitSlowY }}
+        >
           {/* Left Column */}
           <div className={styles.leftColumn}>
             <div className={styles.eyebrowTag}>03 — HOW Argus Solves it</div>
@@ -451,7 +455,7 @@ export default function HowArgusSolvesIt() {
               />
             ))}
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
