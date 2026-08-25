@@ -1,0 +1,130 @@
+.faqSection {
+  position: relative;
+  width: 100%;
+  background-color: #07050d;
+  color: #ffffff;
+  padding: 120px 64px 160px 64px;
+  box-sizing: border-box;
+  z-index: 10;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+}
+
+.faqInner {
+  max-width: 1360px;
+  margin: 0 auto;
+}
+
+/* ─── HEADLINE ─── */
+.faqHeadline {
+  font-size: clamp(32px, 3.5vw, 52px);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  margin: 0 0 64px 0;
+}
+
+/* ─── TWO COLUMN GRID ─── */
+.faqGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+/* ─── INDIVIDUAL FAQ CARD ─── */
+.faqCard {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 28px 32px;
+  cursor: pointer;
+  transition: background 0.25s ease, border-color 0.25s ease;
+  user-select: none;
+}
+
+.faqCard:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Card Header: Question + Chevron */
+.faqCardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.faqQuestion {
+  font-size: 16.5px;
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  margin: 0;
+  flex: 1;
+}
+
+.faqChevron {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.4);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.25s ease;
+  margin-top: 2px;
+}
+
+.faqChevronOpen {
+  transform: rotate(180deg);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ─── ANSWER (Animated with max-height) ─── */
+.faqAnswerWrap {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.3s ease;
+  opacity: 0;
+}
+
+.faqAnswerWrapOpen {
+  max-height: 300px;
+  opacity: 1;
+}
+
+.faqAnswer {
+  font-size: 14.5px;
+  font-weight: 400;
+  line-height: 1.7;
+  letter-spacing: 0;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 0;
+  padding-top: 20px;
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  .faqSection {
+    padding: 100px 32px 120px 32px;
+  }
+  .faqGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .faqSection {
+    padding: 80px 20px 100px 20px;
+  }
+  .faqHeadline {
+    font-size: 28px;
+  }
+}
