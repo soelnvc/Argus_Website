@@ -246,6 +246,30 @@ export default function WhatArgusDetects() {
 
       {/* Expanding Evidence Showcase (70% -> 85% on scroll) */}
       <ExpandingEvidenceShowcase />
+
+      {/* The Watchman for The New India Showcase */}
+      <div className={styles.watchmanContainer}>
+        <motion.div
+          className={styles.watchmanContent}
+          initial={{ opacity: 0, y: 36 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <h2 className={styles.watchmanHeadline}>
+            The Watchman who never sleeps
+            <br />
+            for The New <span className={styles.tricolorText}>India</span>
+          </h2>
+
+          <p className={styles.watchmanSubhead}>
+            <span className={styles.subheadGrey}>
+              Experts have put their trust in the product.
+            </span>{" "}
+            <span className={styles.subheadWhite}>#1 @ Ship to scale.</span>
+          </p>
+        </motion.div>
+      </div>
     </section>
   );
 }

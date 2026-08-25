@@ -330,6 +330,75 @@
   object-fit: cover;
 }
 
+/* ─── WATCHMAN SECTION (The Watchman for The New India) ─── */
+.watchmanContainer {
+  width: 100%;
+  max-width: 1440px;
+  padding: 160px 48px 100px 48px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.watchmanContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  max-width: 1160px;
+}
+
+.watchmanHeadline {
+  font-size: clamp(48px, 6vw, 90px);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  color: #ffffff;
+  margin: 0;
+  text-align: center;
+}
+
+/* Indian Tricolor Gradient */
+.tricolorText {
+  background: linear-gradient(
+    110deg,
+    #ff9933 0%,
+    #ff9933 28%,
+    #ffffff 48%,
+    #ffffff 54%,
+    #138808 74%,
+    #138808 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  font-weight: 700;
+  filter: drop-shadow(0 0 28px rgba(255, 153, 51, 0.25));
+}
+
+.watchmanSubhead {
+  font-size: clamp(16px, 1.45vw, 21px);
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.subheadGrey {
+  color: rgba(255, 255, 255, 0.48);
+}
+
+.subheadWhite {
+  color: #ffffff;
+  font-weight: 600;
+}
+
 @media (max-width: 1200px) {
   .hazardCard {
     flex: 0 0 calc((100% - (2 * 24px)) / 3);
