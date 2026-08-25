@@ -1,0 +1,284 @@
+.detectsSection {
+  position: relative;
+  width: 100%;
+  min-height: 190vh;
+  background-color: #000000;
+  color: #ffffff;
+  z-index: 30;
+  margin-top: -100vh;
+  border-radius: 64px 64px 0 0;
+  clip-path: inset(0 0 0 0 round 64px 64px 0 0);
+  box-shadow: 0 -24px 80px rgba(0, 0, 0, 0.95);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 0 0 160px 0;
+  overflow: hidden;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+}
+
+/* ─── HEADER AREA (Spacious 85vh Canvas for Drag & Drop) ─── */
+.headerContainer {
+  width: 100%;
+  max-width: 1440px;
+  min-height: 85vh; /* 85% of total screen worth of space */
+  padding: 160px 64px 80px 64px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 56px;
+  margin-bottom: 32px;
+  position: relative;
+}
+
+.draggableWrapper {
+  cursor: grab;
+  user-select: none;
+  display: inline-block;
+}
+
+.draggableWrapper:active {
+  cursor: grabbing;
+}
+
+.headlineCenterWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin-top: 10px; /* Moved downward 10px */
+}
+
+.mainHeadline {
+  font-size: 93px;
+  line-height: 1.02;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  color: #ffffff;
+  margin: 0;
+  max-width: 1200px;
+  text-align: center;
+}
+
+.mutedText {
+  color: rgba(255, 255, 255, 0.38);
+  font-weight: 500;
+}
+
+/* Two-column subheadings */
+.subheadingsRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  max-width: 1140px;
+  position: relative;
+}
+
+.subLeft {
+  font-size: 22px;
+  line-height: 1.48;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 0;
+  margin-top: 10px; /* Moved downward 10px */
+  max-width: 460px;
+}
+
+.subLeft strong {
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.subRightWrapper {
+  justify-self: end;
+  transform: translate(50px, 170px);
+}
+
+.subRight {
+  font-size: 16px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.42);
+  margin: 0;
+  max-width: 440px;
+}
+
+/* ─── HORIZONTAL CARDS TRACK (4 Cards View - Midu.design style) ─── */
+.cardsTrackWrapper {
+  width: 100%;
+  position: relative;
+  overflow: visible;
+  padding: 0 48px;
+  box-sizing: border-box;
+}
+
+.cardsScrollContainer {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding-bottom: 24px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.cardsScrollContainer::-webkit-scrollbar {
+  display: none;
+}
+
+/* Full Image Hazard Card (Matching Midu.design Reference) */
+.hazardCard {
+  flex: 0 0 calc((100% - (3 * 24px)) / 4);
+  min-width: 340px;
+  max-width: 420px;
+  height: 520px;
+  border-radius: 32px;
+  position: relative;
+  overflow: hidden;
+  background: #111114;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px;
+  transition:
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hazardCard:hover {
+  transform: translateY(-8px);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+/* Full Background Image */
+.cardBgImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  z-index: 0;
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hazardCard:hover .cardBgImage {
+  transform: scale(1.06);
+}
+
+/* Vignette Overlay for Crisp Contrast */
+.cardVignette {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.15) 0%,
+    rgba(0, 0, 0, 0.1) 40%,
+    rgba(0, 0, 0, 0.65) 75%,
+    rgba(0, 0, 0, 0.92) 100%
+  );
+  pointer-events: none;
+}
+
+/* Card Bottom Row: Title, Subtitle, and Round Plus Button */
+.cardBottomRow {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+}
+
+.cardTextContent {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hazardTitle {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.15;
+}
+
+.hazardSubtitle {
+  font-size: 13.5px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.62);
+  margin: 0;
+}
+
+/* Plus Action Button (Matching Midu.design) */
+.plusButton {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #000000;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  transition:
+    transform 0.25s cubic-bezier(0.22, 0.61, 0.36, 1),
+    background 0.25s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.hazardCard:hover .plusButton {
+  transform: scale(1.1);
+  background: #f3e8ff;
+}
+
+@media (max-width: 1200px) {
+  .hazardCard {
+    flex: 0 0 calc((100% - (2 * 24px)) / 3);
+  }
+}
+
+@media (max-width: 900px) {
+  .headerContainer {
+    padding: 0 24px;
+    gap: 32px;
+  }
+  .subheadingsRow {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .cardsTrackWrapper {
+    padding: 0 24px;
+  }
+  .hazardCard {
+    flex: 0 0 calc((100% - 24px) / 2);
+    min-width: 280px;
+    height: 460px;
+  }
+}
+
+@media (max-width: 640px) {
+  .detectsSection {
+    border-radius: 36px 36px 0 0;
+    clip-path: inset(0 0 0 0 round 36px 36px 0 0);
+    padding: 70px 0 90px 0;
+  }
+  .hazardCard {
+    flex: 0 0 85vw;
+    min-width: unset;
+    height: 440px;
+  }
+}

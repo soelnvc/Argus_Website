@@ -1,0 +1,184 @@
+"use client";
+import React, { useRef } from "react";
+import { motion } from "framer-motion";
+import styles from "./WhatArgusDetects.module.css";
+
+const HAZARDS = [
+  {
+    id: "fire-smoke",
+    title: "Fire & Smoke",
+    subtitle: "Thermal & Flame Detection",
+    tags: ["Thermal Vision", "0.2s Alert"],
+    cctvLabel: "CAM_04 // ZONE_B",
+    image:
+      "https://images.unsplash.com/photo-1582139329536-e7284fece509?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    id: "falls",
+    title: "Falls",
+    subtitle: "Pose Estimation & Scaffolding",
+    tags: ["Pose Estimation", "High Altitude"],
+    cctvLabel: "CAM_12 // SCAFFOLD_03",
+    image:
+      "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    id: "no-helmet",
+    title: "No Helmet",
+    subtitle: "PPE Compliance Monitoring",
+    tags: ["PPE Inspection", "Active Floor"],
+    cctvLabel: "CAM_08 // ASSEMBLY_L2",
+    image:
+      "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    id: "restricted-zones",
+    title: "Restricted Zones",
+    subtitle: "Perimeter & Geo-Fence Breach",
+    tags: ["Geo-Fence", "Access Control"],
+    cctvLabel: "CAM_01 // HAZMAT_SECTOR",
+    image:
+      "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    id: "blocked-exits",
+    title: "Blocked Exits",
+    subtitle: "Egress & Obstacle Tracking",
+    tags: ["Egress Safety", "Fire Code"],
+    cctvLabel: "CAM_09 // CORRIDOR_EAST",
+    image:
+      "https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    id: "unattended-machinery",
+    title: "Unattended Machinery",
+    subtitle: "Robotics & Heavy Press Unit",
+    tags: ["Robotics Cell", "Auto-Halt"],
+    cctvLabel: "CAM_03 // PRESS_UNIT_B",
+    image:
+      "https://images.unsplash.com/photo-1616401784845-180882ba9ba8?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    id: "spills",
+    title: "Spills & Trip Hazards",
+    subtitle: "Surface Scan & Liquid Leak",
+    tags: ["Surface Scan", "Slip Hazard"],
+    cctvLabel: "CAM_07 // LOGISTICS_DOCK",
+    image:
+      "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    id: "smoking",
+    title: "Smoking",
+    subtitle: "Hazardous Area Compliance",
+    tags: ["Vapor Detection", "Zero Tolerance"],
+    cctvLabel: "CAM_11 // SILO_BAY_04",
+    image:
+      "https://images.unsplash.com/photo-1527061011665-3652c757a4d4?auto=format&fit=crop&w=1200&q=80",
+  },
+];
+
+export default function WhatArgusDetects() {
+  const scrollRef = useRef(null);
+
+  return (
+    <section className={styles.detectsSection}>
+      {/* Header Container (Permanently Locked Positions & Sizes) */}
+      <div className={styles.headerContainer}>
+        {/* 1. Main Headline (Center Aligned) */}
+        <div className={styles.headlineCenterWrapper}>
+          <h2 className={styles.mainHeadline}>
+            One system.{" "}
+            <span className={styles.mutedText}>
+              Eight safety
+              <br />
+              hazards.
+            </span>
+          </h2>
+        </div>
+
+        {/* 2 & 3. Subheadings */}
+        <div className={styles.subheadingsRow}>
+          <div>
+            <p className={styles.subLeft}>
+              We deploy with{" "}
+              <strong>
+                industrial plants, high-risk assembly lines, and warehouse
+                facilities
+              </strong>{" "}
+              to catch critical safety events with sub-second response times.
+            </p>
+          </div>
+
+          <div className={styles.subRightWrapper}>
+            <p className={styles.subRight}>
+              Explore how Argus connects to standard camera infrastructure to
+              analyze edge feeds and dispatch real-time incident verification.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Horizontal Cards Showcase (Clean Full Image - No Top Containers) */}
+      <div className={styles.cardsTrackWrapper}>
+        <div className={styles.cardsScrollContainer} ref={scrollRef}>
+          {HAZARDS.map((hazard, index) => (
+            <motion.div
+              key={hazard.id}
+              className={hazard.id === "fire-smoke" ? `${styles.hazardCard} ${styles.hazardCardDark}` : styles.hazardCard}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.1 }}
+              transition={{
+                duration: 0.6,
+                delay: index * 0.06,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+            >
+              {/* Full Background Image */}
+              <img
+                src={hazard.image}
+                alt={hazard.title}
+                className={styles.cardBgImage}
+                loading="lazy"
+              />
+
+              {/* Vignette Overlay for Text Legibility */}
+              <div className={styles.cardVignette} />
+
+              {/* Spacer so bottom row stays pinned cleanly at the bottom */}
+              <div style={{ flex: 1 }} />
+
+              {/* Bottom Row: Title, Subtitle & Round Plus Button */}
+              <div className={styles.cardBottomRow}>
+                <div className={styles.cardTextContent}>
+                  <h3 className={styles.hazardTitle}>{hazard.title}</h3>
+                  <p className={styles.hazardSubtitle}>{hazard.subtitle}</p>
+                </div>
+
+                <button
+                  className={styles.plusButton}
+                  aria-label={`View details for ${hazard.title}`}
+                >
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                </button>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

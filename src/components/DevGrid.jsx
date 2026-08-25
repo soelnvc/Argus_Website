@@ -3,13 +3,19 @@ import React, { useState, useEffect } from "react";
 import styles from "./DevGrid.module.css";
 
 export default function DevGrid({
-  headText, setHeadText,
-  headFontSize, setHeadFontSize,
-  headLineHeight, setHeadLineHeight
+  headText,
+  setHeadText,
+  headFontSize,
+  setHeadFontSize,
+  headLineHeight,
+  setHeadLineHeight,
+  // Detects Section Controls (Optional Props)
+  detectsProps,
 }) {
   const [gridSize, setGridSize] = useState(50);
   const [gridEnabled, setGridEnabled] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
+  const [activeTab, setActiveTab] = useState("hero"); // "hero" | "detects"
 
   // Mouse coordinate tracker
   const [mousePos, setMousePos] = useState({ x: 0, y: 0, visible: false });
@@ -138,7 +144,7 @@ export default function DevGrid({
             onClick={() => setCollapsed(false)}
             title="Open Graph Grid Controls"
           >
-            ▦ <span className={styles.activeModeText}>GRID</span>
+            ▦ <span className={styles.activeModeText}>DEV TOOL</span>
           </button>
         ) : (
           <div className={styles.badgePanel}>
@@ -156,7 +162,7 @@ export default function DevGrid({
               </button>
             </div>
 
-            {/* Current Element Coordinates Locked Readout */}
+            {/* Current Element Coordinates Readout */}
             <div className={styles.liveCoordBox}>
               <div className={styles.liveRow}>
                 <span className={styles.liveLabel}>Left Text:</span>
@@ -215,39 +221,73 @@ export default function DevGrid({
               </div>
             </div>
 
-            {/* Text Editor Controls (Only if props are passed) */}
-            {setHeadText && (
-              <div className={styles.controlsSection} style={{ marginTop: '4px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '12px' }}>
+            {/* Hero Text Controls */}
+            {activeTab === "hero" && setHeadText && (
+              <div className={styles.controlsSection} style={{ marginTop: '4px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '10px' }}>
                 <div className={styles.controlLabel}>
-                  <span>Head Text Editor</span>
+                  <span>Hero Text Editor</span>
                 </div>
                 <textarea 
                   value={headText} 
                   onChange={e => setHeadText(e.target.value)} 
                   style={{ 
-                    width: '100%', height: '60px', background: 'rgba(0,0,0,0.5)', 
+                    width: '100%', height: '52px', background: 'rgba(0,0,0,0.5)', 
                     color: 'white', border: '1px solid rgba(192, 132, 252, 0.4)', 
-                    borderRadius: '6px', padding: '6px', fontSize: '12px',
+                    borderRadius: '6px', padding: '6px', fontSize: '11px',
                     fontFamily: 'inherit', resize: 'none', outline: 'none'
                   }}
                   title="Use Enter for new lines"
                 />
                 
-                <div style={{ display: 'flex', justifySelf: 'stretch', justifyContent: 'space-between', alignItems: 'center', marginTop: '8px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '6px' }}>
                   <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)' }}>Size ({headFontSize}px)</span>
                   <input type="range" min="40" max="250" value={headFontSize} onChange={e => setHeadFontSize(Number(e.target.value))} style={{ width: '120px', cursor: 'pointer' }}/>
                 </div>
                 
-                <div style={{ display: 'flex', justifySelf: 'stretch', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px' }}>
                   <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)' }}>Line Height ({headLineHeight})</span>
                   <input type="range" min="0.5" max="2.0" step="0.01" value={headLineHeight} onChange={e => setHeadLineHeight(Number(e.target.value))} style={{ width: '120px', cursor: 'pointer' }}/>
                 </div>
               </div>
             )}
 
+            {/* Detects Section Text Controls */}
+            {activeTab === "detects" && detectsProps && (
+              <div className={styles.controlsSection} style={{ marginTop: '4px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '10px' }}>
+                <div className={styles.controlLabel}>
+                  <span>Headline Size ({detectsProps.headSize}px)</span>
+                </div>
+                <input 
+                  type="range" min="30" max="140" 
+                  value={detectsProps.headSize} 
+                  onChange={e => detectsProps.setHeadSize(Number(e.target.value))} 
+                  style={{ width: '100%', cursor: 'pointer', marginBottom: '8px' }}
+                />
+
+                <div className={styles.controlLabel}>
+                  <span>Sub Left Size ({detectsProps.subLeftSize}px)</span>
+                </div>
+                <input 
+                  type="range" min="12" max="32" 
+                  value={detectsProps.subLeftSize} 
+                  onChange={e => detectsProps.setSubLeftSize(Number(e.target.value))} 
+                  style={{ width: '100%', cursor: 'pointer', marginBottom: '8px' }}
+                />
+
+                <div className={styles.controlLabel}>
+                  <span>Sub Right Size ({detectsProps.subRightSize}px)</span>
+                </div>
+                <input 
+                  type="range" min="12" max="32" 
+                  value={detectsProps.subRightSize} 
+                  onChange={e => detectsProps.setSubRightSize(Number(e.target.value))} 
+                  style={{ width: '100%', cursor: 'pointer' }}
+                />
+              </div>
+            )}
 
             <div className={styles.badgeFooter}>
-              <span>All 3 elements permanently locked in place. Press [G] to toggle graph paper.</span>
+              <span>Drag & drop elements on screen freely. Press [G] to toggle graph paper.</span>
             </div>
           </div>
         )}
