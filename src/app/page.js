@@ -9,6 +9,7 @@ import ClickToKnow from "@/components/ClickToKnow";
 import DevGrid from "@/components/DevGrid";
 import LoadingScreen from "@/components/LoadingScreen";
 import CCTVFrame from "@/components/CCTVFrame";
+import ScrollToKnow from "@/components/ScrollToKnow";
 import styles from "./page.module.css";
 
 const SLIDES_DATA = [
@@ -52,17 +53,28 @@ function JourneyContainer({ journeyRef }) {
   });
   const journeyProgress = useTransform(journeyProgressRaw, (v) => Math.min(Math.max(v, 0), 1));
   
-  // 6 slides at 2000z intervals = 12000z. Add 2000z to fly past the last one. Total = 14000z.
-  const cameraZ = useTransform(journeyProgress, [0, 1], [0, 14000]);
+  // 6 slides at 2000z intervals = 12000z. 
+  // Fly through all 6 slides in the first 80% of scroll, then hold in deep black for the solution reveal
+  const cameraZ = useTransform(journeyProgress, [0, 0.80, 1.0], [0, 13600, 14200]);
   
-  // Camera snakes left and right to aim at the CCTV viewfinders
-  // Slide 0 (left): camera aims left (container moves right +12vw)
-  // Slide 1 (right): camera aims right (container moves left -12vw)
+  // Camera snakes left and right to aim at the CCTV viewfinders, then centers smoothly
   const cameraX = useTransform(
     journeyProgress, 
-    [0, 0.14, 0.28, 0.42, 0.57, 0.71, 0.85, 1], 
-    ["0vw", "12vw", "-12vw", "12vw", "-12vw", "12vw", "-12vw", "0vw"]
+    [0, 0.13, 0.26, 0.39, 0.52, 0.65, 0.78, 0.82, 1.0], 
+    ["0vw", "12vw", "-12vw", "12vw", "-12vw", "12vw", "-12vw", "0vw", "0vw"]
   );
+
+  // Smooth entry animation for "How we solve this problem" & "scroll to know"
+  // Only triggers once the user has fully scrolled through the CCTV sequence (>= 0.80)
+  const endSectionOpacity = useTransform(journeyProgress, [0.80, 0.88], [0, 1]);
+  const titleY = useTransform(journeyProgress, [0.80, 0.88], [48, 0]);
+  const titleScale = useTransform(journeyProgress, [0.80, 0.88], [0.93, 1]);
+  const titleBlur = useTransform(journeyProgress, [0.80, 0.88], ["blur(12px)", "blur(0px)"]);
+
+  const cueOpacity = useTransform(journeyProgress, [0.85, 0.92], [0, 1]);
+  const cueY = useTransform(journeyProgress, [0.85, 0.92], [24, 0]);
+  const cueScale = useTransform(journeyProgress, [0.85, 0.92], [0.90, 1]);
+  const isPointerActive = useTransform(journeyProgress, (v) => v >= 0.82 ? "auto" : "none");
 
   return (
     <div className={styles.journeySection} ref={journeyRef}>
@@ -77,6 +89,40 @@ function JourneyContainer({ journeyRef }) {
           {SLIDES_DATA.map((slide, i) => (
              <JourneySlide key={i} index={i} slide={slide} cameraZ={cameraZ} />
           ))}
+        </motion.div>
+
+        {/* End of CCTV sequence: "How we solve this problem" + "scroll to know" */}
+        <motion.div 
+          className={styles.journeyEndStage}
+          style={{
+            opacity: endSectionOpacity,
+            pointerEvents: isPointerActive
+          }}
+        >
+          <motion.div 
+            className={styles.bigHeadingWrap}
+            style={{
+              y: titleY,
+              scale: titleScale,
+              filter: titleBlur
+            }}
+          >
+            <h2 className={styles.bigEndHeading}>
+              <span>How we solve</span>
+              <span>this problem</span>
+            </h2>
+          </motion.div>
+
+          <motion.div 
+            className={styles.scrollToKnowWrap}
+            style={{
+              opacity: cueOpacity,
+              y: cueY,
+              scale: cueScale
+            }}
+          >
+            <ScrollToKnow text="scroll to know" />
+          </motion.div>
         </motion.div>
       </div>
     </div>
