@@ -1,6 +1,6 @@
 "use client";
 import React, { useRef } from "react";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import styles from "./WhatArgusDetects.module.css";
 
 const HAZARDS = [
@@ -77,6 +77,41 @@ const HAZARDS = [
       "https://images.unsplash.com/photo-1527061011665-3652c757a4d4?auto=format&fit=crop&w=1200&q=80",
   },
 ];
+
+function ExpandingEvidenceShowcase() {
+  const showcaseRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: showcaseRef,
+    offset: ["start end", "center center"],
+  });
+
+  // Gradually expands from 70vw (70% screen) to 85vw (85% screen)
+  const width = useTransform(scrollYProgress, [0, 1], ["70vw", "85vw"]);
+  const borderRadius = useTransform(scrollYProgress, [0, 1], ["24px", "36px"]);
+  const opacity = useTransform(scrollYProgress, [0, 0.35], [0.65, 1]);
+  const y = useTransform(scrollYProgress, [0, 1], [50, 0]);
+
+  return (
+    <div className={styles.showcaseOuterTrack} ref={showcaseRef}>
+      <motion.div
+        className={styles.expandingShowcaseCard}
+        style={{
+          width,
+          borderRadius,
+          opacity,
+          y,
+        }}
+      >
+        <img
+          src="/images/restricted.png"
+          alt="Argus Evidence Incident Visualizer"
+          className={styles.evidenceImage}
+          loading="lazy"
+        />
+      </motion.div>
+    </div>
+  );
+}
 
 export default function WhatArgusDetects() {
   const scrollRef = useRef(null);
@@ -179,6 +214,38 @@ export default function WhatArgusDetects() {
           ))}
         </div>
       </div>
+
+      {/* Evidence Block (Under cards on same black background) */}
+      <div className={styles.evidenceContainer}>
+        <motion.div
+          className={styles.evidenceRow}
+          initial={{ opacity: 0, y: 32 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <div className={styles.evidenceLeft}>
+            <h2 className={styles.evidenceHeadline}>
+              Every alert{" "}
+              <span className={styles.mutedText}>
+                comes with
+                <br />
+                evidence.
+              </span>
+            </h2>
+          </div>
+
+          <div className={styles.evidenceRight}>
+            <p className={styles.evidenceSubhead}>
+              <strong>Argus doesn&apos;t just report a hazard.</strong>
+              <span>It shows why it was detected.</span>
+            </p>
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Expanding Evidence Showcase (70% -> 85% on scroll) */}
+      <ExpandingEvidenceShowcase />
     </section>
   );
 }

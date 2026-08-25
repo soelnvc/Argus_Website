@@ -245,6 +245,91 @@
   background: #f3e8ff;
 }
 
+/* ─── EVIDENCE ROW (Under Cards on same black background) ─── */
+.evidenceContainer {
+  width: 100%;
+  max-width: 1440px;
+  padding: 160px 64px 60px 64px;
+  box-sizing: border-box;
+}
+
+.evidenceRow {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 80px;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.evidenceHeadline {
+  font-size: clamp(48px, 5.6vw, 84px);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  color: #ffffff;
+  margin: 0;
+  max-width: 760px;
+}
+
+.evidenceRight {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-bottom: 8px;
+}
+
+.evidenceSubhead {
+  font-size: clamp(20px, 1.8vw, 26px);
+  font-weight: 400;
+  line-height: 1.45;
+  letter-spacing: -0.015em;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 0;
+  max-width: 480px;
+}
+
+.evidenceSubhead strong {
+  color: #ffffff;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.evidenceSubhead span {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* ─── EXPANDING EVIDENCE SHOWCASE (70% -> 85% on scroll) ─── */
+.showcaseOuterTrack {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 56px;
+  padding: 0 32px 120px 32px;
+  box-sizing: border-box;
+}
+
+.expandingShowcaseCard {
+  position: relative;
+  max-width: 1540px;
+  overflow: hidden;
+  background: #000000;
+  border: none;
+  box-shadow: 0 40px 120px -20px rgba(0, 0, 0, 0.95);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  will-change: width, transform, border-radius;
+}
+
+.evidenceImage {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
 @media (max-width: 1200px) {
   .hazardCard {
     flex: 0 0 calc((100% - (2 * 24px)) / 3);
