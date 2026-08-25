@@ -1,0 +1,15 @@
+03 — HOW Argust Solves it
+From camera to action.
+
+01 — Watch
+Connect your existing camera feed.
+
+02 — Understand
+Argus analyzes the scene and evaluates potential hazards against safety criteria.
+
+03 — Verify
+Temporal verification filters out transient visual anomalies.
+
+04 — Act
+Confirmed incidents are logged and dispatched to your safety team.
+

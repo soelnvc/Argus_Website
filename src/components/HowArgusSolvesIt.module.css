@@ -1,0 +1,594 @@
+.solvesSection {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #07040b;
+  color: #ffffff;
+  overflow: hidden;
+  padding: 80px 32px 100px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+}
+
+/* Ambient Purple Radial Lighting Glows */
+.ambientPurpleGlowTop {
+  position: absolute;
+  top: -10%;
+  left: 20%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(
+    circle,
+    rgba(147, 51, 234, 0.22) 0%,
+    rgba(126, 34, 206, 0.08) 45%,
+    transparent 70%
+  );
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ambientPurpleGlowBottom {
+  position: absolute;
+  bottom: -15%;
+  right: 15%;
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(
+    circle,
+    rgba(168, 85, 247, 0.18) 0%,
+    rgba(76, 29, 149, 0.12) 50%,
+    transparent 75%
+  );
+  filter: blur(90px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Section 2-Column Grid Layout */
+.sectionContainer {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 1200px;
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 64px;
+  align-items: center;
+}
+
+/* Left Column */
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 520px;
+}
+
+.eyebrowTag {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(216, 180, 254, 0.7);
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.mainHeadline {
+  font-size: clamp(38px, 4.4vw, 56px);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  margin: 0 0 32px 0;
+}
+
+/* Step Selector Pills */
+.pillsList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 40px;
+}
+
+.stepPill {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  outline: none;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
+  width: fit-content;
+  min-width: 180px;
+}
+
+.stepPill:hover {
+  color: #ffffff;
+  border-color: rgba(216, 180, 254, 0.25);
+}
+
+.stepPillActive {
+  color: #ffffff;
+  border-color: transparent;
+}
+
+.activePillHighlight {
+  position: absolute;
+  inset: 0;
+  background: rgba(147, 51, 234, 0.28);
+  border: 1px solid rgba(192, 132, 252, 0.45);
+  border-radius: 12px;
+  z-index: 0;
+  box-shadow: 0 0 20px rgba(147, 51, 234, 0.25);
+}
+
+.pillText {
+  position: relative;
+  z-index: 1;
+  letter-spacing: -0.01em;
+}
+
+/* Left Footer */
+.leftFooter {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.subCopy {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.55);
+  margin: 0;
+  max-width: 360px;
+}
+
+/* Right Column: Large Glass Showcase Card */
+.rightColumn {
+  display: flex;
+  justify-content: center;
+}
+
+.showcaseCard {
+  position: relative;
+  width: 100%;
+  min-height: 520px;
+  background: rgba(15, 10, 24, 0.72);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border-radius: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 35px 90px -20px rgba(0, 0, 0, 0.8),
+    0 0 40px -10px rgba(147, 51, 234, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  padding: 40px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Card Header */
+.cardHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stepIconWrap {
+  color: #d8b4fe;
+  display: flex;
+  align-items: center;
+}
+
+.stepHeadline {
+  font-size: clamp(22px, 2.2vw, 28px);
+  font-weight: 400;
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+  margin: 0;
+  min-height: 64px;
+}
+
+/* Card Body / Visualizer Stage */
+.cardBody {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 0;
+}
+
+.mockupContainer {
+  width: 100%;
+  max-width: 480px;
+}
+
+.mockupCard {
+  width: 100%;
+  background: rgba(22, 15, 36, 0.85);
+  border: 1px solid rgba(216, 180, 254, 0.15);
+  border-radius: 20px;
+  padding: 24px;
+  box-sizing: border-box;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+}
+
+/* Step 01 Mockup: Live Camera Stream */
+.feedHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.feedLiveTag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #4ade80;
+}
+
+.livePulse {
+  width: 8px;
+  height: 8px;
+  background-color: #4ade80;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #4ade80;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.3);
+  }
+}
+
+.timeTag {
+  font-size: 11px;
+  font-family: monospace;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.cameraGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.camSlot {
+  position: relative;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 14px;
+  overflow: hidden;
+}
+
+.camActive {
+  border-color: rgba(147, 51, 234, 0.4);
+  background: linear-gradient(
+    135deg,
+    rgba(30, 18, 50, 0.5),
+    rgba(10, 6, 18, 0.5)
+  );
+}
+
+.camLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 4px;
+}
+
+.streamBadge {
+  font-size: 10px;
+  color: rgba(216, 180, 254, 0.8);
+}
+
+.statusFooter {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 12px;
+}
+
+.latencyTag {
+  color: #4ade80;
+}
+
+/* Step 02 Mockup: AI Neural Scene Analyzer */
+.aiVisionStage {
+  position: relative;
+  height: 140px;
+  background:
+    radial-gradient(
+      circle at 60% 40%,
+      rgba(147, 51, 234, 0.25),
+      rgba(0, 0, 0, 0.6)
+    ),
+    #090610;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.aiOverlayLayer {
+  position: relative;
+  width: 90%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.hazardBoxPrimary {
+  border: 1.5px solid #ef4444;
+  background: rgba(239, 68, 68, 0.12);
+  border-radius: 8px;
+  padding: 8px 10px;
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+}
+
+.hazardTagPrimary {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #ef4444;
+  letter-spacing: 0.04em;
+}
+
+.hazardDistance {
+  font-size: 9.5px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.hazardBoxSecondary {
+  border: 1.5px solid #22c55e;
+  background: rgba(34, 197, 94, 0.08);
+  border-radius: 6px;
+  padding: 6px 10px;
+  width: fit-content;
+}
+
+.hazardTagSecondary {
+  font-size: 9.5px;
+  font-weight: 600;
+  color: #22c55e;
+}
+
+.aiDiagnostics {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 12px;
+}
+
+.diagItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.diagLabel {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.diagValue {
+  font-size: 11px;
+  color: #d8b4fe;
+  font-weight: 600;
+}
+
+.diagAlert {
+  font-size: 11px;
+  color: #ef4444;
+  font-weight: 700;
+}
+
+/* Step 03 Mockup: Temporal Waveform Filter */
+.temporalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 16px;
+}
+
+.verifiedTag {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 9.5px;
+  font-weight: 700;
+}
+
+.waveformStage {
+  position: relative;
+  height: 100px;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 12px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  padding: 12px 16px;
+  box-sizing: border-box;
+  margin-bottom: 16px;
+}
+
+.waveBarGroup {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  width: 100%;
+  height: 100%;
+}
+
+.waveBar {
+  flex: 1;
+  background: linear-gradient(to top, #7e22ce, #c084fc);
+  border-radius: 4px;
+  min-height: 12px;
+  box-shadow: 0 0 10px rgba(192, 132, 252, 0.4);
+}
+
+.thresholdLine {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 30%;
+  border-top: 1px dashed rgba(255, 255, 255, 0.25);
+}
+
+.filterStats {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.statLine {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10.5px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.statHighlight {
+  color: #d8b4fe;
+  font-weight: 600;
+}
+
+/* Step 04 Mockup: Immediate Incident Dispatch */
+.alertHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.alertBadge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #ef4444;
+}
+
+.alertPulse {
+  width: 8px;
+  height: 8px;
+  background-color: #ef4444;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #ef4444;
+  animation: pulse 1.2s infinite;
+}
+
+.dispatchTime {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  font-family: monospace;
+}
+
+.alertContent {
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.alertTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 4px;
+}
+
+.alertMeta {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.dispatchPills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.dispatchedPill {
+  background: rgba(147, 51, 234, 0.2);
+  border: 1px solid rgba(192, 132, 252, 0.3);
+  color: #d8b4fe;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+/* Card Footer */
+.cardFooter {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 20px;
+  margin-top: 16px;
+}
+
+.stepDescription {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.65);
+  margin: 0;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 980px) {
+  .sectionContainer {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+  .leftColumn {
+    min-height: auto;
+  }
+  .showcaseCard {
+    padding: 28px;
+  }
+}
