@@ -155,7 +155,6 @@ export default function Home() {
 
   const [showLoadingScreen, setShowLoadingScreen] = useState(true);
   const [heroReady, setHeroReady] = useState(false);
-  const [showQuestion, setShowQuestion] = useState(true);
 
   // Dev tools state for heading text
   const [headText, setHeadText] = useState("Why do we\nneed Argus");
@@ -182,28 +181,54 @@ export default function Home() {
     Math.min(Math.max(v, 0), 1),
   );
 
-  const borderRadius = useTransform(clampedHero, [0, 0.45], [32, 0]);
-  const maxWidth = useTransform(clampedHero, [0, 0.45], ["1540px", "100%"]);
-  const maxHeight = useTransform(clampedHero, [0, 0.45], ["900px", "100vh"]);
+  const borderRadius = useTransform(clampedHero, [0, 0.3], [32, 0]);
+  const maxWidth = useTransform(clampedHero, [0, 0.3], ["1540px", "100%"]);
+  const maxHeight = useTransform(clampedHero, [0, 0.3], ["900px", "100vh"]);
   const containerPadding = useTransform(
     clampedHero,
-    [0, 0.45],
+    [0, 0.3],
     ["24px", "0px"],
   );
-  const borderOpacity = useTransform(clampedHero, [0, 0.38], [0.08, 0]);
-  const shadowOpacity = useTransform(clampedHero, [0, 0.45], [0.95, 0]);
-  const stickyBg = useTransform(clampedHero, [0, 0.4], ["#050208", "#000000"]);
-  const cardBg = useTransform(clampedHero, [0, 0.4], ["#000000", "#000000"]);
-  const ambientOpacity = useTransform(clampedHero, [0, 0.35], [1, 0]);
+  const borderOpacity = useTransform(clampedHero, [0, 0.25], [0.08, 0]);
+  const shadowOpacity = useTransform(clampedHero, [0, 0.3], [0.95, 0]);
+  const stickyBg = useTransform(clampedHero, [0, 0.3], ["#050208", "#000000"]);
+  const cardBg = useTransform(clampedHero, [0, 0.3], ["#000000", "#000000"]);
+  const ambientOpacity = useTransform(clampedHero, [0, 0.25], [1, 0]);
 
-  const heroBgY = useTransform(clampedHero, [0.5, 0.95], ["0vh", "-12vh"]);
-  const heroContentY = useTransform(clampedHero, [0.5, 0.95], ["0vh", "-24vh"]);
-  const nextSectionY = useTransform(clampedHero, [0.5, 0.95], ["100vh", "0vh"]);
+  const heroBgY = useTransform(clampedHero, [0.3, 0.65], ["0vh", "-12vh"]);
+  const heroContentY = useTransform(clampedHero, [0.3, 0.65], ["0vh", "-24vh"]);
+  const nextSectionY = useTransform(clampedHero, [0.3, 0.65], ["100vh", "0vh"]);
   const nextSectionRadius = useTransform(
     clampedHero,
-    [0.5, 0.9],
+    [0.3, 0.6],
     ["48px 48px 0px 0px", "0px 0px 0px 0px"],
   );
+
+  // Smooth scroll exit for the question layer as we scroll directly into the 3D journey
+  const questionOpacity = useTransform(clampedHero, [0.82, 0.98], [1, 0]);
+  const questionScale = useTransform(clampedHero, [0.82, 0.98], [1, 1.05]);
+  const questionBlur = useTransform(
+    clampedHero,
+    [0.82, 0.98],
+    ["blur(0px)", "blur(10px)"],
+  );
+  const questionY = useTransform(clampedHero, [0.82, 0.98], ["0vh", "-6vh"]);
+  const isQuestionPointerActive = useTransform(clampedHero, (v) =>
+    v > 0.95 ? "none" : "auto",
+  );
+
+  const handleScrollToJourney = () => {
+    if (journeyRef.current) {
+      if (window.__lenis) {
+        window.__lenis.scrollTo(journeyRef.current, {
+          duration: 1.8,
+          offset: 0,
+        });
+      } else {
+        journeyRef.current.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  };
 
   return (
     <>
@@ -304,7 +329,13 @@ export default function Home() {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                     >
-                      <circle cx="12" cy="12" r="3" fill="currentColor" stroke="none" />
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="3"
+                        fill="currentColor"
+                        stroke="none"
+                      />
                       <path d="M2 12c3.5-6 16.5-6 20 0-3.5 6-16.5 6-20 0z" />
                     </svg>
                     <span className={styles.logoText}>argus</span>
@@ -382,77 +413,47 @@ export default function Home() {
             style={{ y: nextSectionY, borderRadius: nextSectionRadius }}
           >
             <div className={styles.nextSectionStage}>
-              <AnimatePresence>
-                {showQuestion && (
-                  <motion.div
-                    key="questionLayer"
-                    initial={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                    exit={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }}
-                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              <motion.div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: "20px",
+                  opacity: questionOpacity,
+                  scale: questionScale,
+                  filter: questionBlur,
+                  y: questionY,
+                  pointerEvents: isQuestionPointerActive,
+                }}
+              >
+                <div className={styles.bigHeadingWrap}>
+                  <h2
+                    className={styles.bigHeroHeading}
                     style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      gap: "20px",
+                      fontSize: `${headFontSize}px`,
+                      lineHeight: headLineHeight,
                     }}
                   >
-                    <div className={styles.bigHeadingWrap}>
-                      <h2
-                        className={styles.bigHeroHeading}
-                        style={{
-                          fontSize: `${headFontSize}px`,
-                          lineHeight: headLineHeight,
-                        }}
-                      >
-                        {headText.split("\n").map((line, idx) => (
-                          <span key={idx}>{line}</span>
-                        ))}
-                      </h2>
-                    </div>
-                    <div className={styles.clickToKnowWrap}>
-                      <ClickToKnow
-                        onClick={() => {
-                          setShowQuestion(false);
-                          // Cinematic auto-scroll into the 3D journey after text fades out
-                          setTimeout(() => {
-                            if (journeyRef.current) {
-                              // Try lenis first, fallback to native smooth scroll
-                              if (window.__lenis) {
-                                window.__lenis.scrollTo(journeyRef.current, {
-                                  duration: 2.0,
-                                  offset: window.innerHeight * 0.72,
-                                });
-                              } else {
-                                const targetTop =
-                                  journeyRef.current.getBoundingClientRect()
-                                    .top +
-                                  window.scrollY +
-                                  window.innerHeight * 0.72;
-                                window.scrollTo({
-                                  top: targetTop,
-                                  behavior: "smooth",
-                                });
-                              }
-                            }
-                          }, 500);
-                        }}
-                      />
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                    {headText.split("\n").map((line, idx) => (
+                      <span key={idx}>{line}</span>
+                    ))}
+                  </h2>
+                </div>
+                <div className={styles.clickToKnowWrap}>
+                  <ScrollToKnow
+                    text="scroll to know"
+                    onClick={handleScrollToJourney}
+                  />
+                </div>
+              </motion.div>
             </div>
           </motion.div>
         </motion.div>
       </div>
 
       {/* --- 3D JOURNEY & HOW ARGUS SOLVES IT SECTION --- */}
-      {!showQuestion && (
-        <>
-          <JourneyContainer journeyRef={journeyRef} />
-          <HowArgusSolvesIt />
-        </>
-      )}
+      <JourneyContainer journeyRef={journeyRef} />
+      <HowArgusSolvesIt />
     </>
   );
 }
