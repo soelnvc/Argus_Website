@@ -10,6 +10,7 @@ import DevGrid from "@/components/DevGrid";
 import LoadingScreen from "@/components/LoadingScreen";
 import CCTVFrame from "@/components/CCTVFrame";
 import ScrollToKnow from "@/components/ScrollToKnow";
+import LavaBackground from "@/components/LavaBackground";
 import styles from "./page.module.css";
 
 const SLIDES_DATA = [
@@ -295,8 +296,14 @@ export default function Home() {
         </motion.div>
       </div>
 
-      {/* --- 3D JOURNEY SECTION (600vh) --- */}
-      {!showQuestion && <JourneyContainer journeyRef={journeyRef} />}
+      {/* --- 3D JOURNEY & LAVA BACKGROUND SECTION --- */}
+      {!showQuestion && (
+        <>
+          <JourneyContainer journeyRef={journeyRef} />
+          <LavaBackground />
+        </>
+      )}
     </>
   );
 }
+
