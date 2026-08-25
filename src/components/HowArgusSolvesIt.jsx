@@ -1,7 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useEffect, useRef } from "react";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useTransform,
+  useMotionValueEvent,
+} from "framer-motion";
 import styles from "./HowArgusSolvesIt.module.css";
 
 const STEPS = [
@@ -288,16 +294,104 @@ function StepVisualizer({ activeStep }) {
   );
 }
 
-export default function HowArgusSolvesIt() {
-  const [activeStep, setActiveStep] = useState(0);
+function ContinuousScrollCard({ step, idx, progress }) {
+  let yTransformConfig;
+  let opacityTransformConfig;
+
+  if (idx === 0) {
+    yTransformConfig = {
+      input: [0, 0.33],
+      output: ["0%", "-140%"],
+    };
+    opacityTransformConfig = {
+      input: [0, 0.32, 0.33],
+      output: [1, 1, 0],
+    };
+  } else if (idx === 1) {
+    yTransformConfig = {
+      input: [0, 0.33, 0.66],
+      output: ["140%", "0%", "-140%"],
+    };
+    opacityTransformConfig = {
+      input: [0, 0.33, 0.65, 0.66],
+      output: [0, 1, 1, 0],
+    };
+  } else if (idx === 2) {
+    yTransformConfig = {
+      input: [0.33, 0.66, 0.99],
+      output: ["140%", "0%", "-140%"],
+    };
+    opacityTransformConfig = {
+      input: [0.32, 0.33, 0.66, 0.98, 0.99],
+      output: [0, 0, 1, 1, 0],
+    };
+  } else {
+    // idx === 3
+    yTransformConfig = {
+      input: [0.66, 1.0],
+      output: ["140%", "0%"],
+    };
+    opacityTransformConfig = {
+      input: [0.65, 0.66, 1.0],
+      output: [0, 0, 1],
+    };
+  }
+
+  const y = useTransform(
+    progress,
+    yTransformConfig.input,
+    yTransformConfig.output
+  );
+  const opacity = useTransform(
+    progress,
+    opacityTransformConfig.input,
+    opacityTransformConfig.output
+  );
 
   return (
-    <section className={styles.solvesSection}>
+    <motion.div
+      className={styles.showcaseCard}
+      style={{ y, opacity }}
+    >
+      <div className={styles.cardHeader}>
+        <div className={styles.stepIconWrap}>{step.icon}</div>
+        <h3 className={styles.stepHeadline}>{step.headline}</h3>
+      </div>
+      <div className={styles.cardBody}>
+        <StepVisualizer activeStep={idx} />
+      </div>
+      <div className={styles.cardFooter}>
+        <p className={styles.stepDescription}>{step.description}</p>
+      </div>
+    </motion.div>
+  );
+}
+
+export default function HowArgusSolvesIt() {
+  const [activeStep, setActiveStep] = useState(0);
+  const containerRef = useRef(null);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"],
+  });
+
+  const bgParallaxY = useTransform(scrollYProgress, [0, 1], ["0%", "8%"]);
+
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    if (latest < 0.17) setActiveStep(0);
+    else if (latest < 0.5) setActiveStep(1);
+    else if (latest < 0.83) setActiveStep(2);
+    else setActiveStep(3);
+  });
+
+  return (
+    <section className={styles.solvesSection} ref={containerRef}>
       <div className={styles.solvesSticky}>
-        {/* Ambient Purple Gradient Lighting Mesh */}
-        <div className={styles.ambientCoreWhiteGlow} />
-        <div className={styles.ambientPurpleGlowTop} />
-        <div className={styles.ambientPurpleGlowBottom} />
+        <motion.div
+          className={styles.bgParallaxLayer}
+          style={{ y: bgParallaxY }}
+        />
 
         <div className={styles.sectionContainer}>
           {/* Left Column */}
@@ -346,55 +440,16 @@ export default function HowArgusSolvesIt() {
             </div>
           </div>
 
-          {/* Right Column: Large Glassmorphic Showcase Card */}
+          {/* Right Column: 4 Continuous Scroll Cards */}
           <div className={styles.rightColumn}>
-            <motion.div
-              className={styles.showcaseCard}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            >
-              {/* Card Header with Active Step Icon & Title */}
-              <div className={styles.cardHeader}>
-                <div className={styles.stepIconWrap}>
-                  {STEPS[activeStep].icon}
-                </div>
-                <AnimatePresence mode="wait">
-                  <motion.h3
-                    key={activeStep}
-                    className={styles.stepHeadline}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -8 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    {STEPS[activeStep].headline}
-                  </motion.h3>
-                </AnimatePresence>
-              </div>
-
-              {/* Central Animated Interactive Visualizer */}
-              <div className={styles.cardBody}>
-                <StepVisualizer activeStep={activeStep} />
-              </div>
-
-              {/* Card Footer with Detailed Description */}
-              <div className={styles.cardFooter}>
-                <AnimatePresence mode="wait">
-                  <motion.p
-                    key={activeStep}
-                    className={styles.stepDescription}
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -6 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    {STEPS[activeStep].description}
-                  </motion.p>
-                </AnimatePresence>
-              </div>
-            </motion.div>
+            {STEPS.map((step, idx) => (
+              <ContinuousScrollCard
+                key={step.id}
+                step={step}
+                idx={idx}
+                progress={scrollYProgress}
+              />
+            ))}
           </div>
         </div>
       </div>
