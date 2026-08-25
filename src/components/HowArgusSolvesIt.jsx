@@ -293,106 +293,109 @@ export default function HowArgusSolvesIt() {
 
   return (
     <section className={styles.solvesSection}>
-      {/* Ambient Purple Background Mesh */}
-      <div className={styles.ambientPurpleGlowTop} />
-      <div className={styles.ambientPurpleGlowBottom} />
+      <div className={styles.solvesSticky}>
+        {/* Ambient Purple Gradient Lighting Mesh */}
+        <div className={styles.ambientCoreWhiteGlow} />
+        <div className={styles.ambientPurpleGlowTop} />
+        <div className={styles.ambientPurpleGlowBottom} />
 
-      <div className={styles.sectionContainer}>
-        {/* Left Column */}
-        <div className={styles.leftColumn}>
-          <div className={styles.eyebrowTag}>03 — HOW Argus Solves it</div>
-          <h2 className={styles.mainHeadline}>
-            From camera
-            <br />
-            to action.
-          </h2>
-
-          {/* Step Selector Pills */}
-          <div className={styles.pillsList}>
-            {STEPS.map((step, idx) => {
-              const isActive = activeStep === idx;
-              return (
-                <button
-                  key={step.id}
-                  onClick={() => setActiveStep(idx)}
-                  className={`${styles.stepPill} ${isActive ? styles.stepPillActive : ""}`}
-                >
-                  {isActive && (
-                    <motion.div
-                      layoutId="activePillBackground"
-                      className={styles.activePillHighlight}
-                      transition={{
-                        type: "spring",
-                        stiffness: 350,
-                        damping: 30,
-                      }}
-                    />
-                  )}
-                  <span className={styles.pillText}>{step.tag}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Left Footer Subtext */}
-          <div className={styles.leftFooter}>
-            <p className={styles.subCopy}>
-              No clutter. No complicated setup.
+        <div className={styles.sectionContainer}>
+          {/* Left Column */}
+          <div className={styles.leftColumn}>
+            <div className={styles.eyebrowTag}>03 — HOW Argus Solves it</div>
+            <h2 className={styles.mainHeadline}>
+              From camera
               <br />
-              Just real-time vision, clearly dispatched.
-            </p>
+              to action.
+            </h2>
+
+            {/* Step Selector Pills */}
+            <div className={styles.pillsList}>
+              {STEPS.map((step, idx) => {
+                const isActive = activeStep === idx;
+                return (
+                  <button
+                    key={step.id}
+                    onClick={() => setActiveStep(idx)}
+                    className={`${styles.stepPill} ${isActive ? styles.stepPillActive : ""}`}
+                  >
+                    {isActive && (
+                      <motion.div
+                        layoutId="activePillBackground"
+                        className={styles.activePillHighlight}
+                        transition={{
+                          type: "spring",
+                          stiffness: 350,
+                          damping: 30,
+                        }}
+                      />
+                    )}
+                    <span className={styles.pillText}>{step.tag}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Left Footer Subtext */}
+            <div className={styles.leftFooter}>
+              <p className={styles.subCopy}>
+                No clutter. No complicated setup.
+                <br />
+                Just real-time vision, clearly dispatched.
+              </p>
+            </div>
           </div>
-        </div>
 
-        {/* Right Column: Large Glassmorphic Showcase Card */}
-        <div className={styles.rightColumn}>
-          <motion.div
-            className={styles.showcaseCard}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          >
-            {/* Card Header with Active Step Icon & Title */}
-            <div className={styles.cardHeader}>
-              <div className={styles.stepIconWrap}>
-                {STEPS[activeStep].icon}
+          {/* Right Column: Large Glassmorphic Showcase Card */}
+          <div className={styles.rightColumn}>
+            <motion.div
+              className={styles.showcaseCard}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            >
+              {/* Card Header with Active Step Icon & Title */}
+              <div className={styles.cardHeader}>
+                <div className={styles.stepIconWrap}>
+                  {STEPS[activeStep].icon}
+                </div>
+                <AnimatePresence mode="wait">
+                  <motion.h3
+                    key={activeStep}
+                    className={styles.stepHeadline}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {STEPS[activeStep].headline}
+                  </motion.h3>
+                </AnimatePresence>
               </div>
-              <AnimatePresence mode="wait">
-                <motion.h3
-                  key={activeStep}
-                  className={styles.stepHeadline}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  {STEPS[activeStep].headline}
-                </motion.h3>
-              </AnimatePresence>
-            </div>
 
-            {/* Central Animated Interactive Visualizer */}
-            <div className={styles.cardBody}>
-              <StepVisualizer activeStep={activeStep} />
-            </div>
+              {/* Central Animated Interactive Visualizer */}
+              <div className={styles.cardBody}>
+                <StepVisualizer activeStep={activeStep} />
+              </div>
 
-            {/* Card Footer with Detailed Description */}
-            <div className={styles.cardFooter}>
-              <AnimatePresence mode="wait">
-                <motion.p
-                  key={activeStep}
-                  className={styles.stepDescription}
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  {STEPS[activeStep].description}
-                </motion.p>
-              </AnimatePresence>
-            </div>
-          </motion.div>
+              {/* Card Footer with Detailed Description */}
+              <div className={styles.cardFooter}>
+                <AnimatePresence mode="wait">
+                  <motion.p
+                    key={activeStep}
+                    className={styles.stepDescription}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {STEPS[activeStep].description}
+                  </motion.p>
+                </AnimatePresence>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </div>
     </section>

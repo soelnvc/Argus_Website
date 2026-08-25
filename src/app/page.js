@@ -68,32 +68,32 @@ function JourneyContainer({ journeyRef }) {
   );
 
   // 3 slides at 2000z intervals (-2000, -4000, -6000) = 6000z.
-  // Fly through all 3 slides in the first 80% of scroll, then hold in deep black for the solution reveal
-  const cameraZ = useTransform(journeyProgress, [0, 0.8, 1.0], [0, 7600, 8200]);
+  // Fly through all 3 slides in the first 90% of scroll, then hold in deep black for the solution reveal
+  const cameraZ = useTransform(journeyProgress, [0, 0.9, 1.0], [0, 7600, 8200]);
 
   // Camera snakes left and right to aim at the CCTV viewfinders, then centers smoothly
   const cameraX = useTransform(
     journeyProgress,
-    [0, 0.26, 0.52, 0.78, 0.82, 1.0],
+    [0, 0.3, 0.6, 0.9, 0.94, 1.0],
     ["0vw", "12vw", "-12vw", "12vw", "0vw", "0vw"],
   );
 
   // Smooth entry animation for "How we solve this problem" & "scroll to know"
-  // Only triggers once the user has fully scrolled through the CCTV sequence (>= 0.80)
-  const endSectionOpacity = useTransform(journeyProgress, [0.8, 0.88], [0, 1]);
-  const titleY = useTransform(journeyProgress, [0.8, 0.88], [48, 0]);
-  const titleScale = useTransform(journeyProgress, [0.8, 0.88], [0.93, 1]);
+  // Only triggers once the user has fully scrolled through the CCTV sequence
+  const endSectionOpacity = useTransform(journeyProgress, [0.92, 0.98], [0, 1]);
+  const titleY = useTransform(journeyProgress, [0.92, 0.98], [48, 0]);
+  const titleScale = useTransform(journeyProgress, [0.92, 0.98], [0.93, 1]);
   const titleBlur = useTransform(
     journeyProgress,
-    [0.8, 0.88],
+    [0.92, 0.98],
     ["blur(12px)", "blur(0px)"],
   );
 
-  const cueOpacity = useTransform(journeyProgress, [0.85, 0.92], [0, 1]);
-  const cueY = useTransform(journeyProgress, [0.85, 0.92], [24, 0]);
-  const cueScale = useTransform(journeyProgress, [0.85, 0.92], [0.9, 1]);
+  const cueOpacity = useTransform(journeyProgress, [0.95, 1.0], [0, 1]);
+  const cueY = useTransform(journeyProgress, [0.95, 1.0], [24, 0]);
+  const cueScale = useTransform(journeyProgress, [0.95, 1.0], [0.9, 1]);
   const isPointerActive = useTransform(journeyProgress, (v) =>
-    v >= 0.82 ? "auto" : "none",
+    v >= 0.94 ? "auto" : "none",
   );
 
   return (
@@ -218,40 +218,14 @@ export default function Home() {
         setHeadLineHeight={setHeadLineHeight}
       />
 
-      {/* PERMANENT FIXED NAVBAR ACROSS ENTIRE WEBSITE */}
+      {/* PERMANENT FIXED NAVBAR DOCK ONLY */}
       <motion.div
-        className={styles.fixedGlobalHeader}
+        className={styles.fixedGlobalNavbarWrap}
         initial={{ opacity: 0, y: -24 }}
         animate={heroReady ? { opacity: 1, y: 0 } : { opacity: 0, y: -24 }}
         transition={{ duration: 0.85, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
       >
-        <div className={styles.globalHeaderLeft}>
-          <a href="#" className={styles.logo}>
-            <svg
-              className={styles.logoIcon}
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="12" cy="12" r="3" fill="currentColor" stroke="none" />
-              <path d="M2 12c3.5-6 16.5-6 20 0-3.5 6-16.5 6-20 0z" />
-            </svg>
-            <span className={styles.logoText}>argus</span>
-          </a>
-        </div>
-
-        <div className={styles.globalHeaderCenter}>
-          <Nav />
-        </div>
-
-        <div className={styles.globalHeaderRight}>
-          <div className={styles.buttonWrapper}>
-            <LiquidMetalButton label="Launch" />
-          </div>
-        </div>
+        <Nav />
       </motion.div>
 
       {/* --- HERO SECTION (250vh) --- */}
@@ -307,6 +281,43 @@ export default function Home() {
               className={styles.heroMovingLayer}
               style={{ y: heroContentY }}
             >
+              <motion.div
+                className={styles.headerLayout}
+                initial={{ opacity: 0, y: -24 }}
+                animate={
+                  heroReady ? { opacity: 1, y: 0 } : { opacity: 0, y: -24 }
+                }
+                transition={{
+                  duration: 0.85,
+                  delay: 0.15,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+              >
+                <div className={styles.logoSlot}>
+                  <a href="#" className={styles.logo}>
+                    <svg
+                      className={styles.logoIcon}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <circle cx="12" cy="12" r="3" fill="currentColor" stroke="none" />
+                      <path d="M2 12c3.5-6 16.5-6 20 0-3.5 6-16.5 6-20 0z" />
+                    </svg>
+                    <span className={styles.logoText}>argus</span>
+                  </a>
+                </div>
+                <div className={styles.centerSlotSpacer} />
+                <div className={styles.ctaSlot}>
+                  <div className={styles.buttonWrapper}>
+                    <LiquidMetalButton label="Launch" />
+                  </div>
+                </div>
+              </motion.div>
+
               <div className={styles.content}>
                 <motion.div
                   className={styles.leftContent}

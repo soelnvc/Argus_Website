@@ -1,36 +1,49 @@
 .solvesSection {
   position: relative;
   width: 100%;
-  min-height: 100vh;
-  background-color: #07040b;
-  color: #ffffff;
-  overflow: hidden;
-  padding: 80px 32px 100px;
-  box-sizing: border-box;
+  height: 180vh; /* Scroll runway allowing previous black screen to move fully out of the viewport */
+  background-color: #FAF8FE;
+  color: #0F0A1C;
+  margin-top: -64px; /* Underlaps smoothly behind the 64px rounded bottom of the black section */
+  z-index: 10;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.solvesSticky {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  z-index: 10;
-  font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
-    sans-serif;
+  overflow: hidden;
+  padding: 40px 32px;
+  box-sizing: border-box;
 }
 
-/* Ambient Purple Radial Lighting Glows */
+/* Luminous Purple Gradient Mesh over White Background */
+.ambientCoreWhiteGlow {
+  position: absolute;
+  top: 0%;
+  left: 20%;
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(216, 180, 254, 0.45) 0%, rgba(233, 213, 255, 0.3) 35%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
 .ambientPurpleGlowTop {
   position: absolute;
   top: -10%;
-  left: 20%;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(
-    circle,
-    rgba(147, 51, 234, 0.22) 0%,
-    rgba(126, 34, 206, 0.08) 45%,
-    transparent 70%
-  );
-  filter: blur(80px);
+  left: -5%;
+  width: 750px;
+  height: 750px;
+  background: radial-gradient(circle, rgba(192, 132, 252, 0.4) 0%, rgba(168, 85, 247, 0.2) 40%, transparent 70%);
+  filter: blur(90px);
   pointer-events: none;
   z-index: 0;
 }
@@ -38,16 +51,11 @@
 .ambientPurpleGlowBottom {
   position: absolute;
   bottom: -15%;
-  right: 15%;
-  width: 700px;
-  height: 700px;
-  background: radial-gradient(
-    circle,
-    rgba(168, 85, 247, 0.18) 0%,
-    rgba(76, 29, 149, 0.12) 50%,
-    transparent 75%
-  );
-  filter: blur(90px);
+  right: -5%;
+  width: 850px;
+  height: 850px;
+  background: radial-gradient(circle, rgba(233, 213, 255, 0.6) 0%, rgba(192, 132, 252, 0.3) 45%, transparent 75%);
+  filter: blur(100px);
   pointer-events: none;
   z-index: 0;
 }
@@ -76,21 +84,21 @@
   font-size: 12px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(216, 180, 254, 0.7);
+  color: #7C3AED;
   margin-bottom: 12px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .mainHeadline {
   font-size: clamp(38px, 4.4vw, 56px);
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1.08;
   letter-spacing: -0.03em;
-  color: #ffffff;
+  color: #0F0A1C;
   margin: 0 0 32px 0;
 }
 
-/* Step Selector Pills */
+/* Step Selector Pills (No Shadows) */
 .pillsList {
   display: flex;
   flex-direction: column;
@@ -104,38 +112,37 @@
   align-items: center;
   padding: 12px 20px;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(147, 51, 234, 0.15);
+  color: #4B5563;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   outline: none;
-  transition:
-    color 0.2s ease,
-    border-color 0.2s ease;
+  transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
   width: fit-content;
   min-width: 180px;
 }
 
 .stepPill:hover {
-  color: #ffffff;
-  border-color: rgba(216, 180, 254, 0.25);
+  color: #0F0A1C;
+  background: #ffffff;
+  border-color: rgba(147, 51, 234, 0.4);
 }
 
 .stepPillActive {
-  color: #ffffff;
+  color: #6D28D9;
+  font-weight: 600;
   border-color: transparent;
 }
 
 .activePillHighlight {
   position: absolute;
   inset: 0;
-  background: rgba(147, 51, 234, 0.28);
-  border: 1px solid rgba(192, 132, 252, 0.45);
+  background: #ffffff;
+  border: 1.5px solid #8B5CF6;
   border-radius: 12px;
   z-index: 0;
-  box-shadow: 0 0 20px rgba(147, 51, 234, 0.25);
 }
 
 .pillText {
@@ -154,12 +161,12 @@
 .subCopy {
   font-size: 13.5px;
   line-height: 1.55;
-  color: rgba(255, 255, 255, 0.55);
+  color: #4B5563;
   margin: 0;
   max-width: 360px;
 }
 
-/* Right Column: Large Glass Showcase Card */
+/* Right Column: Large Glass Showcase Card (No Shadows) */
 .rightColumn {
   display: flex;
   justify-content: center;
@@ -169,15 +176,11 @@
   position: relative;
   width: 100%;
   min-height: 520px;
-  background: rgba(15, 10, 24, 0.72);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(28px);
   -webkit-backdrop-filter: blur(28px);
   border-radius: 32px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow:
-    0 35px 90px -20px rgba(0, 0, 0, 0.8),
-    0 0 40px -10px rgba(147, 51, 234, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.95);
   padding: 40px;
   box-sizing: border-box;
   display: flex;
@@ -194,17 +197,17 @@
 }
 
 .stepIconWrap {
-  color: #d8b4fe;
+  color: #7C3AED;
   display: flex;
   align-items: center;
 }
 
 .stepHeadline {
   font-size: clamp(22px, 2.2vw, 28px);
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1.25;
   letter-spacing: -0.025em;
-  color: #ffffff;
+  color: #0F0A1C;
   margin: 0;
   min-height: 64px;
 }
@@ -225,12 +228,12 @@
 
 .mockupCard {
   width: 100%;
-  background: rgba(22, 15, 36, 0.85);
-  border: 1px solid rgba(216, 180, 254, 0.15);
+  background: #0F0A1C;
+  border: 1px solid rgba(147, 51, 234, 0.25);
   border-radius: 20px;
   padding: 24px;
   box-sizing: border-box;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+  color: #ffffff;
 }
 
 /* Step 01 Mockup: Live Camera Stream */
@@ -256,20 +259,12 @@
   height: 8px;
   background-color: #4ade80;
   border-radius: 50%;
-  box-shadow: 0 0 10px #4ade80;
   animation: pulse 1.5s infinite;
 }
 
 @keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.4;
-    transform: scale(1.3);
-  }
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.3); }
 }
 
 .timeTag {
@@ -296,11 +291,7 @@
 
 .camActive {
   border-color: rgba(147, 51, 234, 0.4);
-  background: linear-gradient(
-    135deg,
-    rgba(30, 18, 50, 0.5),
-    rgba(10, 6, 18, 0.5)
-  );
+  background: linear-gradient(135deg, rgba(30, 18, 50, 0.5), rgba(10, 6, 18, 0.5));
 }
 
 .camLabel {
@@ -332,13 +323,7 @@
 .aiVisionStage {
   position: relative;
   height: 140px;
-  background:
-    radial-gradient(
-      circle at 60% 40%,
-      rgba(147, 51, 234, 0.25),
-      rgba(0, 0, 0, 0.6)
-    ),
-    #090610;
+  background: radial-gradient(circle at 60% 40%, rgba(147, 51, 234, 0.25), rgba(0, 0, 0, 0.6)), #090610;
   border-radius: 14px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
@@ -362,7 +347,6 @@
   background: rgba(239, 68, 68, 0.12);
   border-radius: 8px;
   padding: 8px 10px;
-  box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
 }
 
 .hazardTagPrimary {
@@ -467,7 +451,6 @@
   background: linear-gradient(to top, #7e22ce, #c084fc);
   border-radius: 4px;
   min-height: 12px;
-  box-shadow: 0 0 10px rgba(192, 132, 252, 0.4);
 }
 
 .thresholdLine {
@@ -519,7 +502,6 @@
   height: 8px;
   background-color: #ef4444;
   border-radius: 50%;
-  box-shadow: 0 0 10px #ef4444;
   animation: pulse 1.2s infinite;
 }
 
@@ -567,7 +549,7 @@
 
 /* Card Footer */
 .cardFooter {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
   padding-top: 20px;
   margin-top: 16px;
 }
@@ -575,7 +557,7 @@
 .stepDescription {
   font-size: 13.5px;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.65);
+  color: #4B5563;
   margin: 0;
 }
 
