@@ -17,6 +17,7 @@ import CCTVFrame from "@/components/CCTVFrame";
 import ScrollToKnow from "@/components/ScrollToKnow";
 import HowArgusSolvesIt from "@/components/HowArgusSolvesIt";
 import WhatArgusDetects from "@/components/WhatArgusDetects";
+import ResponsibleSurveillance from "@/components/ResponsibleSurveillance";
 import styles from "./page.module.css";
 
 const SLIDES_DATA = [
@@ -452,10 +453,11 @@ export default function Home() {
         </motion.div>
       </div>
 
-      {/* --- 3D JOURNEY, HOW ARGUS SOLVES IT, & WHAT ARGUS DETECTS --- */}
+      {/* --- 3D JOURNEY, HOW ARGUS SOLVES IT, WHAT ARGUS DETECTS, & RESPONSIBLE SURVEILLANCE --- */}
       <JourneyContainer journeyRef={journeyRef} />
       <HowArgusSolvesIt />
       <WhatArgusDetects />
+      <ResponsibleSurveillance />
     </>
   );
 }

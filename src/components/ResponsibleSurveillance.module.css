@@ -1,0 +1,259 @@
+.surveillanceSection {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f4f4f6;
+  color: #111114;
+  z-index: 40; /* Sits on top of the black section (z-index: 30) */
+  margin-top: -64px; /* Smooth physical overlap over the black section */
+  border-radius: 64px 64px 0 0;
+  clip-path: inset(0 0 0 0 round 64px 64px 0 0);
+  box-shadow: 0 -24px 80px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 140px 48px 180px 48px;
+  overflow: hidden;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+}
+
+/* ─── HEADER CONTAINER ─── */
+.headerContainer {
+  width: 100%;
+  max-width: 1360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 120px;
+}
+
+.mainHeadline {
+  font-size: clamp(44px, 5.8vw, 84px);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  color: #111114;
+  margin: 0;
+  max-width: 980px;
+}
+
+.mutedText {
+  color: rgba(0, 0, 0, 0.4);
+  font-weight: 500;
+}
+
+/* ─── ROWS CONTAINER (Subhead Parallel to White Cards) ─── */
+.rowsContainer {
+  width: 100%;
+  max-width: 1320px;
+  display: flex;
+  flex-direction: column;
+  gap: 152px; /* 80px increased vertical gap */
+  position: relative;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+.featureRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+  width: 100%;
+}
+
+.subheadCol {
+  display: flex;
+  flex-direction: column;
+  max-width: 380px;
+}
+
+.subheadColLeft {
+  justify-self: start;
+}
+
+.subheadColRight {
+  justify-self: end;
+}
+
+/* Thin 4-line editorial subhead text matching midu.design */
+.editorialText {
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: -0.012em;
+  color: rgba(17, 17, 20, 0.65);
+  margin: 0;
+}
+
+.editorialText strong {
+  color: #111114;
+  font-weight: 500;
+}
+
+/* ─── WHITE CARD CONTAINER (Clean Midu.design Reference Style - No Subcontainers) ─── */
+.cardCol {
+  display: flex;
+  width: 100%;
+}
+
+.cardColLeft {
+  justify-content: flex-start;
+}
+
+.cardColRight {
+  justify-content: flex-end;
+}
+
+.whiteCard {
+  background: #ffffff;
+  border-radius: 36px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 24px 60px -15px rgba(0, 0, 0, 0.05),
+    0 2px 6px rgba(0, 0, 0, 0.02);
+  padding: 44px 40px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 500px;
+  min-height: 380px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  transition:
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.whiteCard:hover {
+  transform: translateY(-8px);
+  box-shadow:
+    0 36px 80px -20px rgba(0, 0, 0, 0.09),
+    0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+/* Card Header */
+.cardHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cardCategory {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.cardTitle {
+  font-size: clamp(24px, 2.2vw, 30px);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: #111114;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.cardDivider {
+  width: 100%;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.06);
+  margin: 22px 0 18px 0;
+}
+
+/* Card Body (Pure Typography - No Subcontainers/Chips/Colors) */
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.cardInfoLabel {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.4);
+  letter-spacing: 0.02em;
+}
+
+.cardParagraph {
+  font-size: 15.5px;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+  color: rgba(17, 17, 20, 0.65);
+  margin: 0;
+}
+
+/* Card Bottom Row */
+.cardBottomRow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+/* Corner Action Button (Midu.design Style) */
+.arrowButton {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #f0f0f4;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  color: #111114;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.whiteCard:hover .arrowButton {
+  background: #111114;
+  color: #ffffff;
+  transform: scale(1.08);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .featureRow {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .subheadColLeft,
+  .subheadColRight {
+    justify-self: start;
+    max-width: 100%;
+  }
+  .cardColLeft,
+  .cardColRight {
+    justify-content: center;
+  }
+  .whiteCard {
+    max-width: 100%;
+    min-height: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .surveillanceSection {
+    border-radius: 36px 36px 0 0;
+    clip-path: inset(0 0 0 0 round 36px 36px 0 0);
+    padding: 90px 20px 120px 20px;
+  }
+  .rowsContainer {
+    gap: 90px;
+    padding: 0;
+  }
+  .whiteCard {
+    padding: 32px 24px;
+  }
+}
