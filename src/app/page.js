@@ -20,6 +20,7 @@ import WhatArgusDetects from "@/components/WhatArgusDetects";
 import ResponsibleSurveillance from "@/components/ResponsibleSurveillance";
 import ChooseYourPace from "@/components/ChooseYourPace";
 import FAQ from "@/components/FAQ";
+import Footer from "@/components/Footer";
 import styles from "./page.module.css";
 
 const SLIDES_DATA = [
@@ -462,6 +463,7 @@ export default function Home() {
       <ResponsibleSurveillance />
       <ChooseYourPace />
       <FAQ />
+      <Footer />
     </>
   );
 }

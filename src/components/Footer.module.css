@@ -1,0 +1,228 @@
+.footer {
+  position: relative;
+  width: 100%;
+  background-color: #07050d;
+  color: #ffffff;
+  padding: 100px 64px 0 64px;
+  box-sizing: border-box;
+  z-index: 10;
+  overflow: hidden;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+}
+
+.footerInner {
+  max-width: 1360px;
+  margin: 0 auto;
+}
+
+/* ─── TOP ROW: Meta + Nav Columns ─── */
+.topRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 60px;
+  margin-bottom: 56px;
+}
+
+.leftCol {
+  flex: 1;
+  max-width: 480px;
+}
+
+.metaLine {
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.4);
+  margin: 0 0 28px 0;
+  letter-spacing: 0.01em;
+}
+
+.metaDot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #a855f7;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.tagline {
+  font-size: clamp(24px, 2.8vw, 36px);
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  margin: 0;
+}
+
+/* ─── NAV COLUMNS ─── */
+.navColumns {
+  display: flex;
+  gap: 80px;
+  flex-shrink: 0;
+}
+
+.navColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.navColumnTitle {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 0 0 20px 0;
+  letter-spacing: 0.01em;
+}
+
+.navLink {
+  font-size: 15.5px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  padding: 5px 0;
+  transition: color 0.2s ease;
+  cursor: pointer;
+}
+
+.navLink:hover {
+  color: #a855f7;
+}
+
+/* ─── GET IN TOUCH BUTTON ─── */
+.ctaRow {
+  margin-bottom: 64px;
+}
+
+.ctaButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  border-radius: 9999px;
+  background: #ffffff;
+  color: #000000;
+  font-size: 14.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+}
+
+.ctaButton:hover {
+  background: #f0f0f2;
+  box-shadow: 0 12px 36px rgba(168, 85, 247, 0.2);
+  transform: translateY(-2px);
+}
+
+.ctaStar {
+  font-size: 14px;
+  color: #000000;
+}
+
+/* ─── BOTTOM BAR: Copyright + Legal ─── */
+.bottomBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 24px 0 28px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.copyright {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.legalLinks {
+  display: flex;
+  gap: 32px;
+}
+
+.legalLink {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.legalLink:hover {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ─── GIANT BRAND WATERMARK ─── */
+.brandWatermark {
+  position: relative;
+  width: 100%;
+  text-align: center;
+  margin-top: -20px;
+  padding-bottom: 0;
+  overflow: hidden;
+  height: clamp(140px, 18vw, 260px);
+}
+
+.brandText {
+  font-size: clamp(180px, 22vw, 400px);
+  font-weight: 700;
+  line-height: 0.82;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  background: linear-gradient(
+    180deg,
+    rgba(168, 85, 247, 0.55) 0%,
+    rgba(126, 34, 206, 0.7) 35%,
+    rgba(88, 28, 135, 0.85) 65%,
+    rgba(59, 7, 100, 0.5) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  user-select: none;
+  pointer-events: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  .footer {
+    padding: 80px 32px 0 32px;
+  }
+  .topRow {
+    flex-direction: column;
+    gap: 48px;
+  }
+  .navColumns {
+    gap: 48px;
+  }
+}
+
+@media (max-width: 640px) {
+  .footer {
+    padding: 60px 20px 0 20px;
+  }
+  .navColumns {
+    gap: 36px;
+  }
+  .bottomBar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+}
