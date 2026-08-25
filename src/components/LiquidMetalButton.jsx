@@ -288,7 +288,12 @@ const R_DEFAULTS = {
   ptrRim: 0.80, ptrLag: 0.0016, ptrVref: 4.5,
 };
 
-export default function LiquidMetalButton({ label = "Launch", onClick }) {
+export default function LiquidMetalButton({
+  label = "Launch",
+  onClick,
+  style,
+  className,
+}) {
   const stageRef = useRef(null);
   const canvasRef = useRef(null);
   const btnRef = useRef(null);
@@ -643,7 +648,11 @@ export default function LiquidMetalButton({ label = "Launch", onClick }) {
   }, []);
 
   return (
-    <div className={styles.stage} ref={stageRef}>
+    <div
+      className={`${styles.stage} ${className || ""}`}
+      style={style}
+      ref={stageRef}
+    >
       <div className={styles.plate} aria-hidden="true" ref={plateRef} />
       <canvas className={styles.fx} ref={canvasRef} />
       <button

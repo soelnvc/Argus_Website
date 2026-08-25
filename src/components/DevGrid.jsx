@@ -9,13 +9,13 @@ export default function DevGrid({
   setHeadFontSize,
   headLineHeight,
   setHeadLineHeight,
-  // Detects Section Controls (Optional Props)
-  detectsProps,
+  // Pace Section Controls
+  paceProps,
 }) {
   const [gridSize, setGridSize] = useState(50);
   const [gridEnabled, setGridEnabled] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
-  const [activeTab, setActiveTab] = useState("hero"); // "hero" | "detects"
+  const [activeTab, setActiveTab] = useState("pace"); // "hero" | "pace"
 
   // Mouse coordinate tracker
   const [mousePos, setMousePos] = useState({ x: 0, y: 0, visible: false });
@@ -136,15 +136,16 @@ export default function DevGrid({
         </div>
       )}
 
-      {/* 2. Floating Dev Control Badge */}
-      <div className={styles.devBadge}>
+      {/* ─── FLOATING DEV PANEL ─── */}
+      <div className={styles.panelWrapper}>
         {collapsed ? (
           <button
-            className={styles.collapsedBtn}
+            className={styles.expandBtn}
             onClick={() => setCollapsed(false)}
-            title="Open Graph Grid Controls"
+            title="Open Layout Positioner"
           >
-            ▦ <span className={styles.activeModeText}>DEV TOOL</span>
+            <span className={styles.expandIcon}>▦</span>
+            <span>Positioner</span>
           </button>
         ) : (
           <div className={styles.badgePanel}>
@@ -162,20 +163,98 @@ export default function DevGrid({
               </button>
             </div>
 
+            {/* Tab Switcher if paceProps is provided */}
+            {paceProps && (
+              <div style={{ display: "flex", gap: "6px", marginBottom: "10px" }}>
+                <button
+                  style={{
+                    flex: 1,
+                    padding: "4px 8px",
+                    fontSize: "11px",
+                    borderRadius: "4px",
+                    background:
+                      activeTab === "hero"
+                        ? "rgba(168,85,247,0.3)"
+                        : "rgba(255,255,255,0.06)",
+                    color:
+                      activeTab === "hero"
+                        ? "#ffffff"
+                        : "rgba(255,255,255,0.6)",
+                    border: "1px solid rgba(255,255,255,0.1)",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => setActiveTab("hero")}
+                >
+                  Hero Section
+                </button>
+                <button
+                  style={{
+                    flex: 1,
+                    padding: "4px 8px",
+                    fontSize: "11px",
+                    borderRadius: "4px",
+                    background:
+                      activeTab === "pace"
+                        ? "rgba(168,85,247,0.3)"
+                        : "rgba(255,255,255,0.06)",
+                    color:
+                      activeTab === "pace"
+                        ? "#ffffff"
+                        : "rgba(255,255,255,0.6)",
+                    border: "1px solid rgba(255,255,255,0.1)",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => setActiveTab("pace")}
+                >
+                  Pace Section
+                </button>
+              </div>
+            )}
+
             {/* Current Element Coordinates Readout */}
             <div className={styles.liveCoordBox}>
-              <div className={styles.liveRow}>
-                <span className={styles.liveLabel}>Left Text:</span>
-                <span className={styles.lockedVal}>X: 84px, Y: 262px 🔒</span>
-              </div>
-              <div className={styles.liveRow}>
-                <span className={styles.liveLabel}>Right Heading:</span>
-                <span className={styles.lockedVal}>X: 826px, Y: 44px 🔒</span>
-              </div>
-              <div className={styles.liveRow}>
-                <span className={styles.liveLabel}>Scroll Cue:</span>
-                <span className={styles.lockedVal}>X: 1129px, Y: 269px 🔒</span>
-              </div>
+              {activeTab === "hero" ? (
+                <>
+                  <div className={styles.liveRow}>
+                    <span className={styles.liveLabel}>Left Text:</span>
+                    <span className={styles.lockedVal}>X: 84px, Y: 262px 🔒</span>
+                  </div>
+                  <div className={styles.liveRow}>
+                    <span className={styles.liveLabel}>Right Heading:</span>
+                    <span className={styles.lockedVal}>X: 826px, Y: 44px 🔒</span>
+                  </div>
+                  <div className={styles.liveRow}>
+                    <span className={styles.liveLabel}>Scroll Cue:</span>
+                    <span className={styles.lockedVal}>X: 1129px, Y: 269px 🔒</span>
+                  </div>
+                </>
+              ) : (
+                paceProps && (
+                  <>
+                    <div className={styles.liveRow}>
+                      <span className={styles.liveLabel}>Headline:</span>
+                      <span className={styles.lockedVal}>
+                        X: {Math.round(paceProps.headPos.x)}px, Y:{" "}
+                        {Math.round(paceProps.headPos.y)}px ✋
+                      </span>
+                    </div>
+                    <div className={styles.liveRow}>
+                      <span className={styles.liveLabel}>Get in Touch:</span>
+                      <span className={styles.lockedVal}>
+                        X: {Math.round(paceProps.btn1Pos.x)}px, Y:{" "}
+                        {Math.round(paceProps.btn1Pos.y)}px ✋
+                      </span>
+                    </div>
+                    <div className={styles.liveRow}>
+                      <span className={styles.liveLabel}>Launch:</span>
+                      <span className={styles.lockedVal}>
+                        X: {Math.round(paceProps.btn2Pos.x)}px, Y:{" "}
+                        {Math.round(paceProps.btn2Pos.y)}px ✋
+                      </span>
+                    </div>
+                  </>
+                )
+              )}
             </div>
 
             {/* Grid Size & Toggle Controls */}

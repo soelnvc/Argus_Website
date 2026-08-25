@@ -18,6 +18,7 @@ import ScrollToKnow from "@/components/ScrollToKnow";
 import HowArgusSolvesIt from "@/components/HowArgusSolvesIt";
 import WhatArgusDetects from "@/components/WhatArgusDetects";
 import ResponsibleSurveillance from "@/components/ResponsibleSurveillance";
+import ChooseYourPace from "@/components/ChooseYourPace";
 import styles from "./page.module.css";
 
 const SLIDES_DATA = [
@@ -453,11 +454,12 @@ export default function Home() {
         </motion.div>
       </div>
 
-      {/* --- 3D JOURNEY, HOW ARGUS SOLVES IT, WHAT ARGUS DETECTS, & RESPONSIBLE SURVEILLANCE --- */}
+      {/* --- 3D JOURNEY, HOW ARGUS SOLVES IT, WHAT ARGUS DETECTS, RESPONSIBLE SURVEILLANCE, & CHOOSE YOUR PACE --- */}
       <JourneyContainer journeyRef={journeyRef} />
       <HowArgusSolvesIt />
       <WhatArgusDetects />
       <ResponsibleSurveillance />
+      <ChooseYourPace />
     </>
   );
 }
