@@ -146,11 +146,11 @@
   max-width: 360px;
 }
 
-/* Right Column: Large Glass Showcase Card (No Shadows) */
+/* Right Column: Large Minimal Monochrome Card Container */
 .rightColumn {
   position: relative;
   width: 100%;
-  height: 520px;
+  height: 560px;
   display: flex;
   justify-content: center;
 }
@@ -159,407 +159,149 @@
   position: absolute;
   inset: 0;
   width: 100%;
-  min-height: 520px;
-  background: rgba(0, 0, 0, 0.4);
+  height: 560px;
+  background: rgba(14, 14, 18, 0.78);
   backdrop-filter: blur(28px);
   -webkit-backdrop-filter: blur(28px);
-  border-radius: 32px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  padding: 40px;
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 32px 34px 28px 34px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-/* Card Header */
+/* Top Section: Monochrome Icon & Clean Headline */
 .cardHeader {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin-bottom: 24px;
+  gap: 12px;
 }
 
 .stepIconWrap {
-  color: #d8b4fe;
+  color: #ffffff;
   display: flex;
   align-items: center;
 }
 
 .stepHeadline {
-  font-size: clamp(22px, 2.2vw, 28px);
+  font-size: clamp(21px, 2.2vw, 25px);
   font-weight: 500;
   line-height: 1.25;
   letter-spacing: -0.025em;
   color: #ffffff;
   margin: 0;
-  min-height: 64px;
 }
 
-/* Card Body / Visualizer Stage */
+/* Center Stage: Polished Product Card Image Container */
 .cardBody {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 0;
+  padding: 6px 0;
 }
 
-.mockupContainer {
-  width: 100%;
-  max-width: 480px;
-}
-
-.mockupCard {
-  width: 100%;
-  background: #0f0a1c;
-  border: 1px solid rgba(147, 51, 234, 0.25);
-  border-radius: 20px;
-  padding: 24px;
-  box-sizing: border-box;
-  color: #ffffff;
-}
-
-/* Step 01 Mockup: Live Camera Stream */
-.feedHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.feedLiveTag {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: #4ade80;
-}
-
-.livePulse {
-  width: 8px;
-  height: 8px;
-  background-color: #4ade80;
-  border-radius: 50%;
-  animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.4;
-    transform: scale(1.3);
-  }
-}
-
-.timeTag {
-  font-size: 11px;
-  font-family: monospace;
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.cameraGrid {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 16px;
-}
-
-.camSlot {
+.productFrameWrap {
   position: relative;
-  background: rgba(0, 0, 0, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 12px;
-  padding: 14px;
-  overflow: hidden;
-}
-
-.camActive {
-  border-color: rgba(147, 51, 234, 0.4);
-  background: linear-gradient(
-    135deg,
-    rgba(30, 18, 50, 0.5),
-    rgba(10, 6, 18, 0.5)
-  );
-}
-
-.camLabel {
-  font-size: 12px;
-  font-weight: 600;
-  color: #ffffff;
-  margin-bottom: 4px;
-}
-
-.streamBadge {
-  font-size: 10px;
-  color: rgba(216, 180, 254, 0.8);
-}
-
-.statusFooter {
-  display: flex;
-  justify-content: space-between;
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.5);
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  padding-top: 12px;
-}
-
-.latencyTag {
-  color: #4ade80;
-}
-
-/* Step 02 Mockup: AI Neural Scene Analyzer */
-.aiVisionStage {
-  position: relative;
-  height: 140px;
-  background:
-    radial-gradient(
-      circle at 60% 40%,
-      rgba(147, 51, 234, 0.25),
-      rgba(0, 0, 0, 0.6)
-    ),
-    #090610;
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 16px;
-  overflow: hidden;
-}
-
-.aiOverlayLayer {
-  position: relative;
-  width: 90%;
-  height: 80%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.hazardBoxPrimary {
-  border: 1.5px solid #ef4444;
-  background: rgba(239, 68, 68, 0.12);
-  border-radius: 8px;
-  padding: 8px 10px;
-}
-
-.hazardTagPrimary {
-  font-size: 10.5px;
-  font-weight: 700;
-  color: #ef4444;
-  letter-spacing: 0.04em;
-}
-
-.hazardDistance {
-  font-size: 9.5px;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.hazardBoxSecondary {
-  border: 1.5px solid #22c55e;
-  background: rgba(34, 197, 94, 0.08);
-  border-radius: 6px;
-  padding: 6px 10px;
-  width: fit-content;
-}
-
-.hazardTagSecondary {
-  font-size: 9.5px;
-  font-weight: 600;
-  color: #22c55e;
-}
-
-.aiDiagnostics {
-  display: flex;
-  justify-content: space-between;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  padding-top: 12px;
-}
-
-.diagItem {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.diagLabel {
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.45);
-}
-
-.diagValue {
-  font-size: 11px;
-  color: #d8b4fe;
-  font-weight: 600;
-}
-
-.diagAlert {
-  font-size: 11px;
-  color: #ef4444;
-  font-weight: 700;
-}
-
-/* Step 03 Mockup: Temporal Waveform Filter */
-.temporalHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 11.5px;
-  color: rgba(255, 255, 255, 0.7);
-  margin-bottom: 16px;
-}
-
-.verifiedTag {
-  background: rgba(34, 197, 94, 0.15);
-  color: #4ade80;
-  border: 1px solid rgba(34, 197, 94, 0.3);
-  padding: 2px 8px;
-  border-radius: 999px;
-  font-size: 9.5px;
-  font-weight: 700;
-}
-
-.waveformStage {
-  position: relative;
-  height: 100px;
-  background: rgba(0, 0, 0, 0.35);
-  border-radius: 12px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-around;
-  padding: 12px 16px;
-  box-sizing: border-box;
-  margin-bottom: 16px;
-}
-
-.waveBarGroup {
-  display: flex;
-  align-items: flex-end;
-  gap: 12px;
   width: 100%;
-  height: 100%;
+  max-width: 300px;
 }
 
-.waveBar {
-  flex: 1;
-  background: linear-gradient(to top, #7e22ce, #c084fc);
-  border-radius: 4px;
-  min-height: 12px;
-}
-
-.thresholdLine {
+/* Soft atmospheric glowing light halos */
+.auraPurple::before {
+  content: "";
   position: absolute;
-  left: 0;
-  right: 0;
-  top: 30%;
-  border-top: 1px dashed rgba(255, 255, 255, 0.25);
+  inset: -14px;
+  border-radius: 28px;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(168, 85, 247, 0.28) 0%,
+    rgba(168, 85, 247, 0.04) 65%,
+    transparent 80%
+  );
+  z-index: 0;
+  pointer-events: none;
 }
 
-.filterStats {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+.auraIndigo::before {
+  content: "";
+  position: absolute;
+  inset: -14px;
+  border-radius: 28px;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(99, 102, 241, 0.28) 0%,
+    rgba(99, 102, 241, 0.04) 65%,
+    transparent 80%
+  );
+  z-index: 0;
+  pointer-events: none;
 }
 
-.statLine {
-  display: flex;
-  justify-content: space-between;
-  font-size: 10.5px;
-  color: rgba(255, 255, 255, 0.5);
+.auraEmerald::before {
+  content: "";
+  position: absolute;
+  inset: -14px;
+  border-radius: 28px;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(52, 211, 153, 0.24) 0%,
+    rgba(52, 211, 153, 0.04) 65%,
+    transparent 80%
+  );
+  z-index: 0;
+  pointer-events: none;
 }
 
-.statHighlight {
-  color: #d8b4fe;
-  font-weight: 600;
+.auraAmber::before {
+  content: "";
+  position: absolute;
+  inset: -14px;
+  border-radius: 28px;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(251, 146, 60, 0.26) 0%,
+    rgba(251, 146, 60, 0.04) 65%,
+    transparent 80%
+  );
+  z-index: 0;
+  pointer-events: none;
 }
 
-/* Step 04 Mockup: Immediate Incident Dispatch */
-.alertHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
+.productImageContainer {
+  position: relative;
+  width: 290px;
+  height: 290px;
+  border-radius: 22px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+  background: #0d0f12;
+  z-index: 1;
 }
 
-.alertBadge {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  color: #ef4444;
+.productImage {
+  object-fit: cover;
+  border-radius: 22px;
+  transition: transform 0.4s ease;
 }
 
-.alertPulse {
-  width: 8px;
-  height: 8px;
-  background-color: #ef4444;
-  border-radius: 50%;
-  animation: pulse 1.2s infinite;
-}
-
-.dispatchTime {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.5);
-  font-family: monospace;
-}
-
-.alertContent {
-  background: rgba(239, 68, 68, 0.08);
-  border: 1px solid rgba(239, 68, 68, 0.25);
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 16px;
-}
-
-.alertTitle {
-  font-size: 13px;
-  font-weight: 600;
-  color: #ffffff;
-  margin-bottom: 4px;
-}
-
-.alertMeta {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.dispatchPills {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.dispatchedPill {
-  background: rgba(147, 51, 234, 0.2);
-  border: 1px solid rgba(192, 132, 252, 0.3);
-  color: #d8b4fe;
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 10px;
-  font-weight: 500;
-}
-
-/* Card Footer */
+/* Card Bottom Description */
 .cardFooter {
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding-top: 20px;
-  margin-top: 16px;
+  padding-top: 10px;
 }
 
 .stepDescription {
   font-size: 13.5px;
-  line-height: 1.6;
+  line-height: 1.55;
   color: rgba(255, 255, 255, 0.65);
   margin: 0;
+  max-width: 95%;
 }
 
 /* Responsive Adjustments */
@@ -572,6 +314,11 @@
     min-height: auto;
   }
   .showcaseCard {
-    padding: 28px;
+    padding: 26px 24px;
+    height: 520px;
+  }
+  .productImageContainer {
+    width: 240px;
+    height: 240px;
   }
 }

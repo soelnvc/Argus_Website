@@ -1,0 +1,877 @@
+/* =========================================================================
+   ARGUS GLOBAL NAVBAR COMPONENT BACKUP
+   Includes:
+   1. Nav.jsx (Component Logic & Physics)
+   2. Nav.module.css (Styles, Themes & Specular Shader Masking)
+   ========================================================================= */
+
+/* =========================================================================
+   FILE: src/components/Nav.jsx
+   ========================================================================= */
+"use client";
+import React, { useEffect, useRef } from "react";
+import styles from "./Nav.module.css";
+
+function clamp01(v) {
+  return Math.min(Math.max(v, 0), 1);
+}
+
+export default function Nav() {
+  const dockRef = useRef(null);
+
+  const handleNavClick = (id, e) => {
+    e.preventDefault();
+    if (id === "top") {
+      if (typeof window !== "undefined") {
+        if (window.__lenis) {
+          window.__lenis.scrollTo(0, { duration: 1.5 });
+        } else {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+      }
+      return;
+    }
+
+    const el = document.getElementById(id);
+    if (el) {
+      if (typeof window !== "undefined" && window.__lenis) {
+        window.__lenis.scrollTo(el, { duration: 1.5, offset: -20 });
+      } else {
+        el.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  };
+
+  useEffect(() => {
+    const root = dockRef.current;
+    if (!root) return;
+
+    const dockItems = Array.from(root.querySelectorAll("[data-dock]")).map((el) => ({
+      el,
+      w: 0,
+      h: 0,
+      v: 0,
+      vel: 0,
+      target: 0,
+    }));
+
+    const specItems = Array.from(root.parentElement.querySelectorAll("[data-spec]")).map((el) => ({
+      el,
+      ang: 2.4,
+      tAng: 2.4,
+      br: 0,
+      tBr: 0,
+      focused: false,
+      reach: el.classList.contains(styles.dock) ? 250 : 185,
+    }));
+
+    let on = false;
+    let specOn = false;
+    let aimX = 0,
+      aimY = 0;
+    let aimSeen = false,
+      aimMoved = false;
+    let keyMode = false;
+    let dirty = true,
+      specDirty = true;
+    let live = false;
+    let lastTime = performance.now();
+    let rafId = null;
+
+    const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function fineHover() {
+      return !REDUCED && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    }
+
+    function computeUnit() {
+      const w = window.innerWidth || 1600;
+      return Math.min(Math.max(w, 360), 1900) / 1600;
+    }
+
+    let u = computeUnit();
+
+    function measureDock() {
+      u = computeUnit();
+      on = fineHover();
+      specOn = on;
+
+      dockItems.forEach((st) => {
+        st.el.style.width = "";
+        st.el.style.height = "";
+        st.el.style.transform = "";
+        st.el.dataset.near = "false";
+        st.v = 0;
+        st.vel = 0;
+        st.target = 0;
+      });
+
+      dockItems.forEach((st) => {
+        const r = st.el.getBoundingClientRect();
+        st.w = r.width;
+        st.h = r.height;
+      });
+
+      live = false;
+      dirty = true;
+      aimMoved = aimSeen;
+    }
+
+    measureDock();
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(measureDock);
+    }
+
+    function dockRest() {
+      live = false;
+      dirty = true;
+      dockItems.forEach((st) => {
+        st.target = 0;
+        st.el.dataset.near = "false";
+      });
+    }
+
+    function drawDock(dt) {
+      if (!root || !on) return;
+
+      if (aimSeen && aimMoved && !keyMode) {
+        const isHovered = root.matches(":hover");
+        const rr = root.getBoundingClientRect();
+        const yRel = (aimY - rr.top) / Math.max(rr.height, 1);
+        const inside =
+          aimX >= rr.left && aimX <= rr.right && aimY >= rr.top - 8 && aimY <= rr.bottom + 8;
+
+        if (isHovered || inside || yRel < 0.2) {
+          dockItems.forEach((st) => {
+            const r = st.el.getBoundingClientRect();
+            const cx = r.left + r.width * 0.5;
+            const dist = Math.abs(aimX - cx);
+            const prox = clamp01(1 - dist / (120 * u));
+            st.target = prox * prox * (3 - 2 * prox);
+            st.el.dataset.near = st.target > 0.08 ? "true" : "false";
+          });
+          live = true;
+          dirty = true;
+        } else {
+          dockRest();
+        }
+      }
+
+      if (!dirty) return;
+      let moving = false;
+
+      dockItems.forEach((st) => {
+        st.vel += (st.target - st.v) * 190 * dt;
+        st.vel *= Math.exp(-23 * dt);
+        st.v += st.vel * dt;
+
+        if (Math.abs(st.target - st.v) < 0.001 && Math.abs(st.vel) < 0.004) {
+          st.v = st.target;
+          st.vel = 0;
+        } else {
+          moving = true;
+        }
+
+        const v = Math.min(Math.max(st.v, 0), 1.08);
+        const isMark = st.el.classList.contains(styles["dock-mark"]);
+        const ew = isMark ? 14 * u : Math.min(18 * u, st.w * 0.24);
+        const eh = isMark ? 14 * u : 16 * u;
+
+        st.el.style.width = (st.w + ew * v).toFixed(2) + "px";
+        st.el.style.height = (st.h + eh * v).toFixed(2) + "px";
+        st.el.style.transform = "translateY(" + (v * 3.5 * u).toFixed(2) + "px)";
+      });
+
+      if (!moving) dirty = false;
+    }
+
+    function drawSpec(dt) {
+      if (!specOn) return;
+
+      if (aimSeen && aimMoved) {
+        specItems.forEach((st) => {
+          const r = st.el.getBoundingClientRect();
+          const cx = r.left + r.width * 0.5;
+          const cy = r.top + r.height * 0.5;
+          const dx = Math.max(r.left - aimX, 0, aimX - r.right);
+          const dy = Math.max(r.top - aimY, 0, aimY - r.bottom);
+          const d = Math.sqrt(dx * dx + dy * dy);
+
+          st.tAng =
+            d === 0
+              ? Math.atan2(2 / Math.max(r.height, 1), -2 / Math.max(r.width, 1)) +
+                ((aimX - cx) / Math.max(r.width * 0.5, 1)) * 0.3 +
+                ((cy - aimY) / Math.max(r.height * 0.5, 1)) * 0.15
+              : Math.atan2(cy - aimY, aimX - cx);
+
+          const raw = clamp01(1 - d / (st.reach * u));
+          st.tBr = Math.max(raw * raw * (3 - 2 * raw), st.focused ? 0.9 : 0);
+        });
+        specDirty = true;
+      }
+
+      if (!specDirty) return;
+      let moving = false;
+
+      specItems.forEach((st) => {
+        const diff = ((st.tAng - st.ang + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
+        st.ang += diff * (1 - Math.exp(-12 * dt));
+        st.br += (st.tBr - st.br) * (1 - Math.exp(-14 * dt));
+
+        if (Math.abs(diff) < 0.001 && Math.abs(st.tBr - st.br) < 0.002) {
+          st.ang = st.tAng;
+          st.br = st.tBr;
+        } else {
+          moving = true;
+        }
+
+        st.el.style.setProperty("--spec-angle", st.ang.toFixed(4) + "rad");
+        st.el.style.setProperty("--spec-bright", (clamp01(st.br) * 0.98).toFixed(3));
+      });
+
+      if (!moving) specDirty = false;
+    }
+
+    function setTheme(t) {
+      if (root.dataset.theme !== t) {
+        root.dataset.theme = t;
+        if (root.parentElement) {
+          root.parentElement.dataset.theme = t;
+        }
+      }
+    }
+
+    function updateTheme() {
+      if (!root) return;
+      const navY = 65;
+
+      // 1. Privacy (Responsible Surveillance - Creamish White)
+      const privacyEl = document.getElementById("privacy");
+      if (privacyEl) {
+        const rect = privacyEl.getBoundingClientRect();
+        if (rect.top <= navY && rect.bottom >= navY) {
+          setTheme("white");
+          return;
+        }
+      }
+
+      // 2. Use (Choose Your Pace - Purple)
+      const useEl = document.getElementById("use");
+      if (useEl) {
+        const rect = useEl.getBoundingClientRect();
+        if (rect.top <= navY && rect.bottom >= navY) {
+          setTheme("purple");
+          return;
+        }
+      }
+
+      // 3. FAQ (Charcoal)
+      const faqsEl = document.getElementById("faqs");
+      if (faqsEl) {
+        const rect = faqsEl.getBoundingClientRect();
+        if (rect.top <= navY && rect.bottom >= navY) {
+          setTheme("charcoal");
+          return;
+        }
+      }
+
+      // 4. Safety (What Argus Detects - Charcoal)
+      const safetyEl = document.getElementById("safety");
+      if (safetyEl) {
+        const rect = safetyEl.getBoundingClientRect();
+        if (rect.top <= navY && rect.bottom >= navY) {
+          setTheme("charcoal");
+          return;
+        }
+      }
+
+      // 5. How (How Argus Solves It - Purple)
+      const whyHowEl = document.getElementById("why-how");
+      if (whyHowEl) {
+        const rect = whyHowEl.getBoundingClientRect();
+        if (rect.top <= navY && rect.bottom >= navY) {
+          setTheme("purple");
+          return;
+        }
+      }
+
+      // 6. 3D Journey (JourneyContainer - Charcoal)
+      const journeyEl = document.getElementById("journey");
+      if (journeyEl) {
+        const rect = journeyEl.getBoundingClientRect();
+        if (rect.top <= navY && rect.bottom >= navY) {
+          setTheme("charcoal");
+          return;
+        }
+      }
+
+      // 7. Hero Scroll Wrapper Check:
+      // Inside Hero (scrollWrapper), the "Why do we need Argus" black slide
+      // only appears after scrolling past 1.15 viewports (~1000px).
+      // Anywhere above that threshold (at the Hero with WaveGlow), the theme is PURPLE.
+      const scrollY = window.scrollY || window.pageYOffset || 0;
+      const vh = typeof window !== "undefined" ? window.innerHeight : 800;
+      const whyArgusThreshold = vh * 1.15;
+
+      if (scrollY >= whyArgusThreshold) {
+        setTheme("charcoal");
+      } else {
+        setTheme("purple");
+      }
+    }
+
+    function update(t) {
+      const dt = Math.min((t - lastTime) / 1000, 0.05);
+      lastTime = t;
+
+      updateTheme();
+      drawDock(dt);
+      drawSpec(dt);
+      aimMoved = false;
+
+      rafId = requestAnimationFrame(update);
+    }
+
+    const handleResize = () => {
+      measureDock();
+      updateTheme();
+    };
+    window.addEventListener("resize", handleResize, { passive: true });
+    window.addEventListener("scroll", updateTheme, { passive: true });
+
+    const handlePointerMove = (e) => {
+      if (e.pointerType === "touch") return;
+      aimX = e.clientX;
+      aimY = e.clientY;
+      aimSeen = true;
+      aimMoved = true;
+      keyMode = false;
+      dirty = true;
+      specDirty = true;
+    };
+    window.addEventListener("pointermove", handlePointerMove, { passive: true });
+
+    const handlePointerLeave = () => {
+      aimSeen = false;
+      dockRest();
+      specItems.forEach((st) => {
+        st.tBr = st.focused ? 0.9 : 0;
+      });
+      specDirty = true;
+    };
+    window.addEventListener("pointerleave", handlePointerLeave, { passive: true });
+
+    const handleFocusIn = (e) => {
+      const item = e.target.closest("[data-dock]");
+      if (!item || !on) return;
+      const idx = dockItems.map((st) => st.el).indexOf(item);
+      if (idx >= 0) {
+        keyMode = true;
+        dockItems.forEach((st, i) => {
+          const prox = clamp01(1 - Math.abs(i - idx) / 2.2);
+          st.target = prox * prox * (3 - 2 * prox);
+          st.el.dataset.near = st.target > 0.08 ? "true" : "false";
+        });
+        live = true;
+        dirty = true;
+      }
+    };
+    root.addEventListener("focusin", handleFocusIn);
+
+    const handleFocusOut = () => {
+      keyMode = false;
+      dockRest();
+    };
+    root.addEventListener("focusout", handleFocusOut);
+
+    specItems.forEach((st) => {
+      st.handleFocusIn = () => {
+        st.focused = true;
+        specDirty = true;
+      };
+      st.handleFocusOut = () => {
+        st.focused = false;
+        specDirty = true;
+      };
+      st.el.addEventListener("focusin", st.handleFocusIn);
+      st.el.addEventListener("focusout", st.handleFocusOut);
+    });
+
+    root.parentElement.style.opacity = "1";
+    updateTheme();
+
+    lastTime = performance.now();
+    rafId = requestAnimationFrame(update);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("scroll", updateTheme);
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerleave", handlePointerLeave);
+      root.removeEventListener("focusin", handleFocusIn);
+      root.removeEventListener("focusout", handleFocusOut);
+      specItems.forEach((st) => {
+        st.el.removeEventListener("focusin", st.handleFocusIn);
+        st.el.removeEventListener("focusout", st.handleFocusOut);
+      });
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, []);
+
+  return (
+    <div
+      className={styles["dock-wrap"]}
+      style={{
+        opacity: 0,
+        transition: "opacity 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) 80ms",
+      }}
+    >
+      <nav
+        ref={dockRef}
+        className={`${styles.dock} ${styles["par-dock"]}`}
+        style={{ "--pd": 5 }}
+        data-spec
+        data-theme="purple"
+        aria-label="Primary"
+      >
+        {/* Home / Top */}
+        <a
+          className={`${styles["dock-item"]} ${styles["dock-mark"]}`}
+          data-dock
+          data-spec
+          href="#top"
+          onClick={(e) => handleNavClick("top", e)}
+          aria-label="Home"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              fillRule="evenodd"
+              clipRule="evenodd"
+              d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5ZM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5Zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3Z"
+            />
+          </svg>
+        </a>
+
+        {/* 1. How */}
+        <a
+          className={styles["dock-item"]}
+          data-dock
+          data-spec
+          href="#why-how"
+          onClick={(e) => handleNavClick("why-how", e)}
+        >
+          <span className={styles.glyph} aria-hidden="true">
+            <svg viewBox="0 0 16 16">
+              <path d="M8 14V9" />
+              <path d="M8 9c0-2.4 1.7-4.3 4-4.3.2 2.6-1.6 4.6-4 4.3Z" />
+              <path d="M8 10.5C7.9 8.4 6.4 6.8 4.4 6.8 4.3 8.9 5.9 10.6 8 10.5Z" />
+            </svg>
+          </span>
+          <span>How</span>
+        </a>
+
+        {/* 2. Safety */}
+        <a
+          className={styles["dock-item"]}
+          data-dock
+          data-spec
+          href="#safety"
+          onClick={(e) => handleNavClick("safety", e)}
+        >
+          <span className={styles.glyph} aria-hidden="true">
+            <svg viewBox="0 0 16 16">
+              <path d="M1.6 12.4c2.4-3.4 4.3-5.1 5.7-5.1 2 0 3 3.6 5 3.6 1.1 0 1.9-.5 2.4-1.4" />
+              <path d="M4.3 6.2C5.5 4.4 6.6 3.5 7.6 3.5c1.5 0 2.2 2.4 3.7 2.4" />
+            </svg>
+          </span>
+          <span>Safety</span>
+        </a>
+
+        {/* 3. Privacy */}
+        <a
+          className={styles["dock-item"]}
+          data-dock
+          data-spec
+          href="#privacy"
+          onClick={(e) => handleNavClick("privacy", e)}
+        >
+          <span className={styles.glyph} aria-hidden="true">
+            <svg viewBox="0 0 16 16">
+              <path d="M4 2.4h5.3L12 5.1v8.5H4z" />
+              <path d="M9.2 2.4V5h2.7" />
+              <path d="M6 8.4h4M6 10.8h2.8" />
+            </svg>
+          </span>
+          <span>Privacy</span>
+        </a>
+
+        {/* 4. Use */}
+        <a
+          className={styles["dock-item"]}
+          data-dock
+          data-spec
+          href="#use"
+          onClick={(e) => handleNavClick("use", e)}
+        >
+          <span className={styles.glyph} aria-hidden="true">
+            <svg viewBox="0 0 16 16">
+              <path d="M6.6 2.5h5.1a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H6.6" />
+              <path d="M2.6 8h6.6" />
+              <path d="m7 5.6 2.4 2.4L7 10.4" />
+            </svg>
+          </span>
+          <span>Use</span>
+        </a>
+      </nav>
+    </div>
+  );
+}
+
+
+/* =========================================================================
+   FILE: src/components/Nav.module.css
+   ========================================================================= */
+.dock-wrap {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  width: auto;
+  height: auto;
+}
+
+/* =========================================================================
+   BASE DOCK CAPSULE
+   - Graceful, silky smooth expansion & collapse with tuned easing curve
+   - Uses CSS variables for 100% seamless cross-fade between section themes
+   ========================================================================= */
+.dock {
+  pointer-events: auto;
+  display: flex;
+  align-items: flex-start;
+  gap: calc(3 * var(--u));
+  height: calc(46 * var(--u));
+  padding: calc(5 * var(--u));
+  border-radius: calc(14 * var(--u));
+  isolation: isolate;
+  position: relative;
+  box-sizing: border-box;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 40.5px;
+
+  /* Premium glass panel with illuminated top edge */
+  border: 1px solid var(--dock-border, rgba(255, 255, 255, 0.12));
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.055) 0%,
+      rgba(255, 255, 255, 0) 42%
+    ),
+    var(--dock-bg, rgba(22, 14, 34, 0.85));
+  box-shadow:
+    var(--dock-shadow, 0 8px 32px rgba(0, 0, 0, 0.45)),
+    inset 0 1px rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  transition:
+    max-width 0.6s cubic-bezier(0.25, 1, 0.3, 1),
+    background-color 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    backdrop-filter 0.65s ease;
+}
+
+.dock:hover {
+  max-width: 440px;
+  overflow: visible;
+  transition:
+    max-width 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Top soft gradient glaze */
+.dock::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.01) 60%,
+    transparent 100%
+  );
+  opacity: var(--dock-glaze-opacity, 1);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1;
+}
+
+/* =========================================================================
+   1. PURPLE ACCENT THEME (Hero, How Argus Solves It, Choose Your Pace)
+   ========================================================================= */
+.dock[data-theme="purple"] {
+  --dock-bg: rgba(22, 14, 34, 0.85);
+  --dock-border: rgba(168, 85, 247, 0.35);
+  --dock-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), 0 0 24px rgba(168, 85, 247, 0.2);
+  --dock-glaze-opacity: 1;
+  --item-bg: rgba(255, 255, 255, 0.04);
+  --item-color: rgba(255, 255, 255, 0.55);
+  --item-hover-color: #ffffff;
+  --item-hover-border: rgba(217, 70, 239, 0.45);
+  --item-hover-bg: rgba(38, 16, 54, 0.94);
+  --item-hover-shadow: 0 7px 16px rgba(15, 4, 24, 0.5), 0 0 18px rgba(168, 85, 247, 0.25);
+  --mark-bg: #f3e8ff;
+  --mark-border: #f3e8ff;
+  --mark-color: #3b0764;
+}
+
+.dock[data-theme="purple"]:hover {
+  --dock-bg: rgba(38, 14, 58, 0.92);
+  --dock-border: rgba(168, 85, 247, 0.55);
+  --dock-shadow: 0 12px 36px rgba(0, 0, 0, 0.55), 0 0 30px rgba(168, 85, 247, 0.3);
+}
+
+.dock[data-theme="purple"] .dock-mark[data-near="true"] {
+  --mark-bg: #ffffff;
+  --mark-border: #ffffff;
+  --mark-color: #581c87;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+}
+
+/* =========================================================================
+   2. CHARCOAL / BLACK ACCENT THEME (Why Do We Need Argus, 3D Journey, Safety, FAQs)
+   ========================================================================= */
+.dock[data-theme="charcoal"] {
+  --dock-bg: rgba(16, 16, 20, 0.88);
+  --dock-border: rgba(255, 255, 255, 0.14);
+  --dock-shadow: 0 8px 32px rgba(0, 0, 0, 0.65);
+  --dock-glaze-opacity: 0.8;
+  --item-bg: rgba(255, 255, 255, 0.04);
+  --item-color: rgba(255, 255, 255, 0.55);
+  --item-hover-color: #ffffff;
+  --item-hover-border: rgba(255, 255, 255, 0.22);
+  --item-hover-bg: rgba(28, 28, 34, 0.96);
+  --item-hover-shadow: 0 7px 16px rgba(0, 0, 0, 0.55);
+  --mark-bg: #ffffff;
+  --mark-border: #ffffff;
+  --mark-color: #0d0d10;
+}
+
+.dock[data-theme="charcoal"]:hover {
+  --dock-bg: rgba(24, 24, 28, 0.95);
+  --dock-border: rgba(255, 255, 255, 0.35);
+  --dock-shadow: 0 12px 36px rgba(0, 0, 0, 0.75);
+}
+
+.dock[data-theme="charcoal"] .dock-mark[data-near="true"] {
+  --mark-bg: #e4e4e7;
+  --mark-border: #e4e4e7;
+  --mark-color: #000000;
+  box-shadow: 0 0 16px rgba(255, 255, 255, 0.3);
+}
+
+/* =========================================================================
+   3. CREAMISH OFF-WHITE ACCENT THEME (Privacy / Responsible Surveillance)
+   ========================================================================= */
+.dock[data-theme="white"] {
+  --dock-bg: rgba(244, 241, 235, 0.94);
+  --dock-border: rgba(0, 0, 0, 0.1);
+  --dock-shadow: 0 10px 32px -4px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+  --dock-glaze-opacity: 0.4;
+  --item-bg: rgba(0, 0, 0, 0.035);
+  --item-color: #4b4b54;
+  --item-hover-color: #121216;
+  --item-hover-border: rgba(0, 0, 0, 0.14);
+  --item-hover-bg: #ffffff;
+  --item-hover-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+  --mark-bg: #ede8df;
+  --mark-border: rgba(0, 0, 0, 0.1);
+  --mark-color: #2b2b34;
+}
+
+.dock[data-theme="white"]:hover {
+  --dock-bg: rgba(248, 246, 241, 0.98);
+  --dock-border: rgba(0, 0, 0, 0.16);
+  --dock-shadow: 0 14px 38px -4px rgba(0, 0, 0, 0.11), 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.dock[data-theme="white"] .dock-mark[data-near="true"] {
+  --mark-bg: #ffffff;
+  --mark-border: rgba(0, 0, 0, 0.16);
+  --mark-color: #111116;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+}
+
+/* =========================================================================
+   BASE NAV ITEMS & SIZING
+   ========================================================================= */
+.dock-item {
+  position: relative;
+  z-index: 6;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  height: calc(36 * var(--u));
+  gap: calc(8 * var(--u));
+  padding: 0 calc(13 * var(--u));
+  transform-origin: 50% 0;
+  border: 1px solid transparent;
+  border-radius: calc(10 * var(--u));
+  text-decoration: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: calc(11 * var(--u));
+  font-weight: 500;
+  letter-spacing: calc(1.5 * var(--u));
+  text-transform: uppercase;
+  white-space: nowrap;
+  will-change: width, height, transform;
+
+  /* Smooth cross-fade transition on items */
+  background: var(--item-bg, rgba(255, 255, 255, 0.04));
+  color: var(--item-color, rgba(255, 255, 255, 0.55));
+
+  transition:
+    width 0.22s cubic-bezier(0.22, 0.61, 0.36, 1),
+    height 0.22s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.22s cubic-bezier(0.22, 0.61, 0.36, 1),
+    color 0.18s cubic-bezier(0.22, 0.61, 0.36, 1),
+    border-color 0.2s cubic-bezier(0.22, 0.61, 0.36, 1),
+    background 0.2s cubic-bezier(0.22, 0.61, 0.36, 1),
+    box-shadow 0.2s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* Magnified Hover / Proximity Active Tile */
+.dock-item[data-near="true"] {
+  z-index: 7;
+  color: var(--item-hover-color, #ffffff);
+  border-color: var(--item-hover-border, rgba(255, 255, 255, 0.22));
+  background: var(--item-hover-bg, rgba(28, 28, 34, 0.94));
+  box-shadow: var(--item-hover-shadow, 0 calc(7 * var(--u)) calc(16 * var(--u)) rgba(0, 0, 0, 0.45));
+}
+
+/* Item Glyphs / Icons */
+.dock-item .glyph {
+  width: calc(14 * var(--u));
+  height: calc(14 * var(--u));
+  flex: none;
+  opacity: 0.66;
+  transition: opacity 0.18s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.dock-item .glyph svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.dock-item[data-near="true"] .glyph {
+  opacity: 1;
+}
+
+/* The mark is the dock's anchor */
+.dock-mark {
+  width: calc(36 * var(--u));
+  padding: 0;
+  border-radius: calc(10 * var(--u));
+  overflow: hidden;
+
+  /* Smooth cross-fade transition on mark */
+  background-color: var(--mark-bg, #f3e8ff);
+  border: 1px solid var(--mark-border, #f3e8ff);
+  color: var(--mark-color, #3b0764);
+
+  transition:
+    width 0.22s cubic-bezier(0.22, 0.61, 0.36, 1),
+    height 0.22s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.22s cubic-bezier(0.22, 0.61, 0.36, 1),
+    background-color 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dock-mark svg {
+  width: 58%;
+  height: 58%;
+  display: block;
+  fill: currentColor;
+}
+
+/* =========================================================================
+   DYNAMIC SPECULAR METALLIC CHROMIUM RIM REFLECTION
+   - A conic gradient masked down to the exact 1px border perimeter
+   - Start angle tracks pointer coordinates with smooth angular physics
+   ========================================================================= */
+.dock[data-spec],
+.dock-item[data-spec] {
+  --spec-angle: 2.4rad;
+  --spec-bright: 0;
+}
+
+.dock[data-spec]::after,
+.dock-item[data-spec]::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: 10;
+  padding: 1.2px;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: var(--spec-bright, 0);
+  background: conic-gradient(
+    from var(--spec-angle, 2.4rad) at 50% 50%,
+    rgba(255, 255, 255, 0) 0deg,
+    rgba(255, 255, 255, 0.12) 12deg,
+    rgba(255, 255, 255, 1) 28deg,
+    rgba(255, 255, 255, 0.24) 46deg,
+    rgba(255, 255, 255, 0) 68deg,
+    rgba(255, 255, 255, 0) 180deg,
+    rgba(255, 255, 255, 0.12) 194deg,
+    rgba(255, 255, 255, 1) 208deg,
+    rgba(255, 255, 255, 0.24) 226deg,
+    rgba(255, 255, 255, 0) 248deg,
+    rgba(255, 255, 255, 0) 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  transition: opacity 0.18s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+@media (max-width: 900px) {
+  .dock {
+    height: max(56px, calc(58 * var(--u)));
+    padding: max(6px, calc(6 * var(--u)));
+    gap: max(4px, calc(4 * var(--u)));
+    border-radius: max(17px, calc(18 * var(--u)));
+  }
+  .dock-item {
+    height: max(44px, calc(46 * var(--u)));
+    width: max(44px, calc(46 * var(--u)));
+    padding: 0;
+    border-radius: max(12px, calc(13 * var(--u)));
+  }
+  .dock-mark svg {
+    width: 52%;
+    height: 52%;
+  }
+}
