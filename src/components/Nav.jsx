@@ -145,7 +145,6 @@ export default function Nav() {
         } else {
           dockRest();
         }
-        aimMoved = false;
       }
 
       if (!dirty) return;
@@ -198,6 +197,7 @@ export default function Nav() {
           const raw = clamp01(1 - d / (st.reach * u));
           st.tBr = Math.max(raw * raw * (3 - 2 * raw), st.focused ? 0.9 : 0);
         });
+        specDirty = true;
       }
 
       if (!specDirty) return;
@@ -216,7 +216,7 @@ export default function Nav() {
         }
 
         st.el.style.setProperty("--spec-angle", st.ang.toFixed(4) + "rad");
-        st.el.style.setProperty("--spec-bright", (clamp01(st.br) * 0.96).toFixed(3));
+        st.el.style.setProperty("--spec-bright", (clamp01(st.br) * 0.98).toFixed(3));
       });
 
       if (!moving) specDirty = false;
@@ -317,6 +317,7 @@ export default function Nav() {
       updateTheme();
       drawDock(dt);
       drawSpec(dt);
+      aimMoved = false;
 
       rafId = requestAnimationFrame(update);
     }
