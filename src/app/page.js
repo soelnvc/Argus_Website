@@ -48,13 +48,15 @@ const SLIDES_DATA = [
 ];
 
 function JourneySlide({ index, slide, cameraZ }) {
-  const zDepth = (index + 1) * -2000;
+  const targetZ = (index + 1) * 2000;
+  const zDepth = -targetZ;
   const side = index % 2 === 0 ? "left" : "right";
 
-  // Fade in early, stay solid as we approach and fly through, fade out once it's completely behind the camera
+  // Starts at 0 opacity at start of journey, fades in smoothly at screen center,
+  // stays solid in viewfinder, and fades out as camera flies through
   const opacity = useTransform(
     cameraZ,
-    [-zDepth - 3500, -zDepth - 1000, -zDepth + 600, -zDepth + 1200],
+    [targetZ - 1800, targetZ - 700, targetZ + 500, targetZ + 1200],
     [0, 1, 1, 0],
   );
 
