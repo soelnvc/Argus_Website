@@ -1,0 +1,67 @@
+.wrapper {
+  width: 100%;
+  padding: 12px 0;
+}
+
+.orbsRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 24px;
+}
+
+/* ─── Clean Static Standalone Orb ─── */
+.socialOrb {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  text-decoration: none;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  outline: none;
+  transition:
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.3s ease;
+}
+
+.socialOrb:hover {
+  transform: scale(1.18);
+  filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.5));
+}
+
+.orbCanvas {
+  width: 80px;
+  height: 80px;
+  display: block;
+}
+
+@media (max-width: 900px) {
+  .socialOrb {
+    width: 68px;
+    height: 68px;
+  }
+  .orbCanvas {
+    width: 68px;
+    height: 68px;
+  }
+}
+
+@media (max-width: 640px) {
+  .orbsRow {
+    gap: 12px;
+  }
+  .socialOrb {
+    width: 52px;
+    height: 52px;
+  }
+  .orbCanvas {
+    width: 52px;
+    height: 52px;
+  }
+}

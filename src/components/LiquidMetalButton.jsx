@@ -291,6 +291,8 @@ const R_DEFAULTS = {
 export default function LiquidMetalButton({
   label = "Launch",
   onClick,
+  href = label.toLowerCase() === "launch" ? "https://argus-psi-nine.vercel.app/" : undefined,
+  target = "_blank",
   style,
   className,
 }) {
@@ -298,6 +300,20 @@ export default function LiquidMetalButton({
   const canvasRef = useRef(null);
   const btnRef = useRef(null);
   const plateRef = useRef(null);
+
+  const handleClick = (e) => {
+    if (onClick) {
+      onClick(e);
+    } else if (href) {
+      if (typeof window !== "undefined") {
+        if (target === "_blank") {
+          window.open(href, "_blank", "noopener,noreferrer");
+        } else {
+          window.location.href = href;
+        }
+      }
+    }
+  };
 
   useEffect(() => {
     const stage = stageRef.current;
@@ -659,7 +675,7 @@ export default function LiquidMetalButton({
         className={styles.btn}
         ref={btnRef}
         type="button"
-        onClick={onClick}
+        onClick={handleClick}
       >
         <svg className={styles.ico} viewBox="0 0 115 115" aria-hidden="true">
           <g stroke="currentColor" strokeWidth="17" strokeLinecap="round">

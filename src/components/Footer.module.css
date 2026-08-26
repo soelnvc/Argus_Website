@@ -3,7 +3,7 @@
   width: 100%;
   background-color: #07050d;
   color: #ffffff;
-  padding: 100px 64px 0 64px;
+  padding: 60px 64px 0 64px;
   box-sizing: border-box;
   z-index: 10;
   overflow: hidden;
@@ -17,113 +17,32 @@
   margin: 0 auto;
 }
 
-/* ─── TOP ROW: Meta + Nav Columns ─── */
-.topRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 60px;
-  margin-bottom: 56px;
-}
-
-.leftCol {
-  flex: 1;
-  max-width: 480px;
-}
-
-.metaLine {
-  font-size: 13px;
-  font-weight: 400;
-  color: rgba(255, 255, 255, 0.4);
-  margin: 0 0 28px 0;
-  letter-spacing: 0.01em;
-}
-
-.metaDot {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #a855f7;
-  margin-right: 10px;
-  vertical-align: middle;
-}
-
-.tagline {
-  font-size: clamp(24px, 2.8vw, 36px);
-  font-weight: 500;
-  line-height: 1.35;
-  letter-spacing: -0.02em;
-  color: #ffffff;
-  margin: 0;
-}
-
-/* ─── NAV COLUMNS ─── */
-.navColumns {
-  display: flex;
-  gap: 80px;
-  flex-shrink: 0;
-}
-
-.navColumn {
+/* ─── LETS CONNECT SECTION ─── */
+.connectSection {
   display: flex;
   flex-direction: column;
-  gap: 0;
-}
-
-.navColumnTitle {
-  font-size: 13.5px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.45);
-  margin: 0 0 20px 0;
-  letter-spacing: 0.01em;
-}
-
-.navLink {
-  font-size: 15.5px;
-  font-weight: 400;
-  color: rgba(255, 255, 255, 0.85);
-  text-decoration: none;
-  padding: 5px 0;
-  transition: color 0.2s ease;
-  cursor: pointer;
-}
-
-.navLink:hover {
-  color: #a855f7;
-}
-
-/* ─── GET IN TOUCH BUTTON ─── */
-.ctaRow {
-  margin-bottom: 64px;
-}
-
-.ctaButton {
-  display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 14px 28px;
-  border-radius: 9999px;
-  background: #ffffff;
-  color: #000000;
-  font-size: 14.5px;
+  text-align: center;
+  gap: 28px;
+  margin-bottom: 56px;
+  width: 100%;
+}
+
+.connectHeading {
+  font-size: clamp(48px, 6vw, 80px);
   font-weight: 600;
-  letter-spacing: -0.01em;
-  border: none;
-  cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  text-decoration: none;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  margin: 0;
+  text-align: center;
 }
 
-.ctaButton:hover {
-  background: #f0f0f2;
-  box-shadow: 0 12px 36px rgba(168, 85, 247, 0.2);
-  transform: translateY(-2px);
+.greyText {
+  color: rgba(255, 255, 255, 0.38);
 }
 
-.ctaStar {
-  font-size: 14px;
-  color: #000000;
+.whiteText {
+  color: #ffffff;
 }
 
 /* ─── BOTTOM BAR: Copyright + Legal ─── */
@@ -131,8 +50,8 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  padding: 24px 0 28px 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 24px 0 32px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .copyright {
@@ -202,23 +121,16 @@
 /* ─── RESPONSIVE ─── */
 @media (max-width: 900px) {
   .footer {
-    padding: 80px 32px 0 32px;
+    padding: 44px 32px 0 32px;
   }
-  .topRow {
-    flex-direction: column;
-    gap: 48px;
-  }
-  .navColumns {
-    gap: 48px;
+  .connectSection {
+    margin-bottom: 40px;
   }
 }
 
 @media (max-width: 640px) {
   .footer {
-    padding: 60px 20px 0 20px;
-  }
-  .navColumns {
-    gap: 36px;
+    padding: 36px 20px 0 20px;
   }
   .bottomBar {
     flex-direction: column;
