@@ -380,10 +380,12 @@ export default function HowArgusSolvesIt() {
   const exitSlowY = useTransform(scrollYProgress, [0.72, 1.0], ["0vh", "-12vh"]);
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    if (latest < 0.16) setActiveStep(0);
-    else if (latest < 0.38) setActiveStep(1);
-    else if (latest < 0.60) setActiveStep(2);
-    else setActiveStep(3);
+    let nextStep = 0;
+    if (latest < 0.16) nextStep = 0;
+    else if (latest < 0.38) nextStep = 1;
+    else if (latest < 0.60) nextStep = 2;
+    else nextStep = 3;
+    setActiveStep((prev) => (prev !== nextStep ? nextStep : prev));
   });
 
   return (

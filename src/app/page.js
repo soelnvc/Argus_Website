@@ -88,11 +88,6 @@ function JourneyContainer({ journeyRef }) {
   const endSectionOpacity = useTransform(journeyProgress, [0.92, 0.98], [0, 1]);
   const titleY = useTransform(journeyProgress, [0.92, 0.98], [48, 0]);
   const titleScale = useTransform(journeyProgress, [0.92, 0.98], [0.93, 1]);
-  const titleBlur = useTransform(
-    journeyProgress,
-    [0.92, 0.98],
-    ["blur(12px)", "blur(0px)"],
-  );
 
   const cueOpacity = useTransform(journeyProgress, [0.95, 1.0], [0, 1]);
   const cueY = useTransform(journeyProgress, [0.95, 1.0], [24, 0]);
@@ -129,7 +124,6 @@ function JourneyContainer({ journeyRef }) {
             style={{
               y: titleY,
               scale: titleScale,
-              filter: titleBlur,
             }}
           >
             <h2 className={styles.bigEndHeading}>
@@ -212,11 +206,6 @@ export default function Home() {
   // Smooth scroll exit for the question layer as we scroll directly into the 3D journey
   const questionOpacity = useTransform(clampedHero, [0.82, 0.98], [1, 0]);
   const questionScale = useTransform(clampedHero, [0.82, 0.98], [1, 1.05]);
-  const questionBlur = useTransform(
-    clampedHero,
-    [0.82, 0.98],
-    ["blur(0px)", "blur(10px)"],
-  );
   const questionY = useTransform(clampedHero, [0.82, 0.98], ["0vh", "-6vh"]);
   const isQuestionPointerActive = useTransform(clampedHero, (v) =>
     v > 0.95 ? "none" : "auto",
@@ -426,7 +415,6 @@ export default function Home() {
                   gap: "20px",
                   opacity: questionOpacity,
                   scale: questionScale,
-                  filter: questionBlur,
                   y: questionY,
                   pointerEvents: isQuestionPointerActive,
                 }}

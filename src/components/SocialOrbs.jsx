@@ -465,10 +465,13 @@ export default function SocialOrbs() {
 
     let rafId;
     const tick = () => {
-      const t = performance.now() / 1000;
       if (document.visibilityState !== "hidden") {
-        for (const a of anims) {
-          if (a.visible) a.frame(t);
+        const hasVisible = anims.some((a) => a.visible);
+        if (hasVisible) {
+          const t = performance.now() / 1000;
+          for (const a of anims) {
+            if (a.visible) a.frame(t);
+          }
         }
       }
       rafId = requestAnimationFrame(tick);

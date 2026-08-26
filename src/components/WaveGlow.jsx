@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
 export default function WaveGlow({ text = "ARGUS" }) {
+  const containerRef = useRef(null);
   const bgCanvasRef = useRef(null);
   const fgCanvasRef = useRef(null);
   const [mounted, setMounted] = useState(false);
@@ -10,13 +11,14 @@ export default function WaveGlow({ text = "ARGUS" }) {
     setMounted(true);
     const bgCanvas = bgCanvasRef.current;
     const fgCanvas = fgCanvasRef.current;
-    if (!bgCanvas || !fgCanvas) return;
+    const container = containerRef.current;
+    if (!bgCanvas || !fgCanvas || !container) return;
 
     function setupGL(canvas) {
       const gl =
         canvas.getContext("webgl2", {
           alpha: true,
-          antialias: true,
+          antialias: false,
           powerPreference: "high-performance",
         }) || canvas.getContext("webgl", { alpha: true });
       return gl;
@@ -183,9 +185,28 @@ export default function WaveGlow({ text = "ARGUS" }) {
     resize();
 
     let animId;
+    let isVisible = true;
     const startTime = performance.now();
 
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]) {
+          isVisible = entries[0].isIntersecting;
+          if (isVisible && !animId) {
+            animId = requestAnimationFrame(render);
+          }
+        }
+      },
+      { threshold: 0.05 }
+    );
+    observer.observe(container);
+
     function render() {
+      if (!isVisible) {
+        animId = null;
+        return;
+      }
+
       const elapsed = (performance.now() - startTime) * 0.001;
 
       // Draw Background Glow Canvas
@@ -222,13 +243,15 @@ export default function WaveGlow({ text = "ARGUS" }) {
     render();
 
     return () => {
-      cancelAnimationFrame(animId);
+      if (animId) cancelAnimationFrame(animId);
+      observer.disconnect();
       window.removeEventListener("resize", resize);
     };
   }, []);
 
   return (
     <div
+      ref={containerRef}
       style={{
         position: "absolute",
         inset: 0,
@@ -237,6 +260,7 @@ export default function WaveGlow({ text = "ARGUS" }) {
         overflow: "hidden",
         pointerEvents: "none",
         zIndex: 1,
+        willChange: "transform",
       }}
     >
       {/* 1. Ambient Background Glow (Atmospheric Purple/Pink Bleed) */}

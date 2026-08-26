@@ -85,19 +85,17 @@ function ExpandingEvidenceShowcase() {
     offset: ["start end", "center center"],
   });
 
-  // Gradually expands from 70vw (70% screen) to 85vw (85% screen)
-  const width = useTransform(scrollYProgress, [0, 1], ["70vw", "85vw"]);
-  const borderRadius = useTransform(scrollYProgress, [0, 1], ["24px", "36px"]);
+  // Smooth GPU scale transform with 0 layout reflows
+  const scale = useTransform(scrollYProgress, [0, 1], [0.88, 1]);
   const opacity = useTransform(scrollYProgress, [0, 0.35], [0.65, 1]);
-  const y = useTransform(scrollYProgress, [0, 1], [50, 0]);
+  const y = useTransform(scrollYProgress, [0, 1], [40, 0]);
 
   return (
     <div className={styles.showcaseOuterTrack} ref={showcaseRef}>
       <motion.div
         className={styles.expandingShowcaseCard}
         style={{
-          width,
-          borderRadius,
+          scale,
           opacity,
           y,
         }}

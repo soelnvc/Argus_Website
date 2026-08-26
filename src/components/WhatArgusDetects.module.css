@@ -312,7 +312,8 @@
 
 .expandingShowcaseCard {
   position: relative;
-  max-width: 1540px;
+  width: min(88vw, 1540px);
+  border-radius: 32px;
   overflow: hidden;
   background: #000000;
   border: none;
@@ -320,7 +321,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  will-change: width, transform, border-radius;
+  transform-origin: center center;
+  will-change: transform, opacity;
 }
 
 .evidenceImage {

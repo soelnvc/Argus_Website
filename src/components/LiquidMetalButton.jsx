@@ -504,7 +504,10 @@ export default function LiquidMetalButton({
 
     // ─── render loop ───
     function frame(now) {
-      if (disposed) return;
+      if (disposed || !isButtonVisible) {
+        raf = null;
+        return;
+      }
       const dtRaw = (now - last) / 1000; last = now;
       const dt = Math.min(dtRaw, 1 / 20);
       if (!calm.matches) clock += dt;
@@ -642,12 +645,26 @@ export default function LiquidMetalButton({
     }
 
     resize();
+
+    let isButtonVisible = true;
+    const io = new IntersectionObserver((entries) => {
+      if (entries[0]) {
+        isButtonVisible = entries[0].isIntersecting;
+        if (isButtonVisible && !disposed && !raf) {
+          raf = requestAnimationFrame(frame);
+        }
+      }
+    }, { threshold: 0.05 });
+    io.observe(stage);
+
     raf = requestAnimationFrame(frame);
 
     // ─── cleanup ───
     return () => {
       disposed = true;
       cancelAnimationFrame(raf);
+      raf = null;
+      io.disconnect();
       ro.disconnect();
       btn.removeEventListener("pointerenter", onEnter);
       btn.removeEventListener("pointerleave", onLeave);
