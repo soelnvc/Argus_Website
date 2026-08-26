@@ -218,18 +218,57 @@ export default function Nav() {
       if (!moving) specDirty = false;
     }
 
+    function updateTheme() {
+      if (!root) return;
+      const navY = 60;
+
+      const sections = [
+        { id: "privacy", theme: "white" },
+        { id: "safety", theme: "charcoal" },
+        { id: "journey", theme: "charcoal" },
+        { id: "why-how", theme: "purple" },
+        { id: "use", theme: "purple" },
+        { id: "faqs", theme: "charcoal" },
+      ];
+
+      let detectedTheme = "purple";
+
+      for (const sec of sections) {
+        const el = document.getElementById(sec.id);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= navY && rect.bottom >= navY) {
+            detectedTheme = sec.theme;
+            break;
+          }
+        }
+      }
+
+      if (root.dataset.theme !== detectedTheme) {
+        root.dataset.theme = detectedTheme;
+        if (root.parentElement) {
+          root.parentElement.dataset.theme = detectedTheme;
+        }
+      }
+    }
+
     function update(t) {
       const dt = Math.min((t - lastTime) / 1000, 0.05);
       lastTime = t;
 
+      updateTheme();
       drawDock(dt);
       drawSpec(dt);
 
       rafId = requestAnimationFrame(update);
     }
 
-    const handleResize = () => measureDock();
+    const handleResize = () => {
+      measureDock();
+      updateTheme();
+    };
     window.addEventListener("resize", handleResize, { passive: true });
+    window.addEventListener("scroll", updateTheme, { passive: true });
 
     const handlePointerMove = (e) => {
       if (e.pointerType === "touch") return;
@@ -290,12 +329,14 @@ export default function Nav() {
     });
 
     root.parentElement.style.opacity = "1";
+    updateTheme();
 
     lastTime = performance.now();
     rafId = requestAnimationFrame(update);
 
     return () => {
       window.removeEventListener("resize", handleResize);
+      window.removeEventListener("scroll", updateTheme);
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("pointerleave", handlePointerLeave);
       root.removeEventListener("focusin", handleFocusIn);
@@ -321,6 +362,7 @@ export default function Nav() {
         className={`${styles.dock} ${styles["par-dock"]}`}
         style={{ "--pd": 5 }}
         data-spec
+        data-theme="purple"
         aria-label="Primary"
       >
         {/* Home / Top */}

@@ -9,7 +9,7 @@
   height: auto;
 }
 
-/* Base Navbar: Translucent floating dock with lit top edge & smooth collapsible animation */
+/* Base Navbar: Translucent floating dock with dynamic accent stealing & smooth transitions */
 .dock {
   pointer-events: auto;
   display: flex;
@@ -18,15 +18,6 @@
   height: calc(46 * var(--u));
   padding: calc(5 * var(--u));
   border-radius: calc(14 * var(--u));
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.055) 0%,
-      rgba(255, 255, 255, 0.01) 100%
-    ),
-    rgba(18, 14, 24, 0.75);
-  box-shadow: none;
   isolation: isolate;
   position: relative;
   box-sizing: border-box;
@@ -35,26 +26,210 @@
   max-width: 40.5px;
   transition:
     max-width 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-    background 0.35s cubic-bezier(0.22, 0.61, 0.36, 1),
-    border-color 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
+    background 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    backdrop-filter 0.4s ease;
 }
 
-/* On hover: expands out to reveal all nav items and allows magnified pill to hang freely */
-.dock:hover {
+/* =========================================================================
+   1. PURPLE ACCENT THEME (Hero, How Argus Solves It, Choose Your Pace)
+   ========================================================================= */
+.dock[data-theme="purple"] {
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.055) 0%,
+      rgba(255, 255, 255, 0.01) 100%
+    ),
+    rgba(18, 14, 24, 0.78);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(168, 85, 247, 0.1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.dock[data-theme="purple"]:hover {
   max-width: 480px;
   overflow: visible;
-  border-color: rgba(168, 85, 247, 0.35);
+  border-color: rgba(168, 85, 247, 0.45);
   background:
     linear-gradient(
       180deg,
       rgba(255, 255, 255, 0.08) 0%,
       rgba(255, 255, 255, 0) 45%
     ),
-    rgba(32, 10, 48, 0.75);
-  box-shadow: none;
+    rgba(32, 10, 48, 0.85);
+  box-shadow:
+    0 12px 36px rgba(0, 0, 0, 0.5),
+    0 0 24px rgba(168, 85, 247, 0.2);
 }
 
-/* Base Nav Items: Anchored at top so growth runs downward */
+.dock[data-theme="purple"] .dock-item {
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.dock[data-theme="purple"] .dock-item:hover {
+  color: #ffffff;
+  background: rgba(168, 85, 247, 0.15);
+  border-color: rgba(168, 85, 247, 0.3);
+}
+
+.dock[data-theme="purple"] .dock-item[data-near="true"] {
+  color: #ffffff;
+  border-color: rgba(217, 70, 239, 0.5);
+  background: linear-gradient(
+    180deg,
+    rgba(68, 18, 98, 0.96) 0%,
+    rgba(36, 8, 54, 0.98) 100%
+  );
+  box-shadow: 0 4px 16px rgba(168, 85, 247, 0.35);
+}
+
+.dock[data-theme="purple"] .dock-mark {
+  background: #f3e8ff;
+  border-color: #f3e8ff;
+  color: #3b0764;
+}
+
+.dock[data-theme="purple"] .dock-mark[data-near="true"] {
+  background: #ffffff;
+  border-color: #ffffff;
+  color: #581c87;
+}
+
+/* =========================================================================
+   2. CHARCOAL / BLACK ACCENT THEME (3D Journey, Safety, FAQs)
+   ========================================================================= */
+.dock[data-theme="charcoal"] {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.06) 0%,
+      rgba(255, 255, 255, 0.015) 100%
+    ),
+    rgba(16, 16, 19, 0.88);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.65),
+    inset 0 0 12px rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.dock[data-theme="charcoal"]:hover {
+  max-width: 480px;
+  overflow: visible;
+  border-color: rgba(255, 255, 255, 0.28);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.09) 0%,
+      rgba(255, 255, 255, 0) 50%
+    ),
+    rgba(24, 24, 28, 0.94);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.75);
+}
+
+.dock[data-theme="charcoal"] .dock-item {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.dock[data-theme="charcoal"] .dock-item:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.dock[data-theme="charcoal"] .dock-item[data-near="true"] {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.38);
+  background: linear-gradient(180deg, #323238 0%, #1c1c20 100%);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+}
+
+.dock[data-theme="charcoal"] .dock-mark {
+  background: #ffffff;
+  border-color: #ffffff;
+  color: #0d0d10;
+}
+
+.dock[data-theme="charcoal"] .dock-mark[data-near="true"] {
+  background: #e4e4e7;
+  border-color: #e4e4e7;
+  color: #000000;
+}
+
+/* =========================================================================
+   3. OFF-WHITE ACCENT THEME (Privacy / Responsible Surveillance Section)
+   ========================================================================= */
+.dock[data-theme="white"] {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.94) 0%,
+      rgba(242, 242, 248, 0.9) 100%
+    );
+  box-shadow:
+    0 12px 36px rgba(0, 0, 0, 0.12),
+    0 2px 8px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.dock[data-theme="white"]:hover {
+  max-width: 480px;
+  overflow: visible;
+  border-color: rgba(0, 0, 0, 0.2);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.98) 0%,
+      rgba(246, 246, 252, 0.95) 100%
+    );
+  box-shadow:
+    0 16px 44px rgba(0, 0, 0, 0.15),
+    0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.dock[data-theme="white"] .dock-item {
+  background: rgba(0, 0, 0, 0.04);
+  color: rgba(20, 20, 24, 0.65);
+}
+
+.dock[data-theme="white"] .dock-item:hover {
+  color: #000000;
+  background: rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.18);
+}
+
+.dock[data-theme="white"] .dock-item[data-near="true"] {
+  color: #ffffff;
+  border-color: rgba(0, 0, 0, 0.4);
+  background: linear-gradient(180deg, #222226 0%, #111114 100%);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+.dock[data-theme="white"] .dock-mark {
+  background: #111114;
+  border-color: #111114;
+  color: #ffffff;
+}
+
+.dock[data-theme="white"] .dock-mark[data-near="true"] {
+  background: #000000;
+  border-color: #000000;
+  color: #ffffff;
+}
+
+/* =========================================================================
+   BASE NAV ITEMS & SIZING
+   ========================================================================= */
 .dock-item {
   position: relative;
   z-index: 6;
@@ -68,8 +243,6 @@
   transform-origin: 50% 0;
   border: 1px solid transparent;
   border-radius: calc(10 * var(--u));
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--ink-faint, rgba(255, 255, 255, 0.6));
   text-decoration: none;
   cursor: pointer;
   font-family: inherit;
@@ -80,56 +253,21 @@
   white-space: nowrap;
   will-change: width, height, transform;
   transition:
-    color 0.18s cubic-bezier(0.22, 0.61, 0.36, 1),
-    border-color 0.2s cubic-bezier(0.22, 0.61, 0.36, 1),
-    background 0.2s cubic-bezier(0.22, 0.61, 0.36, 1);
+    color 0.22s cubic-bezier(0.22, 0.61, 0.36, 1),
+    border-color 0.22s cubic-bezier(0.22, 0.61, 0.36, 1),
+    background 0.22s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
-/* A magnified pill hangs below the capsule as its own elevated purple tile */
-.dock-item[data-near="true"] {
-  z-index: 7;
-  color: #ffffff;
-  border-color: rgba(217, 70, 239, 0.45);
-  background: linear-gradient(
-    180deg,
-    rgba(58, 16, 84, 0.95) 0%,
-    rgba(32, 8, 48, 0.98) 100%
-  );
-  box-shadow: none;
-}
-
-.dock-item .glyph {
-  width: calc(14 * var(--u));
-  height: calc(14 * var(--u));
-  flex: none;
-  opacity: 0.7;
-  transition: opacity 0.18s cubic-bezier(0.22, 0.61, 0.36, 1);
-}
-
-.dock-item .glyph svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.25;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.dock-item[data-near="true"] .glyph {
-  opacity: 1;
-}
-
-/* The mark is the dock's anchor: a solid pale lavender/white tile */
+/* The mark is the dock's anchor */
 .dock-mark {
   width: calc(36 * var(--u));
   padding: 0;
-  background: #f3e8ff;
-  border: 1px solid #f3e8ff;
   border-radius: calc(10 * var(--u));
-  color: #3b0764;
   overflow: hidden;
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .dock-mark svg {
@@ -139,31 +277,7 @@
   fill: currentColor;
 }
 
-.dock-mark[data-near="true"] {
-  background: #ffffff;
-  border-color: #ffffff;
-  color: #581c87;
-  box-shadow: none;
-}
-
-.dock-item.is-active {
-  background: rgba(147, 51, 234, 0.3);
-  border-color: rgba(192, 132, 252, 0.4);
-  color: #ffffff;
-  box-shadow: none;
-}
-
-.dock-item.is-active .glyph {
-  opacity: 0.9;
-}
-
-.dock-item--enter {
-  color: #ffffff;
-  background: rgba(168, 85, 247, 0.12);
-  border: 1px solid rgba(168, 85, 247, 0.2);
-}
-
-/* Dynamic Specular Rim Reflection in Purple/Lilac */
+/* Dynamic Specular Rim Reflection */
 .dock[data-spec],
 .dock-item[data-spec] {
   --spec-angle: 2.4rad;
@@ -202,6 +316,43 @@
     linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
+  transition: opacity 0.2s ease;
+}
+
+/* Charcoal Specular */
+.dock[data-theme="charcoal"][data-spec]::after,
+.dock[data-theme="charcoal"] .dock-item[data-spec]::after {
+  background: conic-gradient(
+    from var(--spec-angle) at 50% 50%,
+    rgba(255, 255, 255, 0) 0deg,
+    rgba(255, 255, 255, 0.1) 14deg,
+    rgba(255, 255, 255, 0.95) 28deg,
+    rgba(255, 255, 255, 0.2) 46deg,
+    rgba(255, 255, 255, 0) 68deg,
+    rgba(255, 255, 255, 0) 180deg,
+    rgba(255, 255, 255, 0.1) 194deg,
+    rgba(255, 255, 255, 0.95) 208deg,
+    rgba(255, 255, 255, 0.2) 226deg,
+    rgba(255, 255, 255, 0) 360deg
+  );
+}
+
+/* Off-White Specular */
+.dock[data-theme="white"][data-spec]::after,
+.dock[data-theme="white"] .dock-item[data-spec]::after {
+  background: conic-gradient(
+    from var(--spec-angle) at 50% 50%,
+    rgba(0, 0, 0, 0) 0deg,
+    rgba(0, 0, 0, 0.08) 14deg,
+    rgba(0, 0, 0, 0.45) 28deg,
+    rgba(0, 0, 0, 0.12) 46deg,
+    rgba(0, 0, 0, 0) 68deg,
+    rgba(0, 0, 0, 0) 180deg,
+    rgba(0, 0, 0, 0.08) 194deg,
+    rgba(0, 0, 0, 0.45) 208deg,
+    rgba(0, 0, 0, 0.12) 226deg,
+    rgba(0, 0, 0, 0) 360deg
+  );
 }
 
 @media (max-width: 900px) {
@@ -216,13 +367,6 @@
     width: max(44px, calc(46 * var(--u)));
     padding: 0;
     border-radius: max(12px, calc(13 * var(--u)));
-  }
-  .dock-item span:not(.glyph) {
-    display: none;
-  }
-  .dock-item .glyph {
-    width: max(19px, calc(20 * var(--u)));
-    height: max(19px, calc(20 * var(--u)));
   }
   .dock-mark svg {
     width: 52%;

@@ -97,7 +97,7 @@ function JourneyContainer({ journeyRef }) {
   );
 
   return (
-    <div className={styles.journeySection} ref={journeyRef}>
+    <div className={styles.journeySection} ref={journeyRef} id="journey">
       <div className={styles.journeySticky}>
         <motion.div
           className={styles.cameraContainer}
