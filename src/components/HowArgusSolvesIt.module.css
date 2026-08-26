@@ -1,9 +1,9 @@
 .solvesSection {
   position: relative;
   width: 100%;
-  height: 450vh; /* Scroll runway for continuous 4-card sequence + exit overlap */
+  height: 450vh;
   color: #ffffff;
-  margin-top: -64px; /* Underlaps smoothly behind the 64px rounded bottom of the black section */
+  margin-top: -64px;
   z-index: 10;
   font-family:
     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
@@ -33,7 +33,7 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: 40px 32px;
+  padding: 240px 32px 40px 32px;
   box-sizing: border-box;
 }
 
@@ -57,15 +57,6 @@
   min-height: 520px;
 }
 
-.eyebrowTag {
-  font-size: 12px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #d8b4fe;
-  margin-bottom: 12px;
-  font-weight: 700;
-}
-
 .mainHeadline {
   font-size: clamp(38px, 4.4vw, 56px);
   font-weight: 500;
@@ -75,11 +66,12 @@
   margin: 0 0 32px 0;
 }
 
-/* Step Selector Pills (No Shadows) */
+/* Step Selector Pills (Minimalist, Zero Shadows) */
+/* Step Selector Buttons (Containerless, Highlight Only Selected) */
 .pillsList {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px;
   margin-bottom: 40px;
 }
 
@@ -87,41 +79,40 @@
   position: relative;
   display: flex;
   align-items: center;
-  padding: 12px 20px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.6);
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: rgba(255, 255, 255, 0.4);
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   outline: none;
+  box-shadow: none;
   transition:
     color 0.2s ease,
-    border-color 0.2s ease,
-    background-color 0.2s ease;
+    opacity 0.2s ease;
   width: fit-content;
-  min-width: 180px;
 }
 
 .stepPill:hover {
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.85);
+  background: transparent;
+  border-color: transparent;
 }
 
 .stepPillActive {
   color: #ffffff;
-  font-weight: 600;
-  border-color: transparent;
+  font-weight: 500;
 }
 
 .activePillHighlight {
   position: absolute;
   inset: 0;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1.5px solid rgba(255, 255, 255, 0.4);
-  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 10px;
+  box-shadow: none;
   z-index: 0;
 }
 
@@ -141,16 +132,16 @@
 .subCopy {
   font-size: 13.5px;
   line-height: 1.55;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.65);
   margin: 0;
   max-width: 360px;
 }
 
-/* Right Column: Large Minimal Monochrome Card Container */
+/* Right Column: 1 Outer Boundary Card (Zero Shadows) */
 .rightColumn {
   position: relative;
   width: 100%;
-  height: 560px;
+  height: 520px;
   display: flex;
   justify-content: center;
 }
@@ -159,42 +150,51 @@
   position: absolute;
   inset: 0;
   width: 100%;
-  height: 560px;
-  background: rgba(14, 14, 18, 0.78);
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
+  min-height: 520px;
+  background: rgba(14, 12, 22, 0.72);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
   border-radius: 28px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 32px 34px 28px 34px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: none;
+  padding: 36px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-/* Top Section: Monochrome Icon & Clean Headline */
+/* Card Header — Bare, Unboxed Icon */
 .cardHeader {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  margin-bottom: 14px;
 }
 
 .stepIconWrap {
-  color: #ffffff;
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  justify-content: flex-start;
+  color: #ffffff;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  box-shadow: none;
 }
 
 .stepHeadline {
-  font-size: clamp(21px, 2.2vw, 25px);
+  font-size: clamp(22px, 2.2vw, 26px);
   font-weight: 500;
-  line-height: 1.25;
+  line-height: 1.28;
   letter-spacing: -0.025em;
   color: #ffffff;
   margin: 0;
+  min-height: 58px;
 }
 
-/* Center Stage: Polished Product Card Image Container */
+/* Card Body: Exactly ONE Creative Inner Content Container */
 .cardBody {
   flex: 1;
   display: flex;
@@ -203,105 +203,195 @@
   padding: 6px 0;
 }
 
-.productFrameWrap {
-  position: relative;
+.mockupContainer {
+  width: 100%;
+  max-width: 480px;
+}
+
+.mockupCard {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 22px 24px;
+  box-sizing: border-box;
+  color: #ffffff;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Inner Stage Header */
+.stageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.statusIndicator {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 100%;
-  max-width: 300px;
+  gap: 8px;
 }
 
-/* Soft atmospheric glowing light halos */
-.auraPurple::before {
-  content: "";
-  position: absolute;
-  inset: -14px;
-  border-radius: 28px;
-  background: radial-gradient(
-    circle at 50% 50%,
-    rgba(168, 85, 247, 0.28) 0%,
-    rgba(168, 85, 247, 0.04) 65%,
-    transparent 80%
-  );
-  z-index: 0;
-  pointer-events: none;
+.livePulse {
+  width: 6px;
+  height: 6px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  box-shadow: none;
+  animation: pulse 1.6s infinite ease-in-out;
 }
 
-.auraIndigo::before {
-  content: "";
-  position: absolute;
-  inset: -14px;
-  border-radius: 28px;
-  background: radial-gradient(
-    circle at 50% 50%,
-    rgba(99, 102, 241, 0.28) 0%,
-    rgba(99, 102, 241, 0.04) 65%,
-    transparent 80%
-  );
-  z-index: 0;
-  pointer-events: none;
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.3;
+    transform: scale(1.25);
+  }
 }
 
-.auraEmerald::before {
-  content: "";
-  position: absolute;
-  inset: -14px;
-  border-radius: 28px;
-  background: radial-gradient(
-    circle at 50% 50%,
-    rgba(52, 211, 153, 0.24) 0%,
-    rgba(52, 211, 153, 0.04) 65%,
-    transparent 80%
-  );
-  z-index: 0;
-  pointer-events: none;
+.statusLabel {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #ffffff;
+  font-family: monospace;
 }
 
-.auraAmber::before {
-  content: "";
-  position: absolute;
-  inset: -14px;
-  border-radius: 28px;
-  background: radial-gradient(
-    circle at 50% 50%,
-    rgba(251, 146, 60, 0.26) 0%,
-    rgba(251, 146, 60, 0.04) 65%,
-    transparent 80%
-  );
-  z-index: 0;
-  pointer-events: none;
+.monoTime {
+  font-size: 11px;
+  font-family: monospace;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.02em;
 }
 
-.productImageContainer {
+/* Feed & Telemetry Data Rows */
+.feedList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.feedItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.feedPrimary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.feedTag {
+  font-size: 9.5px;
+  font-weight: 700;
+  font-family: monospace;
+  letter-spacing: 0.06em;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.feedTitle {
+  font-size: 13px;
+  font-weight: 500;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.feedMeta {
+  font-size: 11px;
+  font-family: monospace;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* Open Waveform Rhythm (Step 3) */
+.waveformStage {
   position: relative;
-  width: 290px;
-  height: 290px;
-  border-radius: 22px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
-  background: #0d0f12;
-  z-index: 1;
+  height: 60px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  padding: 4px 0;
+  box-sizing: border-box;
 }
 
-.productImage {
-  object-fit: cover;
-  border-radius: 22px;
-  transition: transform 0.4s ease;
+.waveBarGroup {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  width: 100%;
+  height: 100%;
 }
 
-/* Card Bottom Description */
+.waveBar {
+  flex: 1;
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.2), #ffffff);
+  border-radius: 3px;
+  min-height: 8px;
+}
+
+/* Action Grid (Step 4) */
+.actionGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.actionItem {
+  font-size: 11px;
+  font-family: monospace;
+  color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.actionItem::before {
+  content: "•";
+  color: #ffffff;
+  font-weight: bold;
+}
+
+/* Inner Stage Telemetry Footer */
+.stageFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+}
+
+.telemetryMuted {
+  color: rgba(255, 255, 255, 0.5);
+  font-family: monospace;
+}
+
+.telemetryHighlight {
+  color: #ffffff;
+  font-family: monospace;
+  font-weight: 600;
+}
+
+/* Card Description Footer */
 .cardFooter {
-  padding-top: 10px;
+  padding-top: 14px;
+  margin-top: 10px;
 }
 
 .stepDescription {
   font-size: 13.5px;
-  line-height: 1.55;
-  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.68);
   margin: 0;
-  max-width: 95%;
 }
 
 /* Responsive Adjustments */
@@ -314,11 +404,6 @@
     min-height: auto;
   }
   .showcaseCard {
-    padding: 26px 24px;
-    height: 520px;
-  }
-  .productImageContainer {
-    width: 240px;
-    height: 240px;
+    padding: 28px;
   }
 }

@@ -1,55 +1,103 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import styles from "./FAQ.module.css";
 
 const FAQ_DATA = [
   {
-    question: "How does Argus integrate with existing camera systems?",
+    question: "What hazards does Argus actually catch?",
     answer:
-      "Argus works with your existing surveillance infrastructure — no camera replacement required. It supports browser cameras for instant testing, RTSP streams for integration with industrial CCTV, and edge deployment for production environments. Setup typically takes under 30 minutes.",
+      "Fire and smoke, falls, missing helmets, workers smoking near flammable materials, blocked emergency exits, machinery left running unattended, spills and trip hazards, and people entering restricted zones. Eight in total, watched continuously.",
   },
   {
-    question: "What happens when a hazard is detected?",
+    question: "Why doesn't it alert the instant something looks wrong?",
     answer:
-      "When Argus confirms a hazard through its temporal voting system, it delivers an alert directly to your team's WhatsApp. Each alert includes the hazard type, confidence level, reasoning, and a visual snapshot. Typical time from detection to alert is 12–25 seconds.",
+      "Argus waits for a hazard to show up in two consecutive checks before it alerts anyone — usually a matter of seconds. That short pause is what keeps your team from getting paged over a shadow or someone walking past the camera, so alerts stay something you can trust.",
+  },
+  {
+    question: "Do I need to install cameras or special hardware?",
+    answer:
+      "No. Argus works with the camera you already have — a laptop, a phone, or an existing site camera. Nothing to wire up or mount.",
+  },
+  {
+    question: "Who gets notified when something happens, and how fast?",
+    answer:
+      "Your designated safety contact gets a WhatsApp message with the hazard type, a snapshot of the moment it happened, and the time — usually within seconds of confirmation.",
+  },
+  {
+    question: "Is the video footage stored or shared anywhere?",
+    answer:
+      "Only the specific moment of a confirmed incident is saved, as a single image tied to that alert — not continuous recordings. That image is what your safety team sees when they check the alert.",
+  },
+  {
+    question: "Can other people see our camera feed or incident history?",
+    answer:
+      "No. Your dashboard link is private, and incidents are only visible to people your team gives access to.",
+  },
+  {
+    question: "What if the internet or camera cuts out?",
+    answer:
+      "Argus tells you plainly when it can't see or can't reach your camera, rather than showing a frozen picture and pretending everything's fine. You'll know immediately if something needs checking.",
+  },
+  {
+    question: "Does this replace a safety officer?",
+    answer:
+      "No — think of it as another set of eyes that never blinks. It catches the moment something happens so your safety team can respond faster, not the other way around.",
   },
 ];
 
 function FAQCard({ question, answer }) {
   const [open, setOpen] = useState(false);
+  const contentRef = useRef(null);
+  const [height, setHeight] = useState(0);
+
+  useEffect(() => {
+    if (open && contentRef.current) {
+      setHeight(contentRef.current.scrollHeight);
+    } else {
+      setHeight(0);
+    }
+  }, [open]);
 
   return (
     <div className={styles.faqCard} onClick={() => setOpen((v) => !v)}>
       <div className={styles.faqCardHeader}>
         <p className={styles.faqQuestion}>{question}</p>
-        <span
-          className={`${styles.faqChevron} ${open ? styles.faqChevronOpen : ""}`}
+        <div
+          className={`${styles.faqChevronWrap} ${open ? styles.faqChevronWrapOpen : ""}`}
         >
           <svg
-            width="16"
-            height="16"
+            width="14"
+            height="14"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth="2"
+            strokeWidth="2.5"
             strokeLinecap="round"
             strokeLinejoin="round"
           >
             <polyline points="6 9 12 15 18 9" />
           </svg>
-        </span>
+        </div>
       </div>
       <div
         className={`${styles.faqAnswerWrap} ${open ? styles.faqAnswerWrapOpen : ""}`}
+        style={{ height: `${height}px` }}
       >
-        <p className={styles.faqAnswer}>{answer}</p>
+        <div ref={contentRef} className={styles.faqAnswerContent}>
+          <p className={styles.faqAnswer}>{answer}</p>
+        </div>
       </div>
     </div>
   );
 }
 
 export default function FAQ() {
+  // Split the data in half for two independent columns
+  const midpoint = Math.ceil(FAQ_DATA.length / 2);
+  const column1 = FAQ_DATA.slice(0, midpoint);
+  const column2 = FAQ_DATA.slice(midpoint);
+
   return (
     <section className={styles.faqSection} id="faqs">
       <div className={styles.faqInner}>
@@ -63,17 +111,30 @@ export default function FAQ() {
           Frequently Asked Questions
         </motion.h2>
 
-        <motion.div
-          className={styles.faqGrid}
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.75, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-        >
-          {FAQ_DATA.map((item, i) => (
-            <FAQCard key={i} question={item.question} answer={item.answer} />
-          ))}
-        </motion.div>
+        <div className={styles.faqLayout}>
+          <motion.div
+            className={styles.faqColumn}
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.75, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {column1.map((item, i) => (
+              <FAQCard key={`col1-${i}`} question={item.question} answer={item.answer} />
+            ))}
+          </motion.div>
+          <motion.div
+            className={styles.faqColumn}
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.75, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {column2.map((item, i) => (
+              <FAQCard key={`col2-${i}`} question={item.question} answer={item.answer} />
+            ))}
+          </motion.div>
+        </div>
       </div>
     </section>
   );

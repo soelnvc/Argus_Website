@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useRef } from "react";
-import Image from "next/image";
+import React, { useState, useEffect, useRef } from "react";
 import {
   motion,
+  AnimatePresence,
   useScroll,
   useTransform,
   useMotionValueEvent,
@@ -15,16 +15,13 @@ const STEPS = [
     id: "01",
     tag: "01 — Watch",
     title: "Watch",
-    headline: "Connect your existing cameras.",
+    headline: "Connect your existing camera feed.",
     description:
-      "Argus bridges directly into your on-premise RTSP and IP camera feeds without hardware replacement — streaming with edge-level optimization.",
-    image: "/images/step_watch.jpg",
-    alt: "Argus RTSP Live Camera Feed Hub",
-    auraClass: styles.auraPurple,
+      "Argus bridges directly into your on-premise RTSP and IP camera feeds without hardware replacement. Instant zero-latency streaming with edge-level optimization.",
     icon: (
       <svg
-        width="32"
-        height="32"
+        width="26"
+        height="26"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -33,7 +30,7 @@ const STEPS = [
         strokeLinejoin="round"
       >
         <path d="M23 7l-7 5 7 5V7z" />
-        <rect x="1" y="5" width="15" height="14" rx="3" ry="3" />
+        <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
       </svg>
     ),
   },
@@ -41,16 +38,14 @@ const STEPS = [
     id: "02",
     tag: "02 — Understand",
     title: "Understand",
-    headline: "Neural vision evaluates every hazard.",
+    headline:
+      "Argus analyzes the scene and evaluates potential hazards against safety criteria.",
     description:
-      "Real-time spatial computer vision monitors machinery clearance, PPE compliance, fall risks, and forklift exclusion zones simultaneously 24/7.",
-    image: "/images/step_understand.jpg",
-    alt: "Argus 3D Spatial Neural Vision Analytics",
-    auraClass: styles.auraIndigo,
+      "Real-time neural computer vision monitors machinery clearance, PPE compliance, fall risks, and forklift exclusion zones simultaneously 24/7.",
     icon: (
       <svg
-        width="32"
-        height="32"
+        width="26"
+        height="26"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -58,10 +53,15 @@ const STEPS = [
         strokeLinecap="round"
         strokeLinejoin="round"
       >
-        <circle cx="6" cy="6" r="3" />
-        <circle cx="18" cy="18" r="3" />
-        <path d="M6 9v3a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V9" />
-        <path d="M18 15v-3a3 3 0 0 0-3-3H9a3 3 0 0 0-3 3v3" />
+        <circle cx="12" cy="12" r="3" />
+        <path d="M12 2v2" />
+        <path d="M12 20v2" />
+        <path d="M2 12h2" />
+        <path d="M20 12h2" />
+        <path d="M4.93 4.93l1.41 1.41" />
+        <path d="M17.66 17.66l1.41 1.41" />
+        <path d="M4.93 19.07l1.41-1.41" />
+        <path d="M17.66 6.34l1.41-1.41" />
       </svg>
     ),
   },
@@ -69,16 +69,13 @@ const STEPS = [
     id: "03",
     tag: "03 — Verify",
     title: "Verify",
-    headline: "Temporal filters eliminate false alerts.",
+    headline: "Temporal verification filters out transient visual anomalies.",
     description:
       "Multi-frame temporal tracking eliminates false positives caused by steam, shadows, or momentary occlusions, confirming genuine safety threats before triggering.",
-    image: "/images/step_verify.jpg",
-    alt: "Argus Multi-Frame Temporal Verification",
-    auraClass: styles.auraEmerald,
     icon: (
       <svg
-        width="32"
-        height="32"
+        width="26"
+        height="26"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -95,16 +92,14 @@ const STEPS = [
     id: "04",
     tag: "04 — Act",
     title: "Act",
-    headline: "Instant dispatch to floor managers.",
+    headline:
+      "Confirmed incidents are logged and dispatched to your safety team.",
     description:
-      "Automated alerts broadcast directly to safety managers via dashboard, push notifications, and sound beacons within 200 milliseconds of verified detection.",
-    image: "/images/step_act.jpg",
-    alt: "Argus Instant Safety Protocol Dispatch",
-    auraClass: styles.auraAmber,
+      "Automated alerts broadcast directly to floor managers via dashboard, push notifications, and sound beacons within 200 milliseconds of verified detection.",
     icon: (
       <svg
-        width="32"
-        height="32"
+        width="26"
+        height="26"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -117,6 +112,212 @@ const STEPS = [
     ),
   },
 ];
+
+function StepVisualizer({ activeStep }) {
+  const [timeStr, setTimeStr] = useState("");
+
+  useEffect(() => {
+    const updateTime = () => {
+      const d = new Date();
+      setTimeStr(
+        `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}:${String(d.getSeconds()).padStart(2, "0")}`,
+      );
+    };
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className={styles.mockupContainer}>
+      <AnimatePresence mode="wait">
+        {/* Step 1: Ingest Live Feeds */}
+        {activeStep === 0 && (
+          <motion.div
+            key="step-0"
+            className={styles.mockupCard}
+            initial={{ opacity: 0, scale: 0.98, y: 6 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.98, y: -6 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className={styles.stageHeader}>
+              <div className={styles.statusIndicator}>
+                <span className={styles.livePulse} />
+                <span className={styles.statusLabel}>RTSP INGESTION ACTIVE</span>
+              </div>
+              <span className={styles.monoTime}>UTC {timeStr || "12:45:00"}</span>
+            </div>
+
+            <div className={styles.feedList}>
+              <div className={styles.feedItem}>
+                <div className={styles.feedPrimary}>
+                  <span className={styles.feedTag}>CAM 01</span>
+                  <span className={styles.feedTitle}>Heavy Assembly Bay North</span>
+                </div>
+                <div className={styles.feedMeta}>1080p • 60 FPS • Edge TLS Encrypted</div>
+              </div>
+
+              <div className={styles.feedItem}>
+                <div className={styles.feedPrimary}>
+                  <span className={styles.feedTag}>CAM 02</span>
+                  <span className={styles.feedTitle}>Loading Dock 04 Logistics</span>
+                </div>
+                <div className={styles.feedMeta}>720p • 30 FPS • Synchronized</div>
+              </div>
+            </div>
+
+            <div className={styles.stageFooter}>
+              <span className={styles.telemetryMuted}>4 Channels Ingested</span>
+              <span className={styles.telemetryHighlight}>12ms Zero-Latency</span>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Step 2: Neural Spatial Analysis */}
+        {activeStep === 1 && (
+          <motion.div
+            key="step-1"
+            className={styles.mockupCard}
+            initial={{ opacity: 0, scale: 0.98, y: 6 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.98, y: -6 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className={styles.stageHeader}>
+              <div className={styles.statusIndicator}>
+                <span className={styles.livePulse} />
+                <span className={styles.statusLabel}>NEURAL INFERENCE ENGINE</span>
+              </div>
+              <span className={styles.monoTime}>12.4 TFLOPS</span>
+            </div>
+
+            <div className={styles.feedList}>
+              <div className={styles.feedItem}>
+                <div className={styles.feedPrimary}>
+                  <span className={styles.feedTag}>HAZARD</span>
+                  <span className={styles.feedTitle}>Forklift Zone Proximity Limit</span>
+                </div>
+                <div className={styles.feedMeta}>
+                  Clearance: 1.18m (Safe: 3.00m) • Confidence: 98.4%
+                </div>
+              </div>
+
+              <div className={styles.feedItem}>
+                <div className={styles.feedPrimary}>
+                  <span className={styles.feedTag}>PPE</span>
+                  <span className={styles.feedTitle}>Personnel Clearance Verified</span>
+                </div>
+                <div className={styles.feedMeta}>
+                  Helmet: Pass • Hi-Vis Vest: Pass • Zone: Clearance Bay
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.stageFooter}>
+              <span className={styles.telemetryMuted}>Inference Speed: 4.2ms</span>
+              <span className={styles.telemetryHighlight}>Continuous 24/7 Scan</span>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Step 3: Temporal Stability Filter */}
+        {activeStep === 2 && (
+          <motion.div
+            key="step-2"
+            className={styles.mockupCard}
+            initial={{ opacity: 0, scale: 0.98, y: 6 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.98, y: -6 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className={styles.stageHeader}>
+              <div className={styles.statusIndicator}>
+                <span className={styles.livePulse} />
+                <span className={styles.statusLabel}>TEMPORAL ANOMALY FILTER</span>
+              </div>
+              <span className={styles.monoTime}>8/8 FRAMES VERIFIED</span>
+            </div>
+
+            <div className={styles.waveformStage}>
+              <div className={styles.waveBarGroup}>
+                {[45, 62, 78, 92, 98, 99, 99, 99].map((h, i) => (
+                  <motion.div
+                    key={i}
+                    className={styles.waveBar}
+                    initial={{ height: 0 }}
+                    animate={{ height: `${h}%` }}
+                    transition={{ duration: 0.35, delay: i * 0.03 }}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div className={styles.feedList}>
+              <div className={styles.feedItem}>
+                <div className={styles.feedPrimary}>
+                  <span className={styles.feedTag}>FILTER</span>
+                  <span className={styles.feedTitle}>Transient Anomaly Suppression</span>
+                </div>
+                <div className={styles.feedMeta}>
+                  Steam & momentary shadows eliminated (100% false-positive rejection)
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.stageFooter}>
+              <span className={styles.telemetryMuted}>Temporal Consistency</span>
+              <span className={styles.telemetryHighlight}>99.8% Stability</span>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Step 4: Automated Incident Dispatch */}
+        {activeStep === 3 && (
+          <motion.div
+            key="step-3"
+            className={styles.mockupCard}
+            initial={{ opacity: 0, scale: 0.98, y: 6 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.98, y: -6 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className={styles.stageHeader}>
+              <div className={styles.statusIndicator}>
+                <span className={styles.livePulse} />
+                <span className={styles.statusLabel}>INCIDENT PROTOCOL DISPATCH</span>
+              </div>
+              <span className={styles.monoTime}>+180ms DISPATCH</span>
+            </div>
+
+            <div className={styles.feedList}>
+              <div className={styles.feedItem}>
+                <div className={styles.feedPrimary}>
+                  <span className={styles.feedTag}>ACTION</span>
+                  <span className={styles.feedTitle}>Machinery Safety Protocol Triggered</span>
+                </div>
+                <div className={styles.feedMeta}>
+                  Sector 03 • Conveyor Unit B4 • Operator Audio-Visual Alert
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.actionGrid}>
+              <span className={styles.actionItem}>Floor Dashboard Dispatched</span>
+              <span className={styles.actionItem}>Beacon Sound Active</span>
+              <span className={styles.actionItem}>Secure Audit Log Recorded</span>
+            </div>
+
+            <div className={styles.stageFooter}>
+              <span className={styles.telemetryMuted}>Incident Broadcast</span>
+              <span className={styles.telemetryHighlight}>Immediate Dispatch</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
 
 function ContinuousScrollCard({ step, idx, progress }) {
   let yTransformConfig;
@@ -173,30 +374,17 @@ function ContinuousScrollCard({ step, idx, progress }) {
   );
 
   return (
-    <motion.div className={styles.showcaseCard} style={{ y, opacity }}>
-      {/* Top Left: Monochrome Icon & Headline */}
+    <motion.div
+      className={styles.showcaseCard}
+      style={{ y, opacity }}
+    >
       <div className={styles.cardHeader}>
         <div className={styles.stepIconWrap}>{step.icon}</div>
         <h3 className={styles.stepHeadline}>{step.headline}</h3>
       </div>
-
-      {/* Center: Polished Distinct Product Interface Image (Uniform Ratio & Size) */}
       <div className={styles.cardBody}>
-        <div className={`${styles.productFrameWrap} ${step.auraClass}`}>
-          <div className={styles.productImageContainer}>
-            <Image
-              src={step.image}
-              alt={step.alt}
-              fill
-              sizes="(max-width: 768px) 100vw, 380px"
-              className={styles.productImage}
-              priority={idx === 0}
-            />
-          </div>
-        </div>
+        <StepVisualizer activeStep={idx} />
       </div>
-
-      {/* Bottom: Minimal Secondary Paragraph */}
       <div className={styles.cardFooter}>
         <p className={styles.stepDescription}>{step.description}</p>
       </div>
@@ -220,20 +408,48 @@ export default function HowArgusSolvesIt() {
     let nextStep = 0;
     if (latest < 0.16) nextStep = 0;
     else if (latest < 0.38) nextStep = 1;
-    else if (latest < 0.6) nextStep = 2;
+    else if (latest < 0.60) nextStep = 2;
     else nextStep = 3;
     setActiveStep((prev) => (prev !== nextStep ? nextStep : prev));
   });
 
+  const handleStepClick = (idx) => {
+    setActiveStep(idx);
+    if (!containerRef.current || typeof window === "undefined") return;
+
+    const rect = containerRef.current.getBoundingClientRect();
+    const scrollTop = window.scrollY || window.pageYOffset || 0;
+    const containerTop = rect.top + scrollTop;
+    const containerHeight = containerRef.current.offsetHeight;
+    const windowHeight = window.innerHeight;
+    const scrollableDistance = containerHeight - windowHeight;
+
+    const stepProgress = [0.02, 0.26, 0.49, 0.75];
+    const targetScrollY = containerTop + stepProgress[idx] * scrollableDistance;
+
+    if (window.__lenis) {
+      window.__lenis.scrollTo(targetScrollY, { duration: 1.0 });
+    } else {
+      window.scrollTo({ top: targetScrollY, behavior: "smooth" });
+    }
+  };
+
   return (
-    <section className={styles.solvesSection} ref={containerRef} id="why-how">
+    <section
+      className={styles.solvesSection}
+      ref={containerRef}
+      id="why-how"
+    >
       <div className={styles.solvesSticky}>
         <motion.div
           className={styles.bgParallaxLayer}
           style={{ y: bgParallaxY }}
         />
 
-        <motion.div className={styles.sectionContainer} style={{ y: exitSlowY }}>
+        <motion.div
+          className={styles.sectionContainer}
+          style={{ y: exitSlowY }}
+        >
           {/* Left Column */}
           <div className={styles.leftColumn}>
             <h2 className={styles.mainHeadline}>
@@ -249,7 +465,7 @@ export default function HowArgusSolvesIt() {
                 return (
                   <button
                     key={step.id}
-                    onClick={() => setActiveStep(idx)}
+                    onClick={() => handleStepClick(idx)}
                     className={`${styles.stepPill} ${isActive ? styles.stepPillActive : ""}`}
                   >
                     {isActive && (
@@ -272,12 +488,12 @@ export default function HowArgusSolvesIt() {
             {/* Left Footer Subtext */}
             <div className={styles.leftFooter}>
               <p className={styles.subCopy}>
-                Full installation guidance and support provided.
+                Full Installation Guidance and Support by Argus Team
               </p>
             </div>
           </div>
 
-          {/* Right Column: 4 Continuous Scroll Minimal Monochrome Cards */}
+          {/* Right Column: 4 Continuous Scroll Cards */}
           <div className={styles.rightColumn}>
             {STEPS.map((step, idx) => (
               <ContinuousScrollCard
