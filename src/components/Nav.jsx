@@ -295,13 +295,14 @@ export default function Nav() {
       }
 
       // 7. Hero Scroll Wrapper Check:
-      // When scrollY is past the initial Hero WaveGlow threshold (~320px),
-      // the black "Why do we need Argus" slide is active -> charcoal.
-      // Otherwise, at the top of the page -> purple.
+      // Inside Hero (scrollWrapper), the "Why do we need Argus" black slide
+      // only appears after scrolling past 1.15 viewports (~1000px).
+      // Anywhere above that threshold (at the Hero with WaveGlow), the theme is PURPLE.
       const scrollY = window.scrollY || window.pageYOffset || 0;
-      const heroThreshold = Math.min(window.innerHeight * 0.35, 340);
+      const vh = (typeof window !== "undefined" ? window.innerHeight : 800);
+      const whyArgusThreshold = vh * 1.15;
 
-      if (scrollY > heroThreshold) {
+      if (scrollY >= whyArgusThreshold) {
         setTheme("charcoal");
       } else {
         setTheme("purple");
