@@ -51,7 +51,7 @@ function FAQCard({ question, answer }) {
 
 export default function FAQ() {
   return (
-    <section className={styles.faqSection}>
+    <section className={styles.faqSection} id="faqs">
       <div className={styles.faqInner}>
         <motion.h2
           className={styles.faqHeadline}

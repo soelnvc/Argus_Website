@@ -117,7 +117,7 @@ export default function WhatArgusDetects() {
   const scrollRef = useRef(null);
 
   return (
-    <section className={styles.detectsSection}>
+    <section className={styles.detectsSection} id="safety">
       {/* Header Container (Permanently Locked Positions & Sizes) */}
       <div className={styles.headerContainer}>
         {/* 1. Main Headline (Center Aligned) */}

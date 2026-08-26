@@ -6,7 +6,7 @@ import styles from "./ChooseYourPace.module.css";
 
 export default function ChooseYourPace() {
   return (
-    <section className={styles.depthSection}>
+    <section className={styles.depthSection} id="use">
       {/* Curved Glowing Arc emerging from backside of previous white section */}
       <div className={styles.curvedGlowContainer}>
         <div className={styles.curvedGlowArc} />

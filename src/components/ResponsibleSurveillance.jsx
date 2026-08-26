@@ -89,7 +89,7 @@ function CardContent({ card }) {
 
 export default function ResponsibleSurveillance() {
   return (
-    <section className={styles.surveillanceSection}>
+    <section className={styles.surveillanceSection} id="privacy">
       {/* Header Container */}
       <div className={styles.headerContainer}>
         <motion.h2

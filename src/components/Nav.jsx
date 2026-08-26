@@ -9,6 +9,29 @@ function clamp01(v) {
 export default function Nav() {
   const dockRef = useRef(null);
 
+  const handleNavClick = (id, e) => {
+    e.preventDefault();
+    if (id === "top") {
+      if (typeof window !== "undefined") {
+        if (window.__lenis) {
+          window.__lenis.scrollTo(0, { duration: 1.5 });
+        } else {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+      }
+      return;
+    }
+
+    const el = document.getElementById(id);
+    if (el) {
+      if (typeof window !== "undefined" && window.__lenis) {
+        window.__lenis.scrollTo(el, { duration: 1.5, offset: -20 });
+      } else {
+        el.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  };
+
   useEffect(() => {
     const root = dockRef.current;
     if (!root) return;
@@ -300,11 +323,13 @@ export default function Nav() {
         data-spec
         aria-label="Primary"
       >
+        {/* Home / Top */}
         <a
           className={`${styles["dock-item"]} ${styles["dock-mark"]}`}
           data-dock
           data-spec
-          href="#"
+          href="#top"
+          onClick={(e) => handleNavClick("top", e)}
           aria-label="Home"
         >
           <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -315,49 +340,49 @@ export default function Nav() {
             />
           </svg>
         </a>
-        <a className={styles["dock-item"]} data-dock data-spec href="#">
-          <span className={styles.glyph} aria-hidden="true">
-            <svg viewBox="0 0 16 16">
-              <path d="M8 14V9" />
-              <path d="M8 9c0-2.4 1.7-4.3 4-4.3.2 2.6-1.6 4.6-4 4.3Z" />
-              <path d="M8 10.5C7.9 8.4 6.4 6.8 4.4 6.8 4.3 8.9 5.9 10.6 8 10.5Z" />
-            </svg>
-          </span>
-          <span>Grove</span>
-        </a>
-        <a className={styles["dock-item"]} data-dock data-spec href="#">
-          <span className={styles.glyph} aria-hidden="true">
-            <svg viewBox="0 0 16 16">
-              <path d="M1.6 12.4c2.4-3.4 4.3-5.1 5.7-5.1 2 0 3 3.6 5 3.6 1.1 0 1.9-.5 2.4-1.4" />
-              <path d="M4.3 6.2C5.5 4.4 6.6 3.5 7.6 3.5c1.5 0 2.2 2.4 3.7 2.4" />
-            </svg>
-          </span>
-          <span>Habitats</span>
-        </a>
-        <a className={styles["dock-item"]} data-dock data-spec href="#">
-          <span className={styles.glyph} aria-hidden="true">
-            <svg viewBox="0 0 16 16">
-              <path d="M4 2.4h5.3L12 5.1v8.5H4z" />
-              <path d="M9.2 2.4V5h2.7" />
-              <path d="M6 8.4h4M6 10.8h2.8" />
-            </svg>
-          </span>
-          <span>Journal</span>
-        </a>
+
+        {/* 1. How */}
         <a
-          className={`${styles["dock-item"]} ${styles["dock-item--enter"]}`}
+          className={styles["dock-item"]}
           data-dock
           data-spec
-          href="#"
+          href="#why-how"
+          onClick={(e) => handleNavClick("why-how", e)}
         >
-          <span className={styles.glyph} aria-hidden="true">
-            <svg viewBox="0 0 16 16">
-              <path d="M6.6 2.5h5.1a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H6.6" />
-              <path d="M2.6 8h6.6" />
-              <path d="m7 5.6 2.4 2.4L7 10.4" />
-            </svg>
-          </span>
-          <span>Enter</span>
+          <span>How</span>
+        </a>
+
+        {/* 2. Safety */}
+        <a
+          className={styles["dock-item"]}
+          data-dock
+          data-spec
+          href="#safety"
+          onClick={(e) => handleNavClick("safety", e)}
+        >
+          <span>Safety</span>
+        </a>
+
+        {/* 3. Privacy */}
+        <a
+          className={styles["dock-item"]}
+          data-dock
+          data-spec
+          href="#privacy"
+          onClick={(e) => handleNavClick("privacy", e)}
+        >
+          <span>Privacy</span>
+        </a>
+
+        {/* 4. Use */}
+        <a
+          className={styles["dock-item"]}
+          data-dock
+          data-spec
+          href="#use"
+          onClick={(e) => handleNavClick("use", e)}
+        >
+          <span>Use</span>
         </a>
       </nav>
     </div>

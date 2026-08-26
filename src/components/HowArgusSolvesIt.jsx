@@ -387,7 +387,11 @@ export default function HowArgusSolvesIt() {
   });
 
   return (
-    <section className={styles.solvesSection} ref={containerRef}>
+    <section
+      className={styles.solvesSection}
+      ref={containerRef}
+      id="why-how"
+    >
       <div className={styles.solvesSticky}>
         <motion.div
           className={styles.bgParallaxLayer}
