@@ -58,16 +58,15 @@ export default function Nav() {
     let on = false;
     let specOn = false;
     let aimX = 0,
-      aimY = 0,
-      aimSeen = false,
+      aimY = 0;
+    let aimSeen = false,
       aimMoved = false;
     let keyMode = false;
-    let dirty = true;
-    let specDirty = true;
-    let u = 1;
+    let dirty = true,
+      specDirty = true;
     let live = false;
-    let rafId = null;
     let lastTime = performance.now();
+    let rafId = null;
 
     const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -75,12 +74,17 @@ export default function Nav() {
       return !REDUCED && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
     }
 
+    function computeUnit() {
+      const w = window.innerWidth || 1600;
+      return Math.min(Math.max(w, 360), 1900) / 1600;
+    }
+
+    let u = computeUnit();
+
     function measureDock() {
-      if (!root) return;
+      u = computeUnit();
       on = fineHover();
       specOn = on;
-      const isNarrow = window.matchMedia("(max-width: 900px)").matches;
-      u = window.innerWidth / (isNarrow ? 760 : 1600);
 
       dockItems.forEach((st) => {
         st.el.style.width = "";
@@ -200,14 +204,11 @@ export default function Nav() {
       let moving = false;
 
       specItems.forEach((st) => {
-        let diff = st.tAng - st.ang;
-        while (diff < -Math.PI) diff += Math.PI * 2;
-        while (diff > Math.PI) diff -= Math.PI * 2;
-        st.ang += diff * (1 - Math.exp(-20 * dt));
+        const diff = ((st.tAng - st.ang + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
+        st.ang += diff * (1 - Math.exp(-12 * dt));
+        st.br += (st.tBr - st.br) * (1 - Math.exp(-14 * dt));
 
-        st.br += (st.tBr - st.br) * (1 - Math.exp(-18 * dt));
-
-        if (Math.abs(diff) < 0.002 && Math.abs(st.tBr - st.br) < 0.002) {
+        if (Math.abs(diff) < 0.001 && Math.abs(st.tBr - st.br) < 0.002) {
           st.ang = st.tAng;
           st.br = st.tBr;
         } else {
@@ -215,7 +216,7 @@ export default function Nav() {
         }
 
         st.el.style.setProperty("--spec-angle", st.ang.toFixed(4) + "rad");
-        st.el.style.setProperty("--spec-bright", (clamp01(st.br) * 0.92).toFixed(3));
+        st.el.style.setProperty("--spec-bright", (clamp01(st.br) * 0.96).toFixed(3));
       });
 
       if (!moving) specDirty = false;
@@ -299,7 +300,7 @@ export default function Nav() {
       // only appears after scrolling past 1.15 viewports (~1000px).
       // Anywhere above that threshold (at the Hero with WaveGlow), the theme is PURPLE.
       const scrollY = window.scrollY || window.pageYOffset || 0;
-      const vh = (typeof window !== "undefined" ? window.innerHeight : 800);
+      const vh = typeof window !== "undefined" ? window.innerHeight : 800;
       const whyArgusThreshold = vh * 1.15;
 
       if (scrollY >= whyArgusThreshold) {
@@ -448,6 +449,13 @@ export default function Nav() {
           href="#why-how"
           onClick={(e) => handleNavClick("why-how", e)}
         >
+          <span className={styles.glyph} aria-hidden="true">
+            <svg viewBox="0 0 16 16">
+              <path d="M8 14V9" />
+              <path d="M8 9c0-2.4 1.7-4.3 4-4.3.2 2.6-1.6 4.6-4 4.3Z" />
+              <path d="M8 10.5C7.9 8.4 6.4 6.8 4.4 6.8 4.3 8.9 5.9 10.6 8 10.5Z" />
+            </svg>
+          </span>
           <span>How</span>
         </a>
 
@@ -459,6 +467,12 @@ export default function Nav() {
           href="#safety"
           onClick={(e) => handleNavClick("safety", e)}
         >
+          <span className={styles.glyph} aria-hidden="true">
+            <svg viewBox="0 0 16 16">
+              <path d="M1.6 12.4c2.4-3.4 4.3-5.1 5.7-5.1 2 0 3 3.6 5 3.6 1.1 0 1.9-.5 2.4-1.4" />
+              <path d="M4.3 6.2C5.5 4.4 6.6 3.5 7.6 3.5c1.5 0 2.2 2.4 3.7 2.4" />
+            </svg>
+          </span>
           <span>Safety</span>
         </a>
 
@@ -470,6 +484,13 @@ export default function Nav() {
           href="#privacy"
           onClick={(e) => handleNavClick("privacy", e)}
         >
+          <span className={styles.glyph} aria-hidden="true">
+            <svg viewBox="0 0 16 16">
+              <path d="M4 2.4h5.3L12 5.1v8.5H4z" />
+              <path d="M9.2 2.4V5h2.7" />
+              <path d="M6 8.4h4M6 10.8h2.8" />
+            </svg>
+          </span>
           <span>Privacy</span>
         </a>
 
@@ -481,6 +502,13 @@ export default function Nav() {
           href="#use"
           onClick={(e) => handleNavClick("use", e)}
         >
+          <span className={styles.glyph} aria-hidden="true">
+            <svg viewBox="0 0 16 16">
+              <path d="M6.6 2.5h5.1a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H6.6" />
+              <path d="M2.6 8h6.6" />
+              <path d="m7 5.6 2.4 2.4L7 10.4" />
+            </svg>
+          </span>
           <span>Use</span>
         </a>
       </nav>

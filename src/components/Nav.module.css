@@ -29,10 +29,18 @@
   white-space: nowrap;
   max-width: 40.5px;
 
-  /* Smooth multi-property cross-fade & elegant expansion transition */
-  background-color: var(--dock-bg, rgba(22, 14, 34, 0.85));
-  border: 1px solid var(--dock-border, rgba(168, 85, 247, 0.35));
-  box-shadow: var(--dock-shadow, 0 8px 32px rgba(0, 0, 0, 0.45));
+  /* Premium glass panel with illuminated top edge */
+  border: 1px solid var(--dock-border, rgba(255, 255, 255, 0.12));
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.055) 0%,
+      rgba(255, 255, 255, 0) 42%
+    ),
+    var(--dock-bg, rgba(22, 14, 34, 0.85));
+  box-shadow:
+    var(--dock-shadow, 0 8px 32px rgba(0, 0, 0, 0.45)),
+    inset 0 1px rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
 
@@ -54,7 +62,7 @@
     box-shadow 0.65s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Top soft gradient glaze that subtly lifts the glass */
+/* Top soft gradient glaze */
 .dock::before {
   content: "";
   position: absolute;
@@ -63,8 +71,8 @@
   pointer-events: none;
   background: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.12) 0%,
-    rgba(255, 255, 255, 0.02) 60%,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.01) 60%,
     transparent 100%
   );
   opacity: var(--dock-glaze-opacity, 1);
@@ -80,9 +88,12 @@
   --dock-border: rgba(168, 85, 247, 0.35);
   --dock-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), 0 0 24px rgba(168, 85, 247, 0.2);
   --dock-glaze-opacity: 1;
-  --item-bg: rgba(255, 255, 255, 0.045);
-  --item-border: rgba(255, 255, 255, 0.06);
-  --item-color: rgba(255, 255, 255, 0.7);
+  --item-bg: rgba(255, 255, 255, 0.04);
+  --item-color: rgba(255, 255, 255, 0.55);
+  --item-hover-color: #ffffff;
+  --item-hover-border: rgba(217, 70, 239, 0.45);
+  --item-hover-bg: rgba(38, 16, 54, 0.94);
+  --item-hover-shadow: 0 7px 16px rgba(15, 4, 24, 0.5), 0 0 18px rgba(168, 85, 247, 0.25);
   --mark-bg: #f3e8ff;
   --mark-border: #f3e8ff;
   --mark-color: #3b0764;
@@ -92,22 +103,6 @@
   --dock-bg: rgba(38, 14, 58, 0.92);
   --dock-border: rgba(168, 85, 247, 0.55);
   --dock-shadow: 0 12px 36px rgba(0, 0, 0, 0.55), 0 0 30px rgba(168, 85, 247, 0.3);
-}
-
-.dock[data-theme="purple"] .dock-item:hover {
-  --item-bg: rgba(168, 85, 247, 0.22);
-  --item-border: rgba(192, 132, 252, 0.5);
-  --item-color: #ffffff;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
-}
-
-.dock[data-theme="purple"] .dock-item[data-near="true"] {
-  --item-bg: linear-gradient(180deg, rgba(217, 70, 239, 0.45) 0%, rgba(147, 51, 234, 0.6) 100%);
-  --item-border: rgba(217, 70, 239, 0.75);
-  --item-color: #ffffff;
-  box-shadow:
-    0 6px 20px rgba(147, 51, 234, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
 
 .dock[data-theme="purple"] .dock-mark[data-near="true"] {
@@ -122,12 +117,15 @@
    ========================================================================= */
 .dock[data-theme="charcoal"] {
   --dock-bg: rgba(16, 16, 20, 0.88);
-  --dock-border: rgba(255, 255, 255, 0.16);
-  --dock-shadow: 0 8px 32px rgba(0, 0, 0, 0.65), inset 0 0 12px rgba(255, 255, 255, 0.02);
+  --dock-border: rgba(255, 255, 255, 0.14);
+  --dock-shadow: 0 8px 32px rgba(0, 0, 0, 0.65);
   --dock-glaze-opacity: 0.8;
-  --item-bg: rgba(255, 255, 255, 0.055);
-  --item-border: rgba(255, 255, 255, 0.08);
-  --item-color: rgba(255, 255, 255, 0.7);
+  --item-bg: rgba(255, 255, 255, 0.04);
+  --item-color: rgba(255, 255, 255, 0.55);
+  --item-hover-color: #ffffff;
+  --item-hover-border: rgba(255, 255, 255, 0.22);
+  --item-hover-bg: rgba(28, 28, 34, 0.96);
+  --item-hover-shadow: 0 7px 16px rgba(0, 0, 0, 0.55);
   --mark-bg: #ffffff;
   --mark-border: #ffffff;
   --mark-color: #0d0d10;
@@ -137,22 +135,6 @@
   --dock-bg: rgba(24, 24, 28, 0.95);
   --dock-border: rgba(255, 255, 255, 0.35);
   --dock-shadow: 0 12px 36px rgba(0, 0, 0, 0.75);
-}
-
-.dock[data-theme="charcoal"] .dock-item:hover {
-  --item-bg: rgba(255, 255, 255, 0.15);
-  --item-border: rgba(255, 255, 255, 0.4);
-  --item-color: #ffffff;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
-}
-
-.dock[data-theme="charcoal"] .dock-item[data-near="true"] {
-  --item-bg: linear-gradient(180deg, #323238 0%, #1c1c20 100%);
-  --item-border: rgba(255, 255, 255, 0.55);
-  --item-color: #ffffff;
-  box-shadow:
-    0 6px 20px rgba(0, 0, 0, 0.6),
-    inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 .dock[data-theme="charcoal"] .dock-mark[data-near="true"] {
@@ -170,9 +152,12 @@
   --dock-border: rgba(0, 0, 0, 0.1);
   --dock-shadow: 0 10px 32px -4px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
   --dock-glaze-opacity: 0.4;
-  --item-bg: rgba(255, 255, 255, 0.65);
-  --item-border: rgba(0, 0, 0, 0.08);
+  --item-bg: rgba(0, 0, 0, 0.035);
   --item-color: #4b4b54;
+  --item-hover-color: #121216;
+  --item-hover-border: rgba(0, 0, 0, 0.14);
+  --item-hover-bg: #ffffff;
+  --item-hover-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
   --mark-bg: #ede8df;
   --mark-border: rgba(0, 0, 0, 0.1);
   --mark-color: #2b2b34;
@@ -182,24 +167,6 @@
   --dock-bg: rgba(248, 246, 241, 0.98);
   --dock-border: rgba(0, 0, 0, 0.16);
   --dock-shadow: 0 14px 38px -4px rgba(0, 0, 0, 0.11), 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.dock[data-theme="white"] .dock-item:hover {
-  --item-bg: #ffffff;
-  --item-border: rgba(0, 0, 0, 0.18);
-  --item-color: #1a1a20;
-  box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
-}
-
-.dock[data-theme="white"] .dock-item[data-near="true"] {
-  --item-bg: linear-gradient(180deg, #ffffff 0%, #edeae3 100%);
-  --item-border: rgba(0, 0, 0, 0.25);
-  --item-color: #121216;
-  box-shadow:
-    0 4px 16px rgba(0, 0, 0, 0.09),
-    inset 0 1px 0 rgba(255, 255, 255, 1);
 }
 
 .dock[data-theme="white"] .dock-mark[data-near="true"] {
@@ -223,6 +190,7 @@
   gap: calc(8 * var(--u));
   padding: 0 calc(13 * var(--u));
   transform-origin: 50% 0;
+  border: 1px solid transparent;
   border-radius: calc(10 * var(--u));
   text-decoration: none;
   cursor: pointer;
@@ -235,18 +203,50 @@
   will-change: width, height, transform;
 
   /* Smooth cross-fade transition on items */
-  background: var(--item-bg, rgba(255, 255, 255, 0.045));
-  border: 1px solid var(--item-border, rgba(255, 255, 255, 0.06));
-  color: var(--item-color, rgba(255, 255, 255, 0.7));
+  background: var(--item-bg, rgba(255, 255, 255, 0.04));
+  color: var(--item-color, rgba(255, 255, 255, 0.55));
 
   transition:
     width 0.22s cubic-bezier(0.22, 0.61, 0.36, 1),
     height 0.22s cubic-bezier(0.22, 0.61, 0.36, 1),
     transform 0.22s cubic-bezier(0.22, 0.61, 0.36, 1),
-    background 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-    color 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    color 0.18s cubic-bezier(0.22, 0.61, 0.36, 1),
+    border-color 0.2s cubic-bezier(0.22, 0.61, 0.36, 1),
+    background 0.2s cubic-bezier(0.22, 0.61, 0.36, 1),
+    box-shadow 0.2s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* Magnified Hover / Proximity Active Tile */
+.dock-item[data-near="true"] {
+  z-index: 7;
+  color: var(--item-hover-color, #ffffff);
+  border-color: var(--item-hover-border, rgba(255, 255, 255, 0.22));
+  background: var(--item-hover-bg, rgba(28, 28, 34, 0.94));
+  box-shadow: var(--item-hover-shadow, 0 calc(7 * var(--u)) calc(16 * var(--u)) rgba(0, 0, 0, 0.45));
+}
+
+/* Item Glyphs / Icons */
+.dock-item .glyph {
+  width: calc(14 * var(--u));
+  height: calc(14 * var(--u));
+  flex: none;
+  opacity: 0.66;
+  transition: opacity 0.18s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.dock-item .glyph svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.dock-item[data-near="true"] .glyph {
+  opacity: 1;
 }
 
 /* The mark is the dock's anchor */
@@ -280,6 +280,8 @@
 
 /* =========================================================================
    DYNAMIC SPECULAR METALLIC CHROMIUM RIM REFLECTION
+   - A conic gradient masked down to the exact 1px border perimeter
+   - Start angle tracks pointer coordinates with smooth angular physics
    ========================================================================= */
 .dock[data-spec],
 .dock-item[data-spec] {
@@ -291,25 +293,25 @@
 .dock-item[data-spec]::after {
   content: "";
   position: absolute;
-  inset: 0;
-  z-index: 10;
-  padding: 1.25px;
+  inset: -1px;
+  z-index: 5;
+  padding: 1px;
   border-radius: inherit;
   pointer-events: none;
   opacity: var(--spec-bright, 0);
   background: conic-gradient(
     from var(--spec-angle, 2.4rad) at 50% 50%,
-    rgba(216, 180, 254, 0) 0deg,
-    rgba(216, 180, 254, 0.2) 14deg,
-    rgba(255, 255, 255, 1) 28deg,
-    rgba(216, 180, 254, 0.4) 46deg,
-    rgba(216, 180, 254, 0) 68deg,
-    rgba(216, 180, 254, 0) 180deg,
-    rgba(216, 180, 254, 0.2) 194deg,
-    rgba(255, 255, 255, 1) 208deg,
-    rgba(216, 180, 254, 0.4) 226deg,
-    rgba(216, 180, 254, 0) 248deg,
-    rgba(216, 180, 254, 0) 360deg
+    rgba(255, 255, 255, 0) 0deg,
+    rgba(255, 255, 255, 0.08) 14deg,
+    rgba(255, 255, 255, 0.98) 28deg,
+    rgba(255, 255, 255, 0.16) 46deg,
+    rgba(255, 255, 255, 0) 68deg,
+    rgba(255, 255, 255, 0) 180deg,
+    rgba(255, 255, 255, 0.08) 194deg,
+    rgba(255, 255, 255, 0.98) 208deg,
+    rgba(255, 255, 255, 0.16) 226deg,
+    rgba(255, 255, 255, 0) 248deg,
+    rgba(255, 255, 255, 0) 360deg
   );
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
@@ -319,43 +321,7 @@
     linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
-  transition: opacity 0.2s ease;
-}
-
-/* Charcoal Specular */
-.dock[data-theme="charcoal"][data-spec]::after,
-.dock[data-theme="charcoal"] .dock-item[data-spec]::after {
-  background: conic-gradient(
-    from var(--spec-angle, 2.4rad) at 50% 50%,
-    rgba(255, 255, 255, 0) 0deg,
-    rgba(255, 255, 255, 0.25) 14deg,
-    rgba(255, 255, 255, 1) 28deg,
-    rgba(255, 255, 255, 0.4) 46deg,
-    rgba(255, 255, 255, 0) 68deg,
-    rgba(255, 255, 255, 0) 180deg,
-    rgba(255, 255, 255, 0.25) 194deg,
-    rgba(255, 255, 255, 1) 208deg,
-    rgba(255, 255, 255, 0.4) 226deg,
-    rgba(255, 255, 255, 0) 360deg
-  );
-}
-
-/* Creamish Off-White Specular */
-.dock[data-theme="white"][data-spec]::after,
-.dock[data-theme="white"] .dock-item[data-spec]::after {
-  background: conic-gradient(
-    from var(--spec-angle, 2.4rad) at 50% 50%,
-    rgba(0, 0, 0, 0) 0deg,
-    rgba(0, 0, 0, 0.15) 14deg,
-    rgba(255, 255, 255, 1) 28deg,
-    rgba(0, 0, 0, 0.2) 46deg,
-    rgba(0, 0, 0, 0) 68deg,
-    rgba(0, 0, 0, 0) 180deg,
-    rgba(0, 0, 0, 0.15) 194deg,
-    rgba(255, 255, 255, 1) 208deg,
-    rgba(0, 0, 0, 0.2) 226deg,
-    rgba(0, 0, 0, 0) 360deg
-  );
+  transition: opacity 0.15s ease;
 }
 
 @media (max-width: 900px) {
