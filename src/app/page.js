@@ -25,23 +25,29 @@ import styles from "./page.module.css";
 
 const SLIDES_DATA = [
   {
-    eyebrow: "Did you know?",
-    title: "2,101 fatal injuries in India were caused by persons falling.",
-    stat: "DGFASLI's 2024 reference note reports 2,101 fatal injuries and 11,848 non-fatal injuries attributed to persons falling.",
+    eyebrow: "01 — FALLS",
+    badge: "13,949 total casualties",
+    bigStat: "2,101",
+    title: "fatal injuries caused by persons falling in India.",
+    stat: "DGFASLI's 2024 data records 2,101 fatal and 11,848 non-fatal injuries caused by persons falling.",
     image: "/images/fall.png",
     camLabel: "CAM-01 [FALL HAZARD]",
   },
   {
-    eyebrow: "Did you know?",
-    title: "1,231 fatal injuries in India involved machinery moved by mechanical power.",
-    stat: "The same DGFASLI data reports 9,386 non-fatal injuries and 1,276 dangerous occurrences involving machinery moved by mechanical power.",
+    eyebrow: "02 — MACHINERY",
+    badge: "10,617 total casualties",
+    bigStat: "1,231",
+    title: "fatal injuries involving powered machinery in India.",
+    stat: "DGFASLI's 2024 data records 1,231 fatal and 9,386 non-fatal injuries involving machinery moved by mechanical power.",
     image: "/images/machine.png",
     camLabel: "CAM-02 [MACHINERY]",
   },
   {
-    eyebrow: "Did you know?",
-    title: "Industrial and workplace fires in India cause an estimated 600 to 1,000 fatal injuries and over 2,500 non-fatal injuries annually in registered factories.",
-    stat: "Industry and insurance assessments report that workplace fires inflict a direct annual financial hit of ₹1,000 crore to ₹2,500 crore, escalating to over ₹10,000 crore when accounting for business interruption and informal sector losses.",
+    eyebrow: "03 — INDUSTRIAL FIRES",
+    badge: "5,000+ burn casualties",
+    bigStat: "₹15,000 Cr+",
+    title: "economic toll inflicted each year across Indian factories.",
+    stat: "Chemical units, textile mills, and factories bear direct property losses topping ₹2,500 crore, with electrical short circuits driving over 70% of all workplace fire incidents.",
     image: "/cctv_fire.jpg",
     camLabel: "CAM-03 [FIRE HAZARD]",
   },
@@ -70,6 +76,8 @@ function JourneySlide({ index, slide, cameraZ }) {
     >
       <CCTVFrame
         eyebrow={slide.eyebrow}
+        badge={slide.badge}
+        bigStat={slide.bigStat}
         title={slide.title}
         stat={slide.stat}
         image={slide.image}

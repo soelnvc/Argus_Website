@@ -3,9 +3,11 @@ import React, { useState, useEffect } from "react";
 import styles from "./CCTVFrame.module.css";
 
 export default function CCTVFrame({
-  eyebrow = "Did you know?",
-  title,
-  stat,
+  eyebrow = "01 — FALLS",
+  badge = "13,949 total casualties",
+  bigStat = "2,101",
+  title = "fatal injuries caused by persons falling in India.",
+  stat = "DGFASLI's 2024 data records 2,101 fatal and 11,848 non-fatal injuries caused by persons falling.",
   image = "/cctv_fire.jpg",
   camLabel = "CAM-01",
   side = "left",
@@ -60,7 +62,17 @@ export default function CCTVFrame({
 
       {/* Stats / Story Panel */}
       <div className={styles.statsPanel}>
-        {eyebrow && <span className={styles.eyebrowTag}>{eyebrow}</span>}
+        <div className={styles.headerRow}>
+          {eyebrow && <span className={styles.eyebrowTag}>{eyebrow}</span>}
+          {badge && <span className={styles.badgeTag}>{badge}</span>}
+        </div>
+
+        {bigStat && (
+          <div className={styles.bigStatNumber}>
+            {bigStat}
+          </div>
+        )}
+
         <h3 className={styles.statsTitle}>{title}</h3>
         <p className={styles.statsData}>{stat}</p>
       </div>
