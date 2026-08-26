@@ -25,16 +25,25 @@ import styles from "./page.module.css";
 
 const SLIDES_DATA = [
   {
-    title: "Do you know how many workers die of falling every year?",
-    stat: "Over 800 fatal falls annually in construction & manufacturing.",
+    eyebrow: "Did you know?",
+    title: "2,101 fatal injuries in India were caused by persons falling.",
+    stat: "DGFASLI's 2024 reference note reports 2,101 fatal injuries and 11,848 non-fatal injuries attributed to persons falling.",
+    image: "/images/fall.png",
+    camLabel: "CAM-01 [FALL HAZARD]",
   },
   {
-    title: "Fire hazards are unpredictable.",
-    stat: "Over 3,000 industrial fires are reported each month.",
+    eyebrow: "Did you know?",
+    title: "1,231 fatal injuries in India involved machinery moved by mechanical power.",
+    stat: "The same DGFASLI data reports 9,386 non-fatal injuries and 1,276 dangerous occurrences involving machinery moved by mechanical power.",
+    image: "/images/machine.png",
+    camLabel: "CAM-02 [MACHINERY]",
   },
   {
-    title: "Machine entanglement is a silent killer.",
-    stat: "15% of all workplace fatalities are machinery-related.",
+    eyebrow: "Did you know?",
+    title: "Industrial and workplace fires in India cause an estimated 600 to 1,000 fatal injuries and over 2,500 non-fatal injuries annually in registered factories.",
+    stat: "Industry and insurance assessments report that workplace fires inflict a direct annual financial hit of ₹1,000 crore to ₹2,500 crore, escalating to over ₹10,000 crore when accounting for business interruption and informal sector losses.",
+    image: "/cctv_fire.jpg",
+    camLabel: "CAM-03 [FIRE HAZARD]",
   },
 ];
 
@@ -57,7 +66,14 @@ function JourneySlide({ index, slide, cameraZ }) {
         opacity,
       }}
     >
-      <CCTVFrame title={slide.title} stat={slide.stat} side={side} />
+      <CCTVFrame
+        eyebrow={slide.eyebrow}
+        title={slide.title}
+        stat={slide.stat}
+        image={slide.image}
+        camLabel={slide.camLabel}
+        side={side}
+      />
     </motion.div>
   );
 }
@@ -403,6 +419,7 @@ export default function Home() {
 
           {/* Blank black section with massive bold white text */}
           <motion.div
+            id="why-need-argus"
             className={styles.nextBlankSection}
             style={{ y: nextSectionY, borderRadius: nextSectionRadius }}
           >

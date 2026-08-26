@@ -3,8 +3,9 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  max-width: 1200px;
-  gap: 80px;
+  max-width: 1280px;
+  gap: 72px;
+  box-sizing: border-box;
 }
 
 .alignLeft {
@@ -15,13 +16,17 @@
   flex-direction: row-reverse;
 }
 
-/* The Frame */
+/* ─── The CCTV Viewfinder ─── */
 .viewfinder {
   position: relative;
-  flex: 1;
+  flex: 1.15;
   aspect-ratio: 16 / 9;
-  background-color: #050505;
-  border: 1px solid rgba(255, 0, 0, 0.2);
+  background-color: #060608;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 50, 50, 0.22);
+  box-shadow:
+    0 24px 60px -12px rgba(0, 0, 0, 0.9),
+    0 0 30px rgba(255, 30, 30, 0.08);
   overflow: hidden;
 }
 
@@ -30,102 +35,186 @@
   inset: 0;
   background-size: cover;
   background-position: center;
-  opacity: 0.85;
-  mix-blend-mode: screen;
+  opacity: 0.92;
 }
 
 .crtOverlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(
-    rgba(18, 16, 16, 0) 50%, 
-    rgba(0, 0, 0, 0.25) 50%
+    rgba(18, 16, 16, 0) 50%,
+    rgba(0, 0, 0, 0.3) 50%
   );
   background-size: 100% 4px;
   pointer-events: none;
+  z-index: 2;
+}
+
+/* HUD Top Bar */
+.hudTop {
+  position: absolute;
+  top: 18px;
+  left: 22px;
+  right: 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 4;
+  font-family: monospace;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.camLabel {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.recBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(220, 38, 38, 0.2);
+  border: 1px solid rgba(220, 38, 38, 0.4);
+  padding: 4px 10px;
+  border-radius: 6px;
+  color: #ff4d4d;
+  font-weight: 700;
+  text-shadow: 0 0 8px rgba(255, 77, 77, 0.6);
+}
+
+.recDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ff3333;
+  box-shadow: 0 0 8px #ff3333;
+  animation: pulseDot 1.4s ease-in-out infinite alternate;
+}
+
+@keyframes pulseDot {
+  0% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 /* Red Brackets */
 .bracket {
   position: absolute;
-  width: 40px;
-  height: 40px;
-  border-color: #ff3333;
+  width: 32px;
+  height: 32px;
+  border-color: #ff3b3b;
   border-style: solid;
   border-width: 0;
+  z-index: 3;
 }
 
 .topLeft {
-  top: 20px;
-  left: 20px;
+  top: 14px;
+  left: 14px;
   border-top-width: 2px;
   border-left-width: 2px;
 }
 
 .topRight {
-  top: 20px;
-  right: 20px;
+  top: 14px;
+  right: 14px;
   border-top-width: 2px;
   border-right-width: 2px;
 }
 
 .bottomLeft {
-  bottom: 20px;
-  left: 20px;
+  bottom: 14px;
+  left: 14px;
   border-bottom-width: 2px;
   border-left-width: 2px;
 }
 
 .bottomRight {
-  bottom: 20px;
-  right: 20px;
+  bottom: 14px;
+  right: 14px;
   border-bottom-width: 2px;
   border-right-width: 2px;
 }
 
 .timestamp {
   position: absolute;
-  bottom: 24px;
+  bottom: 18px;
   left: 50%;
   transform: translateX(-50%);
-  color: #ff3333;
+  color: #ff4d4d;
   font-family: monospace;
-  font-size: 14px;
+  font-size: 13px;
   letter-spacing: 2px;
-  text-shadow: 0 0 8px rgba(255, 51, 51, 0.5);
+  text-shadow: 0 0 8px rgba(255, 77, 77, 0.6);
+  z-index: 4;
+  background: rgba(0, 0, 0, 0.65);
+  padding: 4px 14px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 77, 77, 0.25);
 }
 
-/* Stats Panel */
+/* ─── Stats Panel ─── */
 .statsPanel {
-  flex: 0.8;
+  flex: 0.95;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 16px;
+  text-align: left;
+}
+
+.eyebrowTag {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  padding: 5px 14px;
+  border-radius: 9999px;
+  display: inline-block;
 }
 
 .statsTitle {
-  font-size: 32px;
+  font-size: clamp(26px, 2.6vw, 38px);
   font-weight: 700;
   color: #ffffff;
-  line-height: 1.2;
+  line-height: 1.22;
+  letter-spacing: -0.025em;
+  margin: 0;
 }
 
 .statsData {
-  font-size: 18px;
-  color: #a0a0a0;
-  line-height: 1.6;
+  font-size: clamp(14.5px, 1.15vw, 17px);
+  color: rgba(255, 255, 255, 0.62);
+  line-height: 1.65;
+  letter-spacing: -0.01em;
+  margin: 0;
 }
 
 @media (max-width: 900px) {
   .cctvContainer {
     flex-direction: column;
-    gap: 40px;
-    text-align: center;
+    gap: 36px;
   }
-  .alignLeft, .alignRight {
+  .alignLeft,
+  .alignRight {
     flex-direction: column;
   }
   .viewfinder {
+    width: 100%;
+    flex: unset;
+  }
+  .statsPanel {
+    flex: unset;
     width: 100%;
   }
 }

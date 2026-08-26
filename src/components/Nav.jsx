@@ -123,24 +123,25 @@ export default function Nav() {
       if (aimSeen && aimMoved && !keyMode) {
         const isHovered = root.matches(":hover");
         const rr = root.getBoundingClientRect();
-        if (
-          isHovered &&
-          aimX > rr.left - 48 &&
-          aimX < rr.right + 48 &&
-          aimY > rr.top - 44 &&
-          aimY < rr.bottom + 104
-        ) {
+        const yRel = (aimY - rr.top) / Math.max(rr.height, 1);
+        const inside =
+          aimX >= rr.left && aimX <= rr.right && aimY >= rr.top - 8 && aimY <= rr.bottom + 8;
+
+        if (isHovered || inside || yRel < 0.2) {
           dockItems.forEach((st) => {
             const r = st.el.getBoundingClientRect();
-            const prox = clamp01(1 - Math.abs(aimX - (r.left + r.width * 0.5)) / (128 * u));
+            const cx = r.left + r.width * 0.5;
+            const dist = Math.abs(aimX - cx);
+            const prox = clamp01(1 - dist / (120 * u));
             st.target = prox * prox * (3 - 2 * prox);
             st.el.dataset.near = st.target > 0.08 ? "true" : "false";
           });
           live = true;
           dirty = true;
-        } else if (live) {
+        } else {
           dockRest();
         }
+        aimMoved = false;
       }
 
       if (!dirty) return;
@@ -193,18 +194,20 @@ export default function Nav() {
           const raw = clamp01(1 - d / (st.reach * u));
           st.tBr = Math.max(raw * raw * (3 - 2 * raw), st.focused ? 0.9 : 0);
         });
-        specDirty = true;
       }
 
       if (!specDirty) return;
       let moving = false;
 
       specItems.forEach((st) => {
-        const diff = ((st.tAng - st.ang + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
-        st.ang += diff * (1 - Math.exp(-dt * 8));
-        st.br += (st.tBr - st.br) * (1 - Math.exp(-dt * 9));
+        let diff = st.tAng - st.ang;
+        while (diff < -Math.PI) diff += Math.PI * 2;
+        while (diff > Math.PI) diff -= Math.PI * 2;
+        st.ang += diff * (1 - Math.exp(-20 * dt));
 
-        if (Math.abs(diff) < 0.001 && Math.abs(st.tBr - st.br) < 0.002) {
+        st.br += (st.tBr - st.br) * (1 - Math.exp(-18 * dt));
+
+        if (Math.abs(diff) < 0.002 && Math.abs(st.tBr - st.br) < 0.002) {
           st.ang = st.tAng;
           st.br = st.tBr;
         } else {
@@ -218,37 +221,90 @@ export default function Nav() {
       if (!moving) specDirty = false;
     }
 
+    function setTheme(t) {
+      if (root.dataset.theme !== t) {
+        root.dataset.theme = t;
+        if (root.parentElement) {
+          root.parentElement.dataset.theme = t;
+        }
+      }
+    }
+
     function updateTheme() {
       if (!root) return;
-      const navY = 60;
+      const navY = 65;
 
-      const sections = [
-        { id: "privacy", theme: "white" },
-        { id: "safety", theme: "charcoal" },
-        { id: "journey", theme: "charcoal" },
-        { id: "why-how", theme: "purple" },
-        { id: "use", theme: "purple" },
-        { id: "faqs", theme: "charcoal" },
-      ];
-
-      let detectedTheme = "purple";
-
-      for (const sec of sections) {
-        const el = document.getElementById(sec.id);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          if (rect.top <= navY && rect.bottom >= navY) {
-            detectedTheme = sec.theme;
-            break;
-          }
+      // 1. Privacy (Responsible Surveillance - Creamish White)
+      const privacyEl = document.getElementById("privacy");
+      if (privacyEl) {
+        const rect = privacyEl.getBoundingClientRect();
+        if (rect.top <= navY && rect.bottom >= navY) {
+          setTheme("white");
+          return;
         }
       }
 
-      if (root.dataset.theme !== detectedTheme) {
-        root.dataset.theme = detectedTheme;
-        if (root.parentElement) {
-          root.parentElement.dataset.theme = detectedTheme;
+      // 2. Use (Choose Your Pace - Purple)
+      const useEl = document.getElementById("use");
+      if (useEl) {
+        const rect = useEl.getBoundingClientRect();
+        if (rect.top <= navY && rect.bottom >= navY) {
+          setTheme("purple");
+          return;
         }
+      }
+
+      // 3. FAQ (Charcoal)
+      const faqsEl = document.getElementById("faqs");
+      if (faqsEl) {
+        const rect = faqsEl.getBoundingClientRect();
+        if (rect.top <= navY && rect.bottom >= navY) {
+          setTheme("charcoal");
+          return;
+        }
+      }
+
+      // 4. Safety (What Argus Detects - Charcoal)
+      const safetyEl = document.getElementById("safety");
+      if (safetyEl) {
+        const rect = safetyEl.getBoundingClientRect();
+        if (rect.top <= navY && rect.bottom >= navY) {
+          setTheme("charcoal");
+          return;
+        }
+      }
+
+      // 5. How (How Argus Solves It - Purple)
+      const whyHowEl = document.getElementById("why-how");
+      if (whyHowEl) {
+        const rect = whyHowEl.getBoundingClientRect();
+        if (rect.top <= navY && rect.bottom >= navY) {
+          setTheme("purple");
+          return;
+        }
+      }
+
+      // 6. 3D Journey (JourneyContainer - Charcoal)
+      const journeyEl = document.getElementById("journey");
+      if (journeyEl) {
+        const rect = journeyEl.getBoundingClientRect();
+        if (rect.top <= navY && rect.bottom >= navY) {
+          setTheme("charcoal");
+          return;
+        }
+      }
+
+      // 7. Hero Scroll Wrapper Check:
+      // When scrollY is past the initial Hero WaveGlow threshold (~320px),
+      // the black "Why do we need Argus" slide is active -> charcoal.
+      // Otherwise, at the top of the page -> purple.
+      const scrollY = window.scrollY || window.pageYOffset || 0;
+      const heroThreshold = Math.min(window.innerHeight * 0.35, 340);
+
+      if (scrollY > heroThreshold) {
+        setTheme("charcoal");
+      } else {
+        setTheme("purple");
       }
     }
 
