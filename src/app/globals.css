@@ -45,3 +45,77 @@ body{
 .right-0 { right: 0; }
 .z-10 { z-index: 10; }
 .z-50 { z-index: 99999; }
+
+/* ─── CUSTOM TEXT SELECTION STYLING ─── */
+/* Default (Black & Dark backgrounds): Ultra-sleek Violet/Purple */
+::selection {
+  background-color: #8b5cf6;
+  color: #ffffff;
+}
+
+::-moz-selection {
+  background-color: #8b5cf6;
+  color: #ffffff;
+}
+
+/* White backgrounds: Sleek Black Selection */
+#privacy ::selection,
+#privacy *::selection,
+.surveillanceSection ::selection,
+.surveillanceSection *::selection {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+#privacy ::-moz-selection,
+#privacy *::-moz-selection,
+.surveillanceSection ::-moz-selection,
+.surveillanceSection *::-moz-selection {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+/* Purple backgrounds & Purple aura sections: Energetic Vibrant Orange */
+#use ::selection,
+#use *::selection,
+#why-how ::selection,
+#why-how *::selection,
+.solvesSection ::selection,
+.solvesSection *::selection,
+[data-theme="purple"] ::selection,
+[data-theme="purple"] *::selection,
+.purpleGlowBg ::selection,
+.purpleGlowBg *::selection,
+[class*="purple"] ::selection,
+[class*="purple"] *::selection,
+[class*="Purple"] ::selection,
+[class*="Purple"] *::selection,
+[class*="waveGlow"] ::selection,
+[class*="waveGlow"] *::selection,
+[class*="depthSection"] ::selection,
+[class*="depthSection"] *::selection {
+  background-color: #ff6b00;
+  color: #ffffff;
+}
+
+#use ::-moz-selection,
+#use *::-moz-selection,
+#why-how ::-moz-selection,
+#why-how *::-moz-selection,
+.solvesSection ::-moz-selection,
+.solvesSection *::-moz-selection,
+[data-theme="purple"] ::-moz-selection,
+[data-theme="purple"] *::-moz-selection,
+.purpleGlowBg ::-moz-selection,
+.purpleGlowBg *::-moz-selection,
+[class*="purple"] ::-moz-selection,
+[class*="purple"] *::-moz-selection,
+[class*="Purple"] ::-moz-selection,
+[class*="Purple"] *::-moz-selection,
+[class*="waveGlow"] ::-moz-selection,
+[class*="waveGlow"] *::-moz-selection,
+[class*="depthSection"] ::-moz-selection,
+[class*="depthSection"] *::-moz-selection {
+  background-color: #ff6b00;
+  color: #ffffff;
+}
