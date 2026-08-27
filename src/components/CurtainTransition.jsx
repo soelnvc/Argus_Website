@@ -1,11 +1,11 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Alex_Brush } from "next/font/google";
+import { Inter } from "next/font/google";
 import styles from "./CurtainTransition.module.css";
 
-const alexBrush = Alex_Brush({
-  weight: "400",
+const inter = Inter({
+  weight: ["300", "400"],
   subsets: ["latin"],
   display: "swap",
 });
@@ -23,6 +23,26 @@ export function triggerCurtainNavigation(targetId, title) {
   }
 }
 
+const charVariants = {
+  hidden: {
+    opacity: 0,
+    rotateX: -90,
+    y: 12,
+    filter: "blur(4px)",
+  },
+  visible: (i) => ({
+    opacity: 1,
+    rotateX: 0,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.32,
+      delay: 0.06 + i * 0.018,
+      ease: [0.16, 1, 0.3, 1],
+    },
+  }),
+};
+
 export default function CurtainTransition() {
   const [active, setActive] = useState(false);
   const [data, setData] = useState({ targetId: "", title: "" });
@@ -39,7 +59,7 @@ export default function CurtainTransition() {
       setActive(true);
       setPhase("down");
 
-      // 1. Curtain slides down (420ms)
+      // 1. Curtain slides down (400ms)
       setTimeout(() => {
         setPhase("hold");
 
@@ -84,18 +104,18 @@ export default function CurtainTransition() {
           }
         }
 
-        // 3. Brief, crisp hold of 200ms, then collapse upward at matching speed
+        // 3. Crisp hold of 300ms, then collapse upward at matching speed
         setTimeout(() => {
           setPhase("up");
 
-          // 4. Reset once animation finishes collapsing up (420ms)
+          // 4. Reset once animation finishes collapsing up (400ms)
           setTimeout(() => {
             setActive(false);
             setPhase("idle");
             isNavigatingRef.current = false;
-          }, 430);
-        }, 200);
-      }, 420);
+          }, 410);
+        }, 300);
+      }, 400);
     };
 
     window.addEventListener("argus-curtain-navigate", handleNavigate);
@@ -105,6 +125,9 @@ export default function CurtainTransition() {
   }, []);
 
   if (!active) return null;
+
+  const words = data.title ? data.title.split(" ") : [];
+  let globalCharIndex = 0;
 
   return (
     <div className={styles.curtainPortal} aria-hidden="true">
@@ -117,22 +140,43 @@ export default function CurtainTransition() {
             : { y: "-100%" }
         }
         transition={{
-          duration: 0.42,
-          ease: [0.4, 0, 0.2, 1], // Perfectly balanced, symmetrical high-speed curve
+          duration: 0.4,
+          ease: [0.4, 0, 0.2, 1], // Symmetrical high-speed curve
         }}
       >
-        {/* Calligraphic Content Stage */}
+        {/* Brutalist Content Stage */}
         <AnimatePresence mode="wait">
           {(phase === "down" || phase === "hold") && (
             <motion.div
               className={styles.textStage}
-              initial={{ opacity: 0, scale: 0.92, y: 16 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.96, y: -12, transition: { duration: 0.18 } }}
-              transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+              initial={{ opacity: 1 }}
+              animate={{ opacity: 1 }}
+              exit={{
+                opacity: 0,
+                y: -14,
+                transition: { duration: 0.16, ease: [0.4, 0, 1, 1] },
+              }}
             >
-              <h2 className={`${styles.calligraphicTitle} ${alexBrush.className}`}>
-                {data.title}
+              <h2 className={`${styles.brutalistTitle} ${inter.className}`}>
+                {words.map((word, wIdx) => (
+                  <span key={wIdx} className={styles.wordWrap}>
+                    {word.split("").map((char, cIdx) => {
+                      const charIdx = globalCharIndex++;
+                      return (
+                        <motion.span
+                          key={cIdx}
+                          className={styles.charSpan}
+                          custom={charIdx}
+                          initial="hidden"
+                          animate="visible"
+                          variants={charVariants}
+                        >
+                          {char}
+                        </motion.span>
+                      );
+                    })}
+                  </span>
+                ))}
               </h2>
             </motion.div>
           )}

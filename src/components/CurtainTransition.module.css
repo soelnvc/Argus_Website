@@ -32,11 +32,11 @@
   padding: 0 32px;
 }
 
-.calligraphicTitle {
-  font-size: clamp(68px, 11vw, 150px);
-  font-weight: 400;
-  line-height: 1.1;
-  letter-spacing: 0.02em;
+.brutalistTitle {
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
   margin: 0;
   color: #ffffff;
   -webkit-text-fill-color: #ffffff;
@@ -44,10 +44,33 @@
   text-align: center;
   user-select: none;
   padding: 0 16px;
+  opacity: 0.9;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.55em;
+  perspective: 800px;
+}
+
+.wordWrap {
+  display: inline-flex;
+  white-space: nowrap;
+  perspective: 800px;
+}
+
+.charSpan {
+  display: inline-block;
+  transform-origin: 50% 100%;
+  transform-style: preserve-3d;
+  will-change: transform, opacity, filter;
+  backface-visibility: hidden;
 }
 
 @media (max-width: 768px) {
-  .calligraphicTitle {
-    font-size: clamp(48px, 13vw, 84px);
+  .brutalistTitle {
+    font-size: 12px;
+    letter-spacing: 0.24em;
+    gap: 0.45em;
   }
 }

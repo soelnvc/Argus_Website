@@ -219,15 +219,9 @@ export default function Home() {
     Math.min(Math.max(v, 0), 1),
   );
 
-  // Restored smooth, slow, and cinematic hero expansion
+  // Restored smooth, slow, and cinematic hero expansion (using scale for GPU acceleration to fix reverse scroll glitch)
   const borderRadius = useTransform(clampedHero, [0, 0.3], [32, 0]);
-  const maxWidth = useTransform(clampedHero, [0, 0.3], ["1540px", "100%"]);
-  const maxHeight = useTransform(clampedHero, [0, 0.3], ["900px", "100vh"]);
-  const containerPadding = useTransform(
-    clampedHero,
-    [0, 0.3],
-    ["24px", "0px"],
-  );
+  const heroCardScale = useTransform(clampedHero, [0, 0.3], [0.92, 1]);
   const borderOpacity = useTransform(clampedHero, [0, 0.25], [0.08, 0]);
   const shadowOpacity = useTransform(clampedHero, [0, 0.3], [0.95, 0]);
   const stickyBg = useTransform(clampedHero, [0, 0.3], ["#050208", "#000000"]);
@@ -288,7 +282,6 @@ export default function Home() {
         <motion.div
           className={styles.stickyContainer}
           style={{ 
-            padding: containerPadding, 
             backgroundColor: stickyBg,
             opacity: nextSectionOpacity
           }}
@@ -297,8 +290,7 @@ export default function Home() {
             className={styles.heroCardMotion}
             style={{
               borderRadius,
-              maxWidth,
-              maxHeight,
+              scale: heroCardScale,
               backgroundColor: cardBg,
               borderWidth: "1px",
               borderStyle: "solid",
