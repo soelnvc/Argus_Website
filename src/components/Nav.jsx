@@ -1,35 +1,27 @@
 "use client";
 import React, { useEffect, useRef } from "react";
 import styles from "./Nav.module.css";
+import { triggerCurtainNavigation } from "./CurtainTransition";
 
 function clamp01(v) {
   return Math.min(Math.max(v, 0), 1);
 }
+
+const NAV_TITLES = {
+  top: "Argus",
+  "why-how": "How We Solve This",
+  safety: "Safety Hazards",
+  privacy: "Responsible Surveillance",
+  use: "Choose Your Pace",
+};
 
 export default function Nav() {
   const dockRef = useRef(null);
 
   const handleNavClick = (id, e) => {
     e.preventDefault();
-    if (id === "top") {
-      if (typeof window !== "undefined") {
-        if (window.__lenis) {
-          window.__lenis.scrollTo(0, { duration: 1.5 });
-        } else {
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        }
-      }
-      return;
-    }
-
-    const el = document.getElementById(id);
-    if (el) {
-      if (typeof window !== "undefined" && window.__lenis) {
-        window.__lenis.scrollTo(el, { duration: 1.5, offset: -20 });
-      } else {
-        el.scrollIntoView({ behavior: "smooth" });
-      }
-    }
+    const title = NAV_TITLES[id] || id;
+    triggerCurtainNavigation(id, title);
   };
 
   useEffect(() => {
