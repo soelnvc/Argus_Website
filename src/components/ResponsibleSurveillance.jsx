@@ -68,14 +68,43 @@ function CardContent({ card }) {
 
       <div className={styles.cardBottomRow}>
         <button className={styles.arrowButton} aria-label="Explore details">
+          {/* Subtle circular orbit path ring */}
+          <svg className={styles.orbitRing} viewBox="0 0 44 44">
+            <circle
+              cx="22"
+              cy="22"
+              r="20"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.2"
+            />
+          </svg>
+
+          {/* Primary Arrow */}
           <svg
-            className={styles.arrowIcon}
+            className={`${styles.arrowIcon} ${styles.arrowPrimary}`}
             width="15"
             height="15"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth="2.5"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <line x1="7" y1="17" x2="17" y2="7" />
+            <polyline points="7 7 17 7 17 17" />
+          </svg>
+
+          {/* Secondary Arrow: Re-enters smoothly from the opposite side */}
+          <svg
+            className={`${styles.arrowIcon} ${styles.arrowSecondary}`}
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.2"
             strokeLinecap="round"
             strokeLinejoin="round"
           >
