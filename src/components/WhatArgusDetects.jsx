@@ -112,63 +112,62 @@ function ExpandingEvidenceShowcase() {
 }
 
 export default function WhatArgusDetects() {
-  const scrollRef = useRef(null);
-  const scrollAnimationRef = useRef(null);
-  const targetScrollRef = useRef(0);
+  const [activeIndex, setActiveIndex] = React.useState(2);
+  const [hoveredIndex, setHoveredIndex] = React.useState(null);
 
-  const handleContainerScroll = () => {
-    if (!scrollAnimationRef.current && scrollRef.current) {
-      targetScrollRef.current = scrollRef.current.scrollLeft;
-    }
+  const handlePrev = () => {
+    setActiveIndex((prev) => (prev > 0 ? prev - 1 : HAZARDS.length - 1));
   };
 
-  const scroll = (direction) => {
-    if (!scrollRef.current) return;
+  const handleNext = () => {
+    setActiveIndex((prev) => (prev < HAZARDS.length - 1 ? prev + 1 : 0));
+  };
 
-    const container = scrollRef.current;
-    const cardElement = container.querySelector(`.${styles.hazardCard}`);
-    const cardWidth = cardElement ? cardElement.getBoundingClientRect().width : 360;
-    const gap = 24;
-    const step = cardWidth + gap;
-
-    const startScroll = container.scrollLeft;
-    const maxScroll = container.scrollWidth - container.clientWidth;
-
-    let target;
-    if (scrollAnimationRef.current && targetScrollRef.current !== undefined) {
-      target =
-        direction === "left"
-          ? Math.max(0, targetScrollRef.current - step)
-          : Math.min(maxScroll, targetScrollRef.current + step);
-    } else {
-      target =
-        direction === "left"
-          ? Math.max(0, startScroll - step)
-          : Math.min(maxScroll, startScroll + step);
+  const getCardStyle = (offset, index) => {
+    const absOffset = Math.abs(offset);
+    if (absOffset > 2) {
+      return {
+        x: offset > 0 ? 460 : -460,
+        y: 160,
+        rotate: offset > 0 ? 25 : -25,
+        scale: 0.75,
+        opacity: 0,
+        zIndex: 0,
+        pointerEvents: "none",
+      };
     }
 
-    targetScrollRef.current = target;
+    const isHovered = hoveredIndex === index;
 
-    if (scrollAnimationRef.current) {
-      scrollAnimationRef.current.stop();
+    // Tight, exact 5-card arc geometry matching reference
+    const xOffset = offset * 132;
+    let yOffset = absOffset === 0 ? 0 : absOffset === 1 ? 22 : 68;
+    let rotation = offset * 8.2;
+    let scale = absOffset === 0 ? 1 : absOffset === 1 ? 0.95 : 0.88;
+    let zIndex = 10 - absOffset * 2;
+
+    // Hover state: lift up, straighten angle, enlarge, and bring to front
+    if (isHovered) {
+      yOffset -= 38;
+      rotation = rotation * 0.4;
+      scale = scale * 1.05;
+      zIndex = 30;
     }
 
-    // 120fps RAF-driven smooth, slow, and elegant glide
-    scrollAnimationRef.current = animate(startScroll, target, {
-      duration: 1.15,
-      ease: [0.16, 1, 0.3, 1], // High-end quintic deceleration curve
-      onUpdate: (latest) => {
-        container.scrollLeft = latest;
-      },
-      onComplete: () => {
-        scrollAnimationRef.current = null;
-      },
-    });
+    return {
+      x: xOffset,
+      y: yOffset,
+      rotate: rotation,
+      scale,
+      zIndex,
+      opacity: 1,
+      pointerEvents: "auto",
+    };
   };
 
   return (
     <section className={styles.detectsSection} id="safety">
-      {/* Header Container (Permanently Locked Positions & Sizes) */}
+      {/* Header Container */}
       <div className={styles.headerContainer}>
         {/* 1. Main Headline (Center Aligned) */}
         <div className={styles.headlineCenterWrapper}>
@@ -204,68 +203,83 @@ export default function WhatArgusDetects() {
         </div>
       </div>
 
-      {/* Horizontal Cards Showcase (Clean Full Image - No Top Containers) */}
-      <div className={styles.cardsTrackWrapper}>
-        <div
-          className={styles.cardsScrollContainer}
-          ref={scrollRef}
-          onScroll={handleContainerScroll}
-        >
-          {HAZARDS.map((hazard, index) => (
-            <motion.div
-              key={hazard.id}
-              className={hazard.id === "fire-smoke" ? `${styles.hazardCard} ${styles.hazardCardDark}` : styles.hazardCard}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.1 }}
-              transition={{
-                duration: 0.6,
-                delay: index * 0.06,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-            >
-              {/* Full Background Image */}
-              <img
-                src={hazard.image}
-                alt={hazard.title}
-                className={styles.cardBgImage}
-                loading="lazy"
-              />
+      {/* ─── FANNED DECK ARC SHOWCASE (Matching Reference Layout & Hover) ─── */}
+      <div className={styles.fanDeckSectionWrapper}>
+        <div className={styles.fanDeckStage}>
+          {HAZARDS.map((hazard, index) => {
+            const offset = index - activeIndex;
+            const cardStyle = getCardStyle(offset, index);
 
-              {/* Vignette Overlay for Text Legibility */}
-              <div className={styles.cardVignette} />
+            return (
+              <motion.div
+                key={hazard.id}
+                className={`${styles.hazardCard} ${offset === 0 ? styles.activeCenterCard : ""}`}
+                onClick={() => setActiveIndex(index)}
+                onMouseEnter={() => setHoveredIndex(index)}
+                onMouseLeave={() => setHoveredIndex(null)}
+                animate={{
+                  x: cardStyle.x,
+                  y: cardStyle.y,
+                  rotate: cardStyle.rotate,
+                  scale: cardStyle.scale,
+                  opacity: cardStyle.opacity,
+                  zIndex: cardStyle.zIndex,
+                }}
+                transition={{
+                  duration: 0.45,
+                  ease: [0.16, 1, 0.3, 1], // Fluid quintic deceleration
+                }}
+                style={{
+                  pointerEvents: cardStyle.pointerEvents,
+                }}
+              >
+                {/* Full Background Image */}
+                <img
+                  src={hazard.image}
+                  alt={hazard.title}
+                  className={styles.cardBgImage}
+                  loading="lazy"
+                />
 
-              {/* Spacer so bottom row stays pinned cleanly at the bottom */}
-              <div style={{ flex: 1 }} />
+                {/* Vignette Overlay for Text Legibility */}
+                <div className={styles.cardVignette} />
 
-              {/* Bottom Row: Title, Subtitle & Round Plus Button */}
-              <div className={styles.cardBottomRow}>
-                <div className={styles.cardTextContent}>
-                  <h3 className={styles.hazardTitle}>{hazard.title}</h3>
-                  <p className={styles.hazardSubtitle}>{hazard.subtitle}</p>
-                </div>
+                {/* Spacer so bottom row stays pinned cleanly at the bottom */}
+                <div style={{ flex: 1 }} />
 
-                <button
-                  className={styles.plusButton}
-                  aria-label={`View details for ${hazard.title}`}
-                >
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                {/* Bottom Row: Title, Subtitle & Round Plus Button */}
+                <div className={styles.cardBottomRow}>
+                  <div className={styles.cardTextContent}>
+                    <h3 className={styles.hazardTitle}>{hazard.title}</h3>
+                    <p className={styles.hazardSubtitle}>{hazard.subtitle}</p>
+                  </div>
+
+                  <button
+                    className={styles.plusButton}
+                    aria-label={`View details for ${hazard.title}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveIndex(index);
+                    }}
                   >
-                    <line x1="12" y1="5" x2="12" y2="19" />
-                    <line x1="5" y1="12" x2="19" y2="12" />
-                  </svg>
-                </button>
-              </div>
-            </motion.div>
-          ))}
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <line x1="12" y1="5" x2="12" y2="19" />
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                  </button>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
 
         {/* Carousel Navigation Arrows */}
@@ -273,8 +287,8 @@ export default function WhatArgusDetects() {
           <button
             type="button"
             className={styles.navArrowBtn}
-            onClick={() => scroll("left")}
-            aria-label="Previous cards"
+            onClick={handlePrev}
+            aria-label="Previous hazard card"
           >
             <svg
               className={styles.arrowIcon}
@@ -295,8 +309,8 @@ export default function WhatArgusDetects() {
           <button
             type="button"
             className={styles.navArrowBtn}
-            onClick={() => scroll("right")}
-            aria-label="Next cards"
+            onClick={handleNext}
+            aria-label="Next hazard card"
           >
             <svg
               className={styles.arrowIcon}

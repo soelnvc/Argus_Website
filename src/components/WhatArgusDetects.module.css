@@ -1,48 +1,31 @@
 .detectsSection {
   position: relative;
   width: 100%;
-  min-height: 190vh;
   background-color: #000000;
   color: #ffffff;
   z-index: 30;
-  margin-top: -100vh;
-  border-radius: 64px 64px 0 0;
-  clip-path: inset(0 0 0 0 round 64px 64px 0 0);
-  box-shadow: 0 -24px 80px rgba(0, 0, 0, 0.95);
   display: flex;
   flex-direction: column;
   align-items: center;
   box-sizing: border-box;
-  padding: 0 0 160px 0;
+  padding: 0 0 140px 0;
   overflow: hidden;
   font-family:
     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
     sans-serif;
 }
 
-/* ─── HEADER AREA (Spacious 85vh Canvas for Drag & Drop) ─── */
+/* ─── HEADER AREA ─── */
 .headerContainer {
   width: 100%;
-  max-width: 1440px;
-  min-height: 85vh; /* 85% of total screen worth of space */
-  padding: 160px 64px 80px 64px;
+  max-width: 1360px;
+  padding: 120px 48px 48px 48px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  gap: 56px;
-  margin-bottom: 32px;
+  align-items: center;
+  gap: 36px;
   position: relative;
-}
-
-.draggableWrapper {
-  cursor: grab;
-  user-select: none;
-  display: inline-block;
-}
-
-.draggableWrapper:active {
-  cursor: grabbing;
 }
 
 .headlineCenterWrapper {
@@ -51,17 +34,16 @@
   justify-content: center;
   align-items: center;
   text-align: center;
-  margin-top: 10px; /* Moved downward 10px */
 }
 
 .mainHeadline {
-  font-size: 93px;
-  line-height: 1.02;
+  font-size: clamp(48px, 5.6vw, 84px);
+  line-height: 1.05;
   font-weight: 600;
   letter-spacing: -0.04em;
   color: #ffffff;
   margin: 0;
-  max-width: 1200px;
+  max-width: 1100px;
   text-align: center;
 }
 
@@ -72,20 +54,20 @@
 
 /* Two-column subheadings */
 .subheadingsRow {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 64px;
-  max-width: 1140px;
-  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 48px;
+  width: 100%;
+  max-width: 1180px;
 }
 
 .subLeft {
-  font-size: 22px;
-  line-height: 1.48;
+  font-size: 18px;
+  line-height: 1.5;
   color: rgba(255, 255, 255, 0.45);
   margin: 0;
-  margin-top: 10px; /* Moved downward 10px */
-  max-width: 460px;
+  max-width: 480px;
 }
 
 .subLeft strong {
@@ -94,64 +76,79 @@
 }
 
 .subRightWrapper {
-  justify-self: end;
-  transform: translate(50px, 170px);
+  display: flex;
+  justify-content: flex-end;
 }
 
 .subRight {
-  font-size: 16px;
+  font-size: 15px;
   line-height: 1.55;
   color: rgba(255, 255, 255, 0.42);
   margin: 0;
   max-width: 440px;
+  text-align: right;
 }
 
-/* ─── HORIZONTAL CARDS TRACK (4 Cards View - Midu.design style) ─── */
-.cardsTrackWrapper {
+/* ─── FANNED DECK ARC STAGE (Matching Reference Layout & Hover) ─── */
+.fanDeckSectionWrapper {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   position: relative;
   overflow: visible;
-  padding: 0 48px;
+  padding: 0 24px;
   box-sizing: border-box;
+  margin-top: 16px;
+  margin-bottom: 24px;
 }
 
-.cardsScrollContainer {
-  display: flex;
-  gap: 24px;
-  overflow-x: auto;
-  scroll-behavior: auto;
-  padding-bottom: 24px;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
-}
-
-.cardsScrollContainer::-webkit-scrollbar {
-  display: none;
-}
-
-/* Full Image Hazard Card (Matching Midu.design Reference) */
-.hazardCard {
-  flex: 0 0 calc((100% - (3 * 24px)) / 4);
-  min-width: 340px;
-  max-width: 420px;
-  height: 520px;
-  border-radius: 32px;
+.fanDeckStage {
   position: relative;
+  width: 100%;
+  max-width: 1100px;
+  height: 480px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow: visible;
+  user-select: none;
+}
+
+/* Portrait Arc Card (~240px wide, ~380px tall, 32px smooth radius) */
+.hazardCard {
+  position: absolute;
+  top: 36px;
+  width: 240px;
+  height: 380px;
+  border-radius: 32px;
   overflow: hidden;
   background: #111114;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 24px;
+  padding: 20px;
+  cursor: pointer;
+  transform-origin: 50% 120%;
+  box-shadow:
+    0 24px 55px -12px rgba(0, 0, 0, 0.9),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+  will-change: transform, opacity;
   transition:
-    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .hazardCard:hover {
-  transform: translateY(-8px);
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow:
+    0 35px 80px -10px rgba(0, 0, 0, 0.98),
+    0 0 35px rgba(255, 255, 255, 0.12);
+}
+
+.activeCenterCard {
   border-color: rgba(255, 255, 255, 0.22);
 }
 
@@ -168,7 +165,7 @@
 }
 
 .hazardCard:hover .cardBgImage {
-  transform: scale(1.06);
+  transform: scale(1.05);
 }
 
 /* Vignette Overlay for Crisp Contrast */
@@ -180,10 +177,10 @@
   z-index: 1;
   background: linear-gradient(
     180deg,
-    rgba(0, 0, 0, 0.15) 0%,
-    rgba(0, 0, 0, 0.1) 40%,
-    rgba(0, 0, 0, 0.65) 75%,
-    rgba(0, 0, 0, 0.92) 100%
+    rgba(0, 0, 0, 0.08) 0%,
+    rgba(0, 0, 0, 0.15) 40%,
+    rgba(0, 0, 0, 0.7) 75%,
+    rgba(0, 0, 0, 0.94) 100%
   );
   pointer-events: none;
 }
@@ -195,18 +192,18 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 16px;
+  gap: 12px;
   width: 100%;
 }
 
 .cardTextContent {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
 }
 
 .hazardTitle {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 600;
   letter-spacing: -0.025em;
   color: #ffffff;
@@ -215,16 +212,16 @@
 }
 
 .hazardSubtitle {
-  font-size: 13.5px;
+  font-size: 12.5px;
   font-weight: 400;
   color: rgba(255, 255, 255, 0.62);
   margin: 0;
 }
 
-/* Plus Action Button (Matching Midu.design) */
+/* Plus Action Button */
 .plusButton {
-  width: 44px;
-  height: 44px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   background: #ffffff;
   color: #000000;
@@ -241,7 +238,7 @@
 }
 
 .hazardCard:hover .plusButton {
-  transform: scale(1.1);
+  transform: scale(1.08);
   background: #f3e8ff;
 }
 
