@@ -10,8 +10,6 @@ import Nav from "@/components/Nav";
 import LiquidMetalButton from "@/components/LiquidMetalButton";
 import WaveGlow from "@/components/WaveGlow";
 import ScrollCue from "@/components/ScrollCue";
-import ClickToKnow from "@/components/ClickToKnow";
-import DevGrid from "@/components/DevGrid";
 import LoadingScreen from "@/components/LoadingScreen";
 import CCTVFrame from "@/components/CCTVFrame";
 import ScrollToKnow from "@/components/ScrollToKnow";
@@ -200,10 +198,6 @@ export default function Home() {
   const [showLoadingScreen, setShowLoadingScreen] = useState(true);
   const [heroReady, setHeroReady] = useState(false);
 
-  // Dev tools state for heading text
-  const [headText, setHeadText] = useState("Why do we\nneed Argus");
-  const [headFontSize, setHeadFontSize] = useState(219);
-  const [headLineHeight, setHeadLineHeight] = useState(1.15);
 
   useEffect(() => {
     // Initial loading sequence
@@ -278,14 +272,6 @@ export default function Home() {
     <>
       {showLoadingScreen && <LoadingScreen duration={2000} />}
 
-      <DevGrid
-        headText={headText}
-        setHeadText={setHeadText}
-        headFontSize={headFontSize}
-        setHeadFontSize={setHeadFontSize}
-        headLineHeight={headLineHeight}
-        setHeadLineHeight={setHeadLineHeight}
-      />
 
       {/* PERMANENT FIXED NAVBAR DOCK ONLY */}
       <motion.div
@@ -478,16 +464,9 @@ export default function Home() {
                 }}
               >
                 <div className={styles.bigHeadingWrap}>
-                  <h2
-                    className={styles.bigHeroHeading}
-                    style={{
-                      fontSize: `${headFontSize}px`,
-                      lineHeight: headLineHeight,
-                    }}
-                  >
-                    {headText.split("\n").map((line, idx) => (
-                      <span key={idx}>{line}</span>
-                    ))}
+                  <h2 className={styles.bigHeroHeading}>
+                    <span>Why do we</span>
+                    <span>need Argus</span>
                   </h2>
                 </div>
                 <div className={styles.clickToKnowWrap}>
