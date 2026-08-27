@@ -287,6 +287,17 @@
   transform: scale(1.12);
 }
 
+.disabledArrow {
+  opacity: 0.18;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.disabledArrow:hover .arrowIcon {
+  color: rgba(255, 255, 255, 0.38);
+  transform: none;
+}
+
 /* ─── EVIDENCE ROW (Under Cards on same black background) ─── */
 .evidenceContainer {
   width: 100%;

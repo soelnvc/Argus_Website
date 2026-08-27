@@ -116,22 +116,23 @@ export default function WhatArgusDetects() {
   const [hoveredIndex, setHoveredIndex] = React.useState(null);
 
   const handlePrev = () => {
-    setActiveIndex((prev) => (prev > 0 ? prev - 1 : HAZARDS.length - 1));
+    setActiveIndex((prev) => Math.max(0, prev - 1));
   };
 
   const handleNext = () => {
-    setActiveIndex((prev) => (prev < HAZARDS.length - 1 ? prev + 1 : 0));
+    setActiveIndex((prev) => Math.min(HAZARDS.length - 1, prev + 1));
   };
 
   const getCardStyle = (offset, index) => {
     const absOffset = Math.abs(offset);
-    if (absOffset > 2) {
+    if (absOffset > 3) {
       return {
-        x: offset > 0 ? 460 : -460,
-        y: 160,
-        rotate: offset > 0 ? 25 : -25,
-        scale: 0.75,
+        x: offset > 0 ? 520 : -520,
+        y: 180,
+        rotate: offset > 0 ? 30 : -30,
+        scale: 0.72,
         opacity: 0,
+        filter: "blur(10px) brightness(0.3)",
         zIndex: 0,
         pointerEvents: "none",
       };
@@ -139,12 +140,27 @@ export default function WhatArgusDetects() {
 
     const isHovered = hoveredIndex === index;
 
-    // Tight, exact 5-card arc geometry matching reference
+    // ─── SNEAK PEEK FOR INCOMING / OUTGOING CARDS (absOffset === 3) ───
+    if (absOffset === 3) {
+      return {
+        x: offset * 130,
+        y: 125,
+        rotate: offset * 8.2,
+        scale: 0.8,
+        zIndex: 2,
+        opacity: 0.32,
+        filter: "blur(6px) brightness(0.45)",
+        pointerEvents: "auto",
+      };
+    }
+
+    // ─── 5 VISIBLE MAIN DECK CARDS (absOffset <= 2) ───
     const xOffset = offset * 132;
     let yOffset = absOffset === 0 ? 0 : absOffset === 1 ? 22 : 68;
     let rotation = offset * 8.2;
     let scale = absOffset === 0 ? 1 : absOffset === 1 ? 0.95 : 0.88;
     let zIndex = 10 - absOffset * 2;
+    let filter = "blur(0px) brightness(1)";
 
     // Hover state: lift up, straighten angle, enlarge, and bring to front
     if (isHovered) {
@@ -161,6 +177,7 @@ export default function WhatArgusDetects() {
       scale,
       zIndex,
       opacity: 1,
+      filter,
       pointerEvents: "auto",
     };
   };
@@ -223,6 +240,7 @@ export default function WhatArgusDetects() {
                   rotate: cardStyle.rotate,
                   scale: cardStyle.scale,
                   opacity: cardStyle.opacity,
+                  filter: cardStyle.filter,
                   zIndex: cardStyle.zIndex,
                 }}
                 transition={{
@@ -286,8 +304,9 @@ export default function WhatArgusDetects() {
         <div className={styles.navArrowsWrapper}>
           <button
             type="button"
-            className={styles.navArrowBtn}
+            className={`${styles.navArrowBtn} ${activeIndex === 0 ? styles.disabledArrow : ""}`}
             onClick={handlePrev}
+            disabled={activeIndex === 0}
             aria-label="Previous hazard card"
           >
             <svg
@@ -308,8 +327,9 @@ export default function WhatArgusDetects() {
 
           <button
             type="button"
-            className={styles.navArrowBtn}
+            className={`${styles.navArrowBtn} ${activeIndex === HAZARDS.length - 1 ? styles.disabledArrow : ""}`}
             onClick={handleNext}
+            disabled={activeIndex === HAZARDS.length - 1}
             aria-label="Next hazard card"
           >
             <svg
