@@ -128,6 +128,7 @@
   flex-direction: column;
   justify-content: space-between;
   position: relative;
+  cursor: pointer;
   transition:
     transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
     box-shadow 0.55s cubic-bezier(0.16, 1, 0.3, 1),
@@ -331,5 +332,269 @@
   }
   .whiteCard {
     padding: 32px 24px;
+  }
+}
+
+/* ─── MIDU.DESIGN 16:9 EXPANDED MODAL (High Blur Backdrop, 2-Column Split, Left Grey Stage & Right Info) ─── */
+.expandedBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 32px 24px;
+  box-sizing: border-box;
+}
+
+.expandedCard {
+  background-color: #eaecf0;
+  border-radius: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow:
+    0 40px 120px -20px rgba(0, 0, 0, 0.38),
+    0 2px 12px rgba(0, 0, 0, 0.04);
+  width: min(calc(84vw - 100px), 1020px);
+  height: min(calc(80vh - 50px), calc((84vw - 100px) * 9.8 / 16));
+  aspect-ratio: 16 / 9.8;
+  max-width: 1020px;
+  max-height: calc(80vh - 50px);
+  padding: 24px;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 1.22fr 0.78fr;
+  grid-template-rows: 100%;
+  gap: 36px;
+  overflow: hidden;
+  color: #111114;
+  position: relative;
+  transform-origin: center center;
+  will-change: transform, opacity, filter;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+
+/* ─── LEFT COLUMN: Soft Grey Inset Stage with Floating White Cards ─── */
+.leftDisplayStage {
+  background: #dce1e8;
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  padding: 22px 20px 28px 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  min-height: 0;
+  height: 100%;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.leftDisplayStage::-webkit-scrollbar {
+  width: 6px;
+}
+
+.leftDisplayStage::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 999px;
+  margin: 14px 0;
+}
+
+.leftDisplayStage::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 999px;
+}
+
+.leftDisplayStage::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.35);
+}
+
+/* Floating White Text Sub-Cards */
+.subCard {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 22px 24px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.04);
+  border: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.subCardTitle {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #111114;
+  margin: 0;
+}
+
+.subCardItems {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 2px;
+}
+
+.subCardItem {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.itemLabel {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #111114;
+}
+
+.itemDesc {
+  font-size: 13.5px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: rgba(17, 17, 20, 0.68);
+}
+
+.flowBadge {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: #111114;
+  background: #f0f1f4;
+  padding: 6px 12px;
+  border-radius: 8px;
+  display: inline-block;
+  width: fit-content;
+  margin-top: 4px;
+  letter-spacing: 0.02em;
+  line-height: 1.45;
+}
+
+.subCardText {
+  font-size: 13.5px;
+  font-weight: 400;
+  line-height: 1.55;
+  color: rgba(17, 17, 20, 0.68);
+  margin: 0;
+}
+
+.subCardHighlight {
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #111114;
+  margin: 2px 0 0 0;
+}
+
+/* ─── RIGHT COLUMN: Round-Cornered Square Close Button & Bottom Content ─── */
+.rightInfoStage {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding: 8px 12px 20px 0;
+  box-sizing: border-box;
+}
+
+.topActionRow {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.squareCloseBtn {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: #ffffff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #111114;
+  cursor: pointer;
+  transition:
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.25s ease;
+}
+
+.squareCloseBtn:hover {
+  transform: scale(0.92);
+  background: #ffffff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+.closeCrossIcon {
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: center;
+}
+
+.squareCloseBtn:hover .closeCrossIcon {
+  transform: rotate(180deg);
+}
+
+.rightBottomContent {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 440px;
+}
+
+.modalTitle {
+  font-size: clamp(30px, 3.2vw, 44px);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+  color: #111114;
+  margin: 0;
+}
+
+.modalDescription {
+  font-size: 15.5px;
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: -0.01em;
+  color: rgba(17, 17, 20, 0.65);
+  margin: 0;
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 960px) {
+  .expandedCard {
+    grid-template-columns: 1fr;
+    aspect-ratio: auto;
+    max-height: 90vh;
+    padding: 20px;
+    gap: 24px;
+    overflow-y: auto;
+  }
+  .rightInfoStage {
+    order: 1;
+    padding: 0;
+    gap: 16px;
+  }
+  .leftDisplayStage {
+    order: 2;
+    min-height: 300px;
+    padding: 20px 16px;
+  }
+  .rightBottomContent {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .expandedBackdrop {
+    padding: 16px;
+  }
+  .expandedCard {
+    border-radius: 28px;
   }
 }
