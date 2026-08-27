@@ -406,9 +406,9 @@ export default function HowArgusSolvesIt() {
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     let nextStep = 0;
-    if (latest < 0.16) nextStep = 0;
-    else if (latest < 0.38) nextStep = 1;
-    else if (latest < 0.60) nextStep = 2;
+    if (latest < 0.25) nextStep = 0;
+    else if (latest < 0.50) nextStep = 1;
+    else if (latest < 0.75) nextStep = 2;
     else nextStep = 3;
     setActiveStep((prev) => (prev !== nextStep ? nextStep : prev));
   });
@@ -424,7 +424,7 @@ export default function HowArgusSolvesIt() {
     const windowHeight = window.innerHeight;
     const scrollableDistance = containerHeight - windowHeight;
 
-    const stepProgress = [0.02, 0.26, 0.49, 0.75];
+    const stepProgress = [0.05, 0.30, 0.55, 0.80];
     const targetScrollY = containerTop + stepProgress[idx] * scrollableDistance;
 
     if (window.__lenis) {
