@@ -69,6 +69,7 @@ function CardContent({ card }) {
       <div className={styles.cardBottomRow}>
         <button className={styles.arrowButton} aria-label="Explore details">
           <svg
+            className={styles.arrowIcon}
             width="15"
             height="15"
             viewBox="0 0 24 24"

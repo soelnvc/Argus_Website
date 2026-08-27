@@ -1,6 +1,6 @@
 "use client";
 import React, { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, animate } from "framer-motion";
 import styles from "./WhatArgusDetects.module.css";
 
 const HAZARDS = [
@@ -113,6 +113,58 @@ function ExpandingEvidenceShowcase() {
 
 export default function WhatArgusDetects() {
   const scrollRef = useRef(null);
+  const scrollAnimationRef = useRef(null);
+  const targetScrollRef = useRef(0);
+
+  const handleContainerScroll = () => {
+    if (!scrollAnimationRef.current && scrollRef.current) {
+      targetScrollRef.current = scrollRef.current.scrollLeft;
+    }
+  };
+
+  const scroll = (direction) => {
+    if (!scrollRef.current) return;
+
+    const container = scrollRef.current;
+    const cardElement = container.querySelector(`.${styles.hazardCard}`);
+    const cardWidth = cardElement ? cardElement.getBoundingClientRect().width : 360;
+    const gap = 24;
+    const step = cardWidth + gap;
+
+    const startScroll = container.scrollLeft;
+    const maxScroll = container.scrollWidth - container.clientWidth;
+
+    let target;
+    if (scrollAnimationRef.current && targetScrollRef.current !== undefined) {
+      target =
+        direction === "left"
+          ? Math.max(0, targetScrollRef.current - step)
+          : Math.min(maxScroll, targetScrollRef.current + step);
+    } else {
+      target =
+        direction === "left"
+          ? Math.max(0, startScroll - step)
+          : Math.min(maxScroll, startScroll + step);
+    }
+
+    targetScrollRef.current = target;
+
+    if (scrollAnimationRef.current) {
+      scrollAnimationRef.current.stop();
+    }
+
+    // 120fps RAF-driven smooth, slow, and elegant glide
+    scrollAnimationRef.current = animate(startScroll, target, {
+      duration: 1.15,
+      ease: [0.16, 1, 0.3, 1], // High-end quintic deceleration curve
+      onUpdate: (latest) => {
+        container.scrollLeft = latest;
+      },
+      onComplete: () => {
+        scrollAnimationRef.current = null;
+      },
+    });
+  };
 
   return (
     <section className={styles.detectsSection} id="safety">
@@ -154,7 +206,11 @@ export default function WhatArgusDetects() {
 
       {/* Horizontal Cards Showcase (Clean Full Image - No Top Containers) */}
       <div className={styles.cardsTrackWrapper}>
-        <div className={styles.cardsScrollContainer} ref={scrollRef}>
+        <div
+          className={styles.cardsScrollContainer}
+          ref={scrollRef}
+          onScroll={handleContainerScroll}
+        >
           {HAZARDS.map((hazard, index) => (
             <motion.div
               key={hazard.id}
@@ -210,6 +266,53 @@ export default function WhatArgusDetects() {
               </div>
             </motion.div>
           ))}
+        </div>
+
+        {/* Carousel Navigation Arrows */}
+        <div className={styles.navArrowsWrapper}>
+          <button
+            type="button"
+            className={styles.navArrowBtn}
+            onClick={() => scroll("left")}
+            aria-label="Previous cards"
+          >
+            <svg
+              className={styles.arrowIcon}
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <line x1="19" y1="12" x2="5" y2="12" />
+              <polyline points="12 19 5 12 12 5" />
+            </svg>
+          </button>
+
+          <button
+            type="button"
+            className={styles.navArrowBtn}
+            onClick={() => scroll("right")}
+            aria-label="Next cards"
+          >
+            <svg
+              className={styles.arrowIcon}
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </button>
         </div>
       </div>
 
