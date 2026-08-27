@@ -54,15 +54,17 @@ const SLIDES_DATA = [
 ];
 
 function JourneySlide({ index, slide, cameraZ }) {
-  const targetZ = (index + 1) * 2000;
+  // Slide 0 starts at 1500z due to overlap. Slides 1 & 2 use original targetZ to preserve the cinematic end pause.
+  const targetZ = index === 0 ? 1500 : index === 1 ? 3400 : 5200;
   const zDepth = -targetZ;
   const side = index % 2 === 0 ? "left" : "right";
 
-  // Starts at 0 opacity at start of journey, fades in smoothly at screen center,
-  // stays solid in viewfinder, and fades out as camera flies through
+  // Fades in entirely while hidden behind the curtain, waiting to be revealed
   const opacity = useTransform(
     cameraZ,
-    [targetZ - 1800, targetZ - 700, targetZ + 500, targetZ + 1200],
+    index === 0
+      ? [0, 400, targetZ + 300, targetZ + 900]
+      : [targetZ - 1300, targetZ - 400, targetZ + 300, targetZ + 900],
     [0, 1, 1, 0],
   );
 
@@ -98,15 +100,32 @@ function JourneyContainer({ journeyRef }) {
     Math.min(Math.max(v, 0), 1),
   );
 
-  // 3 slides at 2000z intervals (-2000, -4000, -6000) = 6000z.
   // Fly through all 3 slides in the first 90% of scroll, then hold in deep black for the solution reveal
-  const cameraZ = useTransform(journeyProgress, [0, 0.9, 1.0], [0, 7600, 8200]);
+  const cameraZ = useTransform(journeyProgress, [0, 0.9, 1.0], [0, 6800, 7400]);
 
-  // Camera snakes left and right to aim at the CCTV viewfinders, then centers smoothly
+  // Camera snakes left and right smoothly like a wave to aim at the CCTV viewfinders
   const cameraX = useTransform(
     journeyProgress,
-    [0, 0.3, 0.6, 0.9, 0.94, 1.0],
-    ["0vw", "12vw", "-12vw", "12vw", "0vw", "0vw"],
+    [
+      0, 0.10, 0.20, 0.26, 0.325, 0.39, 0.45, 0.51, 0.57, 0.63, 0.69, 0.80, 0.90, 0.95, 1.0,
+    ],
+    [
+      "0vw",
+      "8.5vw",
+      "12vw",
+      "8.5vw",
+      "0vw",
+      "-8.5vw",
+      "-12vw",
+      "-8.5vw",
+      "0vw",
+      "8.5vw",
+      "12vw",
+      "12vw",
+      "0vw",
+      "0vw",
+      "0vw",
+    ],
   );
 
   // Smooth entry animation for "How we solve this problem" & "scroll to know"
@@ -206,6 +225,7 @@ export default function Home() {
     Math.min(Math.max(v, 0), 1),
   );
 
+  // Restored smooth, slow, and cinematic hero expansion
   const borderRadius = useTransform(clampedHero, [0, 0.3], [32, 0]);
   const maxWidth = useTransform(clampedHero, [0, 0.3], ["1540px", "100%"]);
   const maxHeight = useTransform(clampedHero, [0, 0.3], ["900px", "100vh"]);
@@ -220,6 +240,7 @@ export default function Home() {
   const cardBg = useTransform(clampedHero, [0, 0.3], ["#000000", "#000000"]);
   const ambientOpacity = useTransform(clampedHero, [0, 0.25], [1, 0]);
 
+  // Restored majestic, smooth entrance of Why do we need Argus
   const heroBgY = useTransform(clampedHero, [0.3, 0.65], ["0vh", "-12vh"]);
   const heroContentY = useTransform(clampedHero, [0.3, 0.65], ["0vh", "-24vh"]);
   const nextSectionY = useTransform(clampedHero, [0.3, 0.65], ["100vh", "0vh"]);
@@ -229,10 +250,13 @@ export default function Home() {
     ["48px 48px 0px 0px", "0px 0px 0px 0px"],
   );
 
-  // Smooth scroll exit for the question layer as we scroll directly into the 3D journey
-  const questionOpacity = useTransform(clampedHero, [0.82, 0.98], [1, 0]);
-  const questionScale = useTransform(clampedHero, [0.82, 0.98], [1, 1.05]);
-  const questionY = useTransform(clampedHero, [0.82, 0.98], ["0vh", "-6vh"]);
+  // Fade out the entire black curtain to seamlessly reveal the 3D slides underneath
+  const nextSectionOpacity = useTransform(clampedHero, [0.85, 1.0], [1, 0]);
+
+  // Continuous fluid movement to eliminate "pause" feel
+  const questionOpacity = useTransform(clampedHero, [0.75, 0.98], [1, 0]);
+  const questionScale = useTransform(clampedHero, [0.65, 0.98], [1, 1.1]);
+  const questionY = useTransform(clampedHero, [0.65, 0.98], ["0vh", "-15vh"]);
   const isQuestionPointerActive = useTransform(clampedHero, (v) =>
     v > 0.95 ? "none" : "auto",
   );
@@ -277,7 +301,11 @@ export default function Home() {
       <div className={styles.scrollWrapper} ref={heroRef}>
         <motion.div
           className={styles.stickyContainer}
-          style={{ padding: containerPadding, backgroundColor: stickyBg }}
+          style={{ 
+            padding: containerPadding, 
+            backgroundColor: stickyBg,
+            opacity: nextSectionOpacity
+          }}
         >
           <motion.div
             className={styles.heroCardMotion}
@@ -431,7 +459,10 @@ export default function Home() {
           <motion.div
             id="why-need-argus"
             className={styles.nextBlankSection}
-            style={{ y: nextSectionY, borderRadius: nextSectionRadius }}
+            style={{ 
+              y: nextSectionY, 
+              borderRadius: nextSectionRadius 
+            }}
           >
             <div className={styles.nextSectionStage}>
               <motion.div
