@@ -291,7 +291,7 @@ const R_DEFAULTS = {
 export default function LiquidMetalButton({
   label = "Launch",
   onClick,
-  href = label.toLowerCase() === "launch" ? "https://argus-live-umber.vercel.app/" : undefined,
+  href = label.toLowerCase() === "launch" ? "https://argus-dun.vercel.app/" : undefined,
   target = "_blank",
   style,
   className,
