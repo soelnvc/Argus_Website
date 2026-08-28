@@ -265,35 +265,12 @@ export default function WhatArgusDetects() {
                 {/* Spacer so bottom row stays pinned cleanly at the bottom */}
                 <div style={{ flex: 1 }} />
 
-                {/* Bottom Row: Title, Subtitle & Round Plus Button */}
+                {/* Bottom Row: Title and Subtitle */}
                 <div className={styles.cardBottomRow}>
                   <div className={styles.cardTextContent}>
                     <h3 className={styles.hazardTitle}>{hazard.title}</h3>
                     <p className={styles.hazardSubtitle}>{hazard.subtitle}</p>
                   </div>
-
-                  <button
-                    className={styles.plusButton}
-                    aria-label={`View details for ${hazard.title}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setActiveIndex(index);
-                    }}
-                  >
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <line x1="12" y1="5" x2="12" y2="19" />
-                      <line x1="5" y1="12" x2="19" y2="12" />
-                    </svg>
-                  </button>
                 </div>
               </motion.div>
             );
