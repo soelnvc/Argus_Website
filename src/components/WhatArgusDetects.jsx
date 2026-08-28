@@ -10,8 +10,7 @@ const HAZARDS = [
     subtitle: "Thermal & Flame Detection",
     tags: ["Thermal Vision", "0.2s Alert"],
     cctvLabel: "CAM_04 // ZONE_B",
-    image:
-      "https://images.unsplash.com/photo-1582139329536-e7284fece509?auto=format&fit=crop&w=1200&q=80",
+    image: "/hazard images/fire.jpg",
   },
   {
     id: "falls",
@@ -19,8 +18,7 @@ const HAZARDS = [
     subtitle: "Pose Estimation & Scaffolding",
     tags: ["Pose Estimation", "High Altitude"],
     cctvLabel: "CAM_12 // SCAFFOLD_03",
-    image:
-      "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1200&q=80",
+    image: "/hazard images/fall.png",
   },
   {
     id: "no-helmet",
@@ -28,8 +26,7 @@ const HAZARDS = [
     subtitle: "PPE Compliance Monitoring",
     tags: ["PPE Inspection", "Active Floor"],
     cctvLabel: "CAM_08 // ASSEMBLY_L2",
-    image:
-      "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80",
+    image: "/hazard images/nohelmet.png",
   },
   {
     id: "restricted-zones",
@@ -37,8 +34,7 @@ const HAZARDS = [
     subtitle: "Perimeter & Geo-Fence Breach",
     tags: ["Geo-Fence", "Access Control"],
     cctvLabel: "CAM_01 // HAZMAT_SECTOR",
-    image:
-      "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80",
+    image: "/hazard images/restrictedzone.png",
   },
   {
     id: "blocked-exits",
@@ -46,8 +42,7 @@ const HAZARDS = [
     subtitle: "Egress & Obstacle Tracking",
     tags: ["Egress Safety", "Fire Code"],
     cctvLabel: "CAM_09 // CORRIDOR_EAST",
-    image:
-      "https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=1200&q=80",
+    image: "/hazard images/blockedexit.png",
   },
   {
     id: "unattended-machinery",
@@ -55,8 +50,7 @@ const HAZARDS = [
     subtitle: "Robotics & Heavy Press Unit",
     tags: ["Robotics Cell", "Auto-Halt"],
     cctvLabel: "CAM_03 // PRESS_UNIT_B",
-    image:
-      "https://images.unsplash.com/photo-1616401784845-180882ba9ba8?auto=format&fit=crop&w=1200&q=80",
+    image: "/hazard images/unattendedmech.png",
   },
   {
     id: "spills",
@@ -64,8 +58,7 @@ const HAZARDS = [
     subtitle: "Surface Scan & Liquid Leak",
     tags: ["Surface Scan", "Slip Hazard"],
     cctvLabel: "CAM_07 // LOGISTICS_DOCK",
-    image:
-      "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1200&q=80",
+    image: "/hazard images/spilledhazard.png",
   },
   {
     id: "smoking",
@@ -73,8 +66,7 @@ const HAZARDS = [
     subtitle: "Hazardous Area Compliance",
     tags: ["Vapor Detection", "Zero Tolerance"],
     cctvLabel: "CAM_11 // SILO_BAY_04",
-    image:
-      "https://images.unsplash.com/photo-1527061011665-3652c757a4d4?auto=format&fit=crop&w=1200&q=80",
+    image: "/hazard images/smoking.png",
   },
 ];
 
