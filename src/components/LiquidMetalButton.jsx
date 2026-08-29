@@ -310,7 +310,9 @@ export default function LiquidMetalButton({
       onClick(e);
     } else if (href) {
       if (typeof window !== "undefined") {
-        if (target === "_blank") {
+        if (href.startsWith("mailto:")) {
+          window.location.href = href;
+        } else if (target === "_blank") {
           window.open(href, "_blank", "noopener,noreferrer");
         } else {
           window.location.href = href;

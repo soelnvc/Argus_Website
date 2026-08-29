@@ -481,22 +481,31 @@ export default function SocialOrbs() {
   return (
     <div className={styles.wrapper} ref={containerRef}>
       <div className={styles.orbsRow}>
-        {SOCIALS.map((soc) => (
-          <a
-            key={soc.mode}
-            href={soc.href}
-            target={soc.href.startsWith("mailto:") ? "_self" : "_blank"}
-            rel="noopener noreferrer"
-            className={styles.socialOrb}
-            aria-label={soc.name}
-            title={soc.name}
-          >
-            <canvas
-              data-mode={soc.mode}
-              className={styles.orbCanvas}
-            />
-          </a>
-        ))}
+        {SOCIALS.map((soc) => {
+          const isMail = soc.href.startsWith("mailto:");
+          return (
+            <a
+              key={soc.mode}
+              href={soc.href}
+              target={isMail ? "_self" : "_blank"}
+              rel={isMail ? undefined : "noopener noreferrer"}
+              className={styles.socialOrb}
+              aria-label={soc.name}
+              title={soc.name}
+              onClick={(e) => {
+                if (isMail) {
+                  e.preventDefault();
+                  window.location.href = soc.href;
+                }
+              }}
+            >
+              <canvas
+                data-mode={soc.mode}
+                className={styles.orbCanvas}
+              />
+            </a>
+          );
+        })}
       </div>
     </div>
   );
