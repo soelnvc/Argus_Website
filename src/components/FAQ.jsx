@@ -93,6 +93,8 @@ function FAQCard({ question, answer }) {
 }
 
 export default function FAQ() {
+  const [mobileExpanded, setMobileExpanded] = useState(false);
+
   // Split the data in half for two independent columns
   const midpoint = Math.ceil(FAQ_DATA.length / 2);
   const column1 = FAQ_DATA.slice(0, midpoint);
@@ -101,38 +103,91 @@ export default function FAQ() {
   return (
     <section className={styles.faqSection} id="faqs">
       <div className={styles.faqInner}>
-        <motion.h2
-          className={styles.faqHeadline}
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        >
-          Frequently Asked Questions
-        </motion.h2>
+        <div className={styles.faqHeaderRow}>
+          <motion.h2
+            className={styles.faqHeadline}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          >
+            Frequently Asked Questions
+          </motion.h2>
 
-        <div className={styles.faqLayout}>
-          <motion.div
-            className={styles.faqColumn}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.75, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          {/* Small expanding button for mobile */}
+          <button
+            type="button"
+            className={styles.mobileExpandBtn}
+            onClick={() => setMobileExpanded((v) => !v)}
+            aria-expanded={mobileExpanded}
           >
-            {column1.map((item, i) => (
-              <FAQCard key={`col1-${i}`} question={item.question} answer={item.answer} />
-            ))}
-          </motion.div>
+            <span>{mobileExpanded ? "Collapse" : "Expand"}</span>
+            <motion.svg
+              animate={{ rotate: mobileExpanded ? 180 : 0 }}
+              transition={{ duration: 0.25 }}
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </motion.svg>
+          </button>
+        </div>
+
+        {/* Desktop always renders, Mobile expands/collapses with smooth height transition */}
+        <div className={styles.desktopFaqWrap}>
+          <div className={styles.faqLayout}>
+            <motion.div
+              className={styles.faqColumn}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.75, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            >
+              {column1.map((item, i) => (
+                <FAQCard key={`col1-${i}`} question={item.question} answer={item.answer} />
+              ))}
+            </motion.div>
+            <motion.div
+              className={styles.faqColumn}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.75, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            >
+              {column2.map((item, i) => (
+                <FAQCard key={`col2-${i}`} question={item.question} answer={item.answer} />
+              ))}
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Mobile Accordion with smooth slow elegant expand/collapse */}
+        <div className={styles.mobileFaqWrap}>
           <motion.div
-            className={styles.faqColumn}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.75, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            initial={false}
+            animate={{
+              height: mobileExpanded ? "auto" : 0,
+              opacity: mobileExpanded ? 1 : 0,
+            }}
+            transition={{
+              height: { duration: 0.65, ease: [0.16, 1, 0.3, 1] },
+              opacity: { duration: 0.45, ease: "easeInOut" },
+            }}
+            className={styles.mobileFaqMotionWrapper}
           >
-            {column2.map((item, i) => (
-              <FAQCard key={`col2-${i}`} question={item.question} answer={item.answer} />
-            ))}
+            <div className={styles.faqLayout}>
+              <div className={styles.faqColumn}>
+                {FAQ_DATA.map((item, i) => (
+                  <FAQCard key={`mob-${i}`} question={item.question} answer={item.answer} />
+                ))}
+              </div>
+            </div>
           </motion.div>
         </div>
       </div>

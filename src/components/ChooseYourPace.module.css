@@ -163,20 +163,25 @@
 
 @media (max-width: 768px) {
   .depthSection {
-    padding: 120px 24px 100px 24px;
+    min-height: auto;
+    padding: 120px 24px 30px 24px;
   }
   .mainHeadline {
-    font-size: clamp(36px, 10vw, 54px);
+    font-size: clamp(30px, 8vw, 42px);
     line-height: 1.08;
   }
   .buttonGroup {
     flex-direction: column;
     align-items: flex-start;
-    margin-top: 16px;
-    gap: 0; /* Let the canvas overlap vertically or just keep 0 */
+    margin-top: 4px;
+    margin-left: -90px;
+    gap: 0;
   }
   .liquidBtnWrap {
     margin-right: 0;
-    margin-bottom: -50px; /* Collapse canvas vertically */
+    margin-bottom: -50px;
+  }
+  .launchBtnWrap {
+    display: none !important;
   }
 }

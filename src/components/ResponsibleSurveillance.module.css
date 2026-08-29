@@ -601,7 +601,7 @@
 
 @media (max-width: 768px) {
   .surveillanceSection {
-    padding: 60px 16px 80px 16px;
+    padding: 60px 16px 120px 16px;
     border-radius: 36px;
     clip-path: inset(0 0 0 0 round 36px);
   }

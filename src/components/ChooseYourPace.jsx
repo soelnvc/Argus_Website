@@ -50,7 +50,7 @@ export default function ChooseYourPace() {
             />
           </div>
 
-          <div className={styles.liquidBtnWrap}>
+          <div className={`${styles.liquidBtnWrap} ${styles.launchBtnWrap}`}>
             <LiquidMetalButton
               label="Launch"
               style={{
