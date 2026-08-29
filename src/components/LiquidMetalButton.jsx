@@ -291,7 +291,11 @@ const R_DEFAULTS = {
 export default function LiquidMetalButton({
   label = "Launch",
   onClick,
-  href = label.toLowerCase() === "launch" ? "https://argus-dun.vercel.app/" : undefined,
+  href = label.toLowerCase() === "launch"
+    ? "https://argus-dun.vercel.app/"
+    : label.toLowerCase() === "get in touch"
+    ? "mailto:argusintelligence.ai@gmail.com"
+    : undefined,
   target = "_blank",
   style,
   className,
