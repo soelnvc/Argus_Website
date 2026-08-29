@@ -421,7 +421,7 @@ const SOCIALS = [
     mode: "email",
     name: "Email",
     shimmer: "Sending…",
-    href: "mailto:contact@argus.safety",
+    href: "mailto:argusintelligence.ai@gmail.com",
   },
 ];
 
