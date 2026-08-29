@@ -6,6 +6,7 @@
   max-width: 1280px;
   gap: 72px;
   box-sizing: border-box;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 .alignLeft {
@@ -226,19 +227,102 @@
 
 @media (max-width: 900px) {
   .cctvContainer {
-    flex-direction: column;
-    gap: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
   }
-  .alignLeft,
+  .alignLeft {
+    flex-direction: row !important; /* Left: Pic, Right: Para */
+  }
   .alignRight {
-    flex-direction: column;
+    flex-direction: row-reverse !important; /* Left: Para, Right: Pic */
   }
   .viewfinder {
-    width: 100%;
-    flex: unset;
+    flex: 1.05;
+    min-width: 0;
+    width: auto;
+    aspect-ratio: 16 / 10;
+    border-radius: 14px;
+  }
+  .hudTop {
+    top: 8px;
+    left: 10px;
+    right: 10px;
+    font-size: 9px;
+    letter-spacing: 0.5px;
+  }
+  .camLabel {
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 8px;
+  }
+  .recBadge {
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 8px;
+    gap: 5px;
+  }
+  .recDot {
+    width: 6px;
+    height: 6px;
+  }
+  .bracket {
+    width: 16px;
+    height: 16px;
+  }
+  .topLeft {
+    top: 6px;
+    left: 6px;
+  }
+  .topRight {
+    top: 6px;
+    right: 6px;
+  }
+  .bottomLeft {
+    bottom: 6px;
+    left: 6px;
+  }
+  .bottomRight {
+    bottom: 6px;
+    right: 6px;
+  }
+  .timestamp {
+    bottom: 8px;
+    font-size: 9px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    letter-spacing: 1px;
   }
   .statsPanel {
-    flex: unset;
-    width: 100%;
+    flex: 1.15;
+    min-width: 0;
+    width: auto;
+    gap: 6px;
+  }
+  .headerRow {
+    gap: 6px;
+  }
+  .eyebrowTag {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+  }
+  .badgeTag {
+    font-size: 10px;
+    margin-left: 0;
+  }
+  .bigStatNumber {
+    font-size: clamp(26px, 7vw, 32px);
+    margin-top: 2px;
+  }
+  .statsTitle {
+    font-size: clamp(12.5px, 3.4vw, 14.5px);
+    line-height: 1.25;
+  }
+  .statsData {
+    font-size: clamp(10px, 2.8vw, 11.5px);
+    line-height: 1.42;
+    color: rgba(255, 255, 255, 0.65);
   }
 }

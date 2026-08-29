@@ -343,27 +343,125 @@
   .fixedGlobalNavbarWrap {
     display: none !important; /* Mobile uses dedicated bottom navbar */
   }
+
+  /* 4) Logo center top & Launch button positioned at bottom above ARGUS */
   .headerLayout {
-    padding: 16px;
-    grid-template-columns: 1fr auto;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    display: block;
+    pointer-events: none;
+  }
+  .logoSlot {
+    position: absolute;
+    top: 24px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    pointer-events: auto;
+  }
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
   }
   .logoText {
-    display: none; /* Hide 'argus' text to save space */
+    display: inline-block;
+    font-size: 15px;
+    font-weight: 600;
+  }
+  .centerSlotSpacer {
+    display: none;
+  }
+
+  /* 1) Place Launch button just some space above the Heading of ARGUS at bottom of the page */
+  .ctaSlot {
+    position: absolute;
+    top: auto;
+    bottom: 125px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    z-index: 50;
+    pointer-events: auto;
   }
   .buttonWrapper {
+    margin: 0;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* 3) Text center aligned and positioned in the 5.0 to 8.5 zone (from bottom) */
+  .content {
+    position: absolute;
+    top: 13vh;
+    left: 0;
+    right: 0;
+    bottom: auto;
+    width: 100%;
+    display: flex;
     flex-direction: column;
-    gap: 12px;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 20px;
+    box-sizing: border-box;
+    gap: 22px;
+    pointer-events: none;
   }
   .leftContent {
-    margin: 16px 16px 0 16px;
+    position: static;
+    margin: 0;
+    padding: 0;
     max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 5px;
+    pointer-events: auto;
+  }
+  .statusTitle {
+    font-size: 14.5px;
+    font-weight: 500;
+    text-align: center;
+    letter-spacing: -0.01em;
+    color: rgba(255, 255, 255, 0.95);
+  }
+  .subtext {
+    font-size: 13px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.55);
   }
   .rightContent {
-    margin: 16px;
-    max-width: 100%;
+    position: static;
+    margin: 0;
+    padding: 0;
+    max-width: 360px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    pointer-events: auto;
   }
   .pitch {
-    font-size: 20px;
+    font-size: clamp(23px, 6.4vw, 29px);
+    line-height: 1.22;
+    text-align: center;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    color: #ffffff;
   }
   .bigHeroHeading {
     font-size: clamp(40px, 10vw, 64px);
@@ -468,9 +566,100 @@
   will-change: transform, opacity;
 }
 
+.desktopJourneyWrap {
+  display: block;
+  width: 100%;
+}
+
+.mobileJourneyWrap {
+  display: none;
+}
+
 @media (max-width: 1100px) {
   .bigEndHeading {
     font-size: clamp(40px, 10vw, 76px);
+    line-height: 0.98;
+  }
+}
+
+@media (max-width: 768px) {
+  .desktopJourneyWrap {
+    display: none !important;
+  }
+  .mobileJourneyWrap {
+    display: block !important;
+    position: relative;
+    width: 100%;
+    background-color: #000000;
+    z-index: 20;
+    margin-top: -100vh;
+    border-radius: 0 0 40px 40px;
+    clip-path: inset(0 0 0 0 round 0 0 40px 40px);
+  }
+  .mobileJourneyTrack {
+    position: relative;
+    width: 100%;
+    height: 240vh; /* Smooth, natural scroll pacing */
+    background-color: #000000;
+  }
+  .mobileJourneySticky {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 20px 14px;
+    box-sizing: border-box;
+  }
+  .mobileCardsStage {
+    position: absolute;
+    top: 15%;
+    bottom: calc(90px + env(safe-area-inset-bottom, 0px));
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px;
+    box-sizing: border-box;
+    will-change: transform, opacity;
+  }
+  .mobileCardsList {
+    width: 100%;
+    height: 100%;
+    max-width: 480px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0;
+  }
+  .mobileCardItem {
+    width: 100%;
+    display: flex;
+    align-items: center;
+  }
+  .mobileJourneyEndStage {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 24px;
+    padding: 32px 20px;
+    box-sizing: border-box;
+    will-change: transform, opacity;
+  }
+  .bigEndHeading {
+    font-size: clamp(38px, 9.5vw, 56px);
     line-height: 0.98;
   }
 }

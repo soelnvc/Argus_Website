@@ -89,8 +89,102 @@ function JourneySlide({ index, slide, cameraZ }) {
   );
 }
 
+function MobileJourneySection() {
+  const mobileRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: mobileRef,
+    offset: ["start start", "end end"],
+  });
+
+  // Phase 1: 3 cards fade in (0.0 to 0.2), stay (0.2 to 0.65), fade out (0.65 to 0.82)
+  const cardsOpacity = useTransform(
+    scrollYProgress,
+    [0.0, 0.22, 0.65, 0.82],
+    [0, 1, 1, 0],
+  );
+  const cardsY = useTransform(
+    scrollYProgress,
+    [0.0, 0.22, 0.65, 0.82],
+    [40, 0, 0, -30],
+  );
+  const cardsScale = useTransform(
+    scrollYProgress,
+    [0.0, 0.22, 0.65, 0.82],
+    [0.94, 1, 1, 0.96],
+  );
+  const cardsPointer = useTransform(scrollYProgress, (v) =>
+    v >= 0.15 && v <= 0.75 ? "auto" : "none",
+  );
+
+  // Phase 2: "How we solve this problem" fades in (0.76 to 0.94) and holds
+  const endOpacity = useTransform(scrollYProgress, [0.76, 0.92], [0, 1]);
+  const endY = useTransform(scrollYProgress, [0.76, 0.92], [40, 0]);
+  const endScale = useTransform(scrollYProgress, [0.76, 0.92], [0.92, 1]);
+  const endPointer = useTransform(scrollYProgress, (v) =>
+    v >= 0.8 ? "auto" : "none",
+  );
+
+  return (
+    <div className={styles.mobileJourneyTrack} ref={mobileRef}>
+      <div className={styles.mobileJourneySticky}>
+        {/* Step 2: Fade in the 3 Cards 2-halves layout all at once */}
+        <motion.div
+          className={styles.mobileCardsStage}
+          style={{
+            opacity: cardsOpacity,
+            y: cardsY,
+            scale: cardsScale,
+            pointerEvents: cardsPointer,
+          }}
+        >
+          <div className={styles.mobileCardsList}>
+            {SLIDES_DATA.map((slide, i) => {
+              const side = i % 2 === 0 ? "left" : "right";
+              return (
+                <div key={i} className={styles.mobileCardItem}>
+                  <CCTVFrame
+                    eyebrow={slide.eyebrow}
+                    badge={slide.badge}
+                    bigStat={slide.bigStat}
+                    title={slide.title}
+                    stat={slide.stat}
+                    image={slide.image}
+                    camLabel={slide.camLabel}
+                    side={side}
+                  />
+                </div>
+              );
+            })}
+          </div>
+        </motion.div>
+
+        {/* Step 3: Fade in "How we solve this problem" */}
+        <motion.div
+          className={styles.mobileJourneyEndStage}
+          style={{
+            opacity: endOpacity,
+            y: endY,
+            scale: endScale,
+            pointerEvents: endPointer,
+          }}
+        >
+          <div className={styles.bigHeadingWrap}>
+            <h2 className={styles.bigEndHeading}>
+              <span>How we solve</span>
+              <span>this problem</span>
+            </h2>
+          </div>
+          <div className={styles.scrollToKnowWrap}>
+            <ScrollToKnow text="scroll to know" />
+          </div>
+        </motion.div>
+      </div>
+    </div>
+  );
+}
+
 function JourneyContainer({ journeyRef }) {
-  // --- 3D JOURNEY SCROLL LOGIC ---
+  // --- 3D JOURNEY SCROLL LOGIC (DESKTOP) ---
   const { scrollYProgress: journeyProgressRaw } = useScroll({
     target: journeyRef,
     offset: ["start start", "end end"],
@@ -128,7 +222,6 @@ function JourneyContainer({ journeyRef }) {
   );
 
   // Smooth entry animation for "How we solve this problem" & "scroll to know"
-  // Only triggers once the user has fully scrolled through the CCTV sequence
   const endSectionOpacity = useTransform(journeyProgress, [0.92, 0.98], [0, 1]);
   const titleY = useTransform(journeyProgress, [0.92, 0.98], [48, 0]);
   const titleScale = useTransform(journeyProgress, [0.92, 0.98], [0.93, 1]);
@@ -141,54 +234,64 @@ function JourneyContainer({ journeyRef }) {
   );
 
   return (
-    <div className={styles.journeySection} ref={journeyRef} id="journey">
-      <div className={styles.journeySticky}>
-        <motion.div
-          className={styles.cameraContainer}
-          style={{
-            z: cameraZ,
-            x: cameraX,
-          }}
-        >
-          {SLIDES_DATA.map((slide, i) => (
-            <JourneySlide key={i} index={i} slide={slide} cameraZ={cameraZ} />
-          ))}
-        </motion.div>
+    <>
+      {/* DESKTOP 3D JOURNEY (Visible on screens > 768px) */}
+      <div className={styles.desktopJourneyWrap}>
+        <div className={styles.journeySection} ref={journeyRef} id="journey">
+          <div className={styles.journeySticky}>
+            <motion.div
+              className={styles.cameraContainer}
+              style={{
+                z: cameraZ,
+                x: cameraX,
+              }}
+            >
+              {SLIDES_DATA.map((slide, i) => (
+                <JourneySlide key={i} index={i} slide={slide} cameraZ={cameraZ} />
+              ))}
+            </motion.div>
 
-        {/* End of CCTV sequence: "How we solve this problem" + "scroll to know" */}
-        <motion.div
-          className={styles.journeyEndStage}
-          style={{
-            opacity: endSectionOpacity,
-            pointerEvents: isPointerActive,
-          }}
-        >
-          <motion.div
-            className={styles.bigHeadingWrap}
-            style={{
-              y: titleY,
-              scale: titleScale,
-            }}
-          >
-            <h2 className={styles.bigEndHeading}>
-              <span>How we solve</span>
-              <span>this problem</span>
-            </h2>
-          </motion.div>
+            {/* End of CCTV sequence: "How we solve this problem" + "scroll to know" */}
+            <motion.div
+              className={styles.journeyEndStage}
+              style={{
+                opacity: endSectionOpacity,
+                pointerEvents: isPointerActive,
+              }}
+            >
+              <motion.div
+                className={styles.bigHeadingWrap}
+                style={{
+                  y: titleY,
+                  scale: titleScale,
+                }}
+              >
+                <h2 className={styles.bigEndHeading}>
+                  <span>How we solve</span>
+                  <span>this problem</span>
+                </h2>
+              </motion.div>
 
-          <motion.div
-            className={styles.scrollToKnowWrap}
-            style={{
-              opacity: cueOpacity,
-              y: cueY,
-              scale: cueScale,
-            }}
-          >
-            <ScrollToKnow text="scroll to know" />
-          </motion.div>
-        </motion.div>
+              <motion.div
+                className={styles.scrollToKnowWrap}
+                style={{
+                  opacity: cueOpacity,
+                  y: cueY,
+                  scale: cueScale,
+                }}
+              >
+                <ScrollToKnow text="scroll to know" />
+              </motion.div>
+            </motion.div>
+          </div>
+        </div>
       </div>
-    </div>
+
+      {/* MOBILE NATURAL FLOWING SECTION (Visible on screens <= 768px) */}
+      <div className={styles.mobileJourneyWrap}>
+        <MobileJourneySection />
+      </div>
+    </>
   );
 }
 

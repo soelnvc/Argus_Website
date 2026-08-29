@@ -490,6 +490,7 @@ export default function HowArgusSolvesIt() {
               <p className={styles.subCopy}>
                 Full Installation Guidance and Support by Argus Team
               </p>
+              <div className={styles.mobileSeparator} aria-hidden="true" />
             </div>
           </div>
 

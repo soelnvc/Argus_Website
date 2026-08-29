@@ -85,3 +85,9 @@
     margin: 0 24px 24px 24px;
   }
 }
+
+@media (max-width: 768px) {
+  .scrollCue {
+    display: none !important;
+  }
+}
