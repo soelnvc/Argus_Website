@@ -39,6 +39,7 @@
   width: 80px;
   height: 80px;
   display: block;
+  pointer-events: none;
 }
 
 @media (max-width: 900px) {
