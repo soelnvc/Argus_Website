@@ -407,3 +407,30 @@
     padding: 28px;
   }
 }
+
+@media (max-width: 768px) {
+  .solvesSticky {
+    padding: 120px 24px 32px 24px;
+    height: 100svh; /* use dynamic viewport height for mobile browsers */
+  }
+  .sectionContainer {
+    gap: 32px;
+  }
+  .mainHeadline {
+    font-size: clamp(32px, 8vw, 42px);
+    margin: 0 0 24px 0;
+  }
+  .pillsList {
+    margin-bottom: 24px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .showcaseCard {
+    padding: 20px;
+    border-radius: 16px;
+  }
+  .stepDescription {
+    font-size: 13px;
+  }
+}

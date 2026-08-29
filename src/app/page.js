@@ -7,6 +7,7 @@ import {
   AnimatePresence,
 } from "framer-motion";
 import Nav from "@/components/Nav";
+import MobileBottomNav from "@/components/MobileBottomNav";
 import LiquidMetalButton from "@/components/LiquidMetalButton";
 import WaveGlow from "@/components/WaveGlow";
 import ScrollCue from "@/components/ScrollCue";
@@ -267,7 +268,7 @@ export default function Home() {
       {showLoadingScreen && <LoadingScreen duration={2000} />}
 
 
-      {/* PERMANENT FIXED NAVBAR DOCK ONLY */}
+      {/* PERMANENT FIXED NAVBAR DOCK (Desktop: Top dock, Mobile: Bottom stretching pill nav) */}
       <motion.div
         className={styles.fixedGlobalNavbarWrap}
         initial={{ opacity: 0, y: -24 }}
@@ -276,6 +277,9 @@ export default function Home() {
       >
         <Nav />
       </motion.div>
+
+      {/* MOBILE BOTTOM NAVBAR ONLY (Controlled entirely via CSS media queries) */}
+      <MobileBottomNav />
 
       {/* --- HERO SECTION (250vh) --- */}
       <div className={styles.scrollWrapper} ref={heroRef}>

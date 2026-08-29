@@ -457,40 +457,51 @@
   font-weight: 600;
 }
 
-@media (max-width: 1200px) {
-  .hazardCard {
-    flex: 0 0 calc((100% - (2 * 24px)) / 3);
+@media (max-width: 768px) {
+  .detectsSection {
+    border-top-left-radius: 40px;
+    border-top-right-radius: 40px;
+    padding: 0 0 80px 0;
   }
-}
-
-@media (max-width: 900px) {
   .headerContainer {
-    padding: 0 24px;
+    padding: 80px 24px 32px 24px;
     gap: 32px;
   }
-  .subheadingsRow {
-    grid-template-columns: 1fr;
-    gap: 20px;
+  .mainHeadline {
+    font-size: clamp(36px, 10vw, 52px);
   }
-  .cardsTrackWrapper {
+  .subheadingsRow {
+    flex-direction: column;
+    gap: 24px;
+  }
+  .subLeft, .subRight {
+    max-width: 100%;
+    text-align: left;
+  }
+  .subRightWrapper {
+    justify-content: flex-start;
+  }
+  .fanDeckSectionWrapper {
+    padding: 0;
+    margin-top: 0;
+    transform: scale(0.75); /* Scale down the fanned deck to fit on mobile */
+    transform-origin: top center;
+  }
+  .evidenceContainer {
     padding: 0 24px;
   }
-  .hazardCard {
-    flex: 0 0 calc((100% - 24px) / 2);
-    min-width: 280px;
-    height: 460px;
+  .evidenceRow {
+    flex-direction: column;
+    gap: 24px;
   }
-}
-
-@media (max-width: 640px) {
-  .detectsSection {
-    border-radius: 36px 36px 0 0;
-    clip-path: inset(0 0 0 0 round 36px 36px 0 0);
-    padding: 70px 0 90px 0;
+  .evidenceLeft, .evidenceRight {
+    max-width: 100%;
+    text-align: left;
   }
-  .hazardCard {
-    flex: 0 0 85vw;
-    min-width: unset;
-    height: 440px;
+  .watchmanContainer {
+    padding: 80px 24px 60px 24px;
+  }
+  .watchmanHeadline {
+    font-size: clamp(32px, 8vw, 48px);
   }
 }

@@ -339,6 +339,37 @@
   }
 }
 
+@media (max-width: 768px) {
+  .fixedGlobalNavbarWrap {
+    display: none !important; /* Mobile uses dedicated bottom navbar */
+  }
+  .headerLayout {
+    padding: 16px;
+    grid-template-columns: 1fr auto;
+  }
+  .logoText {
+    display: none; /* Hide 'argus' text to save space */
+  }
+  .buttonWrapper {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .leftContent {
+    margin: 16px 16px 0 16px;
+    max-width: 100%;
+  }
+  .rightContent {
+    margin: 16px;
+    max-width: 100%;
+  }
+  .pitch {
+    font-size: 20px;
+  }
+  .bigHeroHeading {
+    font-size: clamp(40px, 10vw, 64px);
+  }
+}
+
 /* 3D Journey Section (Foreground elevated card with rounded downcorners) */
 .journeySection {
   position: relative;

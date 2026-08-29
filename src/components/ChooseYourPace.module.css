@@ -161,12 +161,22 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .depthSection {
-    padding: 140px 20px 100px 20px;
+    padding: 120px 24px 100px 24px;
   }
   .mainHeadline {
-    font-size: clamp(36px, 8.5vw, 54px);
+    font-size: clamp(36px, 10vw, 54px);
     line-height: 1.08;
+  }
+  .buttonGroup {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 16px;
+    gap: 0; /* Let the canvas overlap vertically or just keep 0 */
+  }
+  .liquidBtnWrap {
+    margin-right: 0;
+    margin-bottom: -50px; /* Collapse canvas vertically */
   }
 }

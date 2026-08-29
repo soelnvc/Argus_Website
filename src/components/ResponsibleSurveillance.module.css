@@ -566,6 +566,15 @@
 }
 
 /* ─── RESPONSIVE ─── */
+@media (max-width: 1024px) {
+  .featureRow {
+    gap: 40px;
+  }
+  .whiteCard {
+    padding: 32px;
+  }
+}
+
 @media (max-width: 960px) {
   .expandedCard {
     grid-template-columns: 1fr;
@@ -590,11 +599,41 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
+  .surveillanceSection {
+    padding: 80px 24px 100px 24px;
+    border-radius: 40px;
+    clip-path: inset(0 0 0 0 round 40px);
+  }
+  .headerContainer {
+    margin-bottom: 64px;
+  }
+  .mainHeadline {
+    font-size: clamp(36px, 10vw, 56px);
+  }
+  .rowsContainer {
+    gap: 80px;
+  }
+  .featureRow {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .subheadCol {
+    max-width: 100%;
+  }
+  .cardColLeft, .cardColRight {
+    justify-content: center;
+  }
+  .whiteCard {
+    min-height: auto;
+  }
   .expandedBackdrop {
     padding: 16px;
   }
   .expandedCard {
     border-radius: 28px;
+  }
+  .modalTitle {
+    font-size: clamp(26px, 8vw, 32px);
   }
 }

@@ -324,7 +324,7 @@
   transition: opacity 0.18s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .dock {
     height: max(56px, calc(58 * var(--u)));
     padding: max(6px, calc(6 * var(--u)));
@@ -333,9 +333,13 @@
   }
   .dock-item {
     height: max(44px, calc(46 * var(--u)));
+    width: auto;
+    padding: 0 16px;
+    border-radius: max(12px, calc(13 * var(--u)));
+  }
+  .dock-mark {
     width: max(44px, calc(46 * var(--u)));
     padding: 0;
-    border-radius: max(12px, calc(13 * var(--u)));
   }
   .dock-mark svg {
     width: 52%;

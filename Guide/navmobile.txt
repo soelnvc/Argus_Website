@@ -1,0 +1,208 @@
+'use client';
+
+import {
+  useCallback,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ComponentType,
+  type TransitionEvent,
+} from 'react';
+import { Home, Images, Plus, Search, Wallet } from 'lucide-react';
+import clsx from 'clsx';
+import './styles.css';
+
+type NavItem = {
+  id: string;
+  label: string;
+  icon: ComponentType<{ className?: string; 'aria-hidden'?: boolean }>;
+};
+
+const NAV_ITEMS: NavItem[] = [
+  { id: 'home', label: 'Home', icon: Home },
+  { id: 'gallery', label: 'Gallery', icon: Images },
+  { id: 'wallet', label: 'Wallet', icon: Wallet },
+  { id: 'search', label: 'Search', icon: Search },
+];
+
+type IndicatorRect = { left: number; width: number };
+type IndicatorPhase = 'idle' | 'stretch' | 'settle';
+
+// Extend towards the newly picked tab first, then let the trailing edge catch up and land on it.
+const STRETCH_MS = 300;
+const SETTLE_MS = 550;
+
+export function BottomNav() {
+  const [activeId, setActiveId] = useState<string>(NAV_ITEMS[0].id);
+  const [phase, setPhase] = useState<IndicatorPhase>('idle');
+  const [indicator, setIndicator] = useState<IndicatorRect | null>(null);
+  const [itemRects, setItemRects] = useState<Record<string, IndicatorRect>>({});
+  const buttonsRef = useRef(new Map<string, HTMLButtonElement>());
+  const phaseRef = useRef<IndicatorPhase>('idle');
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useLayoutEffect(() => {
+    phaseRef.current = phase;
+  }, [phase]);
+
+  useLayoutEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
+  const measure = useCallback((id: string): IndicatorRect | null => {
+    const button = buttonsRef.current.get(id);
+    if (!button) return null;
+    return { left: button.offsetLeft, width: button.offsetWidth };
+  }, []);
+
+  const updateRects = useCallback(() => {
+    const next: Record<string, IndicatorRect> = {};
+    buttonsRef.current.forEach((button, id) => {
+      next[id] = { left: button.offsetLeft, width: button.offsetWidth };
+    });
+    setItemRects(next);
+
+    // While stretching towards the target, ignore live re-measures so the bounding box doesn't get clobbered.
+    if (phaseRef.current === 'stretch') return;
+    const rect = next[activeId];
+    if (rect) setIndicator(rect);
+  }, [activeId]);
+
+  useLayoutEffect(() => {
+    // ResizeObserver fires an initial measurement for each newly observed button, so this also
+    // covers the first mount and every activeId change without calling setState directly here.
+    const observer = new ResizeObserver(updateRects);
+    buttonsRef.current.forEach((button) => observer.observe(button));
+
+    window.addEventListener('resize', updateRects);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', updateRects);
+    };
+  }, [updateRects]);
+
+  // An item is covered as soon as the indicator's target rect (not just its current animated frame) spans it.
+  function isCoveredByIndicator(rect: IndicatorRect | undefined) {
+    if (!indicator || !rect) return false;
+    const indicatorRight = indicator.left + indicator.width;
+    return rect.left >= indicator.left - 1 && rect.left + rect.width <= indicatorRight + 1;
+  }
+
+  function handleSelect(id: string) {
+    if (phaseRef.current !== 'idle' || id === activeId) return;
+
+    const startRect = indicator ?? measure(activeId);
+    const targetRect = measure(id);
+    if (!startRect || !targetRect) return;
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion) {
+      setActiveId(id);
+      setIndicator(targetRect);
+      return;
+    }
+
+    const left = Math.min(startRect.left, targetRect.left);
+    const right = Math.max(startRect.left + startRect.width, targetRect.left + targetRect.width);
+
+    setPhase('stretch');
+    setIndicator({ left, width: right - left });
+
+    timeoutRef.current = setTimeout(() => {
+      setActiveId(id);
+      setPhase('settle');
+
+      // Safety net in case a transitionend never fires (e.g. tab hidden mid-animation).
+      timeoutRef.current = setTimeout(() => {
+        setPhase('idle');
+      }, SETTLE_MS + 100);
+    }, STRETCH_MS);
+  }
+
+  function handleIndicatorTransitionEnd(event: TransitionEvent<HTMLSpanElement>) {
+    if (event.propertyName !== 'width') return;
+    if (phaseRef.current !== 'settle') return;
+
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setPhase('idle');
+  }
+
+  return (
+    <div className="flex items-center gap-3">
+      <div
+        role="tablist"
+        aria-label="Primary"
+        className="relative flex items-center gap-1 rounded-full border border-white/15 bg-white/10 p-1.5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15),0_25px_50px_-12px_rgba(0,0,0,0.4)] backdrop-blur-xl"
+      >
+        {indicator && (
+          <span
+            aria-hidden
+            onTransitionEnd={handleIndicatorTransitionEnd}
+            className="nav-indicator absolute top-1.5 bottom-1.5 left-0 z-0"
+            style={{
+              left: indicator.left,
+              width: indicator.width,
+              transitionProperty: 'left, width',
+              transitionDuration: `${phase === 'stretch' ? STRETCH_MS : SETTLE_MS}ms`,
+              transitionTimingFunction:
+                phase === 'stretch'
+                  ? 'cubic-bezier(0.16, 1, 0.3, 1)'
+                  : 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+            }}
+          >
+            <span className="block h-full w-full rounded-full bg-white" />
+          </span>
+        )}
+
+        {NAV_ITEMS.map((item) => {
+          const isActive = item.id === activeId;
+          // Colors flip as soon as the indicator covers a tab, ahead of the label/icon-pop for the target.
+          const isColorActive = isActive || isCoveredByIndicator(itemRects[item.id]);
+          const Icon = item.icon;
+
+          return (
+            <button
+              key={item.id}
+              ref={(node) => {
+                if (node) buttonsRef.current.set(item.id, node);
+                else buttonsRef.current.delete(item.id);
+              }}
+              type="button"
+              role="tab"
+              aria-selected={isActive}
+              onClick={() => handleSelect(item.id)}
+              className={clsx(
+                'relative z-10 flex h-11 cursor-pointer items-center rounded-full px-3.5 transition-colors duration-300 active:scale-95',
+                isColorActive ? 'text-violet-900' : 'text-white/70 hover:text-white'
+              )}
+            >
+              <span className="flex">
+                <Icon aria-hidden className="h-5 w-5 shrink-0" />
+              </span>
+
+              <span
+                className="grid [transition:grid-template-columns_0.5s_cubic-bezier(0.65,0,0.35,1)]"
+                style={{ gridTemplateColumns: isActive ? '1fr' : '0fr' }}
+              >
+                <span className="overflow-hidden whitespace-nowrap">
+                  <span className="pl-1.5 text-sm font-semibold">{item.label}</span>
+                </span>
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      <button
+        type="button"
+        aria-label="Create"
+        className="relative flex h-14 w-14 shrink-0 cursor-pointer items-center justify-center rounded-full bg-violet-600 text-white shadow-[0_15px_30px_-8px_rgba(124,58,237,0.7)] transition-transform duration-200 hover:scale-105 active:scale-95"
+      >
+        <span aria-hidden className="fab-ring absolute inset-0 rounded-full bg-violet-500" />
+        <Plus aria-hidden className="relative h-6 w-6" />
+      </button>
+    </div>
+  );
+}

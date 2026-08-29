@@ -145,14 +145,20 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .faqSection {
-    padding: 80px 20px 100px 20px;
+    padding: 80px 24px 100px 24px;
   }
   .faqCard {
-    padding: 24px 24px;
+    padding: 20px 20px;
   }
   .faqHeadline {
-    font-size: 28px;
+    font-size: 24px;
+  }
+  .faqQuestion {
+    font-size: 18px;
+  }
+  .faqAnswer {
+    font-size: 15px;
   }
 }
