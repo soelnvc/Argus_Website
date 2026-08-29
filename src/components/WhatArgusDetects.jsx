@@ -107,12 +107,54 @@ export default function WhatArgusDetects() {
   const [activeIndex, setActiveIndex] = React.useState(2);
   const [hoveredIndex, setHoveredIndex] = React.useState(null);
 
+  const touchStartX = useRef(0);
+  const touchStartY = useRef(0);
+  const touchDeltaX = useRef(0);
+  const touchDeltaY = useRef(0);
+
   const handlePrev = () => {
     setActiveIndex((prev) => Math.max(0, prev - 1));
   };
 
   const handleNext = () => {
     setActiveIndex((prev) => Math.min(HAZARDS.length - 1, prev + 1));
+  };
+
+  const handleDragEnd = (event, info) => {
+    const swipeThreshold = 30;
+    const velocityThreshold = 180;
+    const offset = info.offset.x;
+    const velocity = info.velocity.x;
+
+    if (offset < -swipeThreshold || velocity < -velocityThreshold) {
+      handleNext();
+    } else if (offset > swipeThreshold || velocity > velocityThreshold) {
+      handlePrev();
+    }
+  };
+
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+    touchDeltaX.current = 0;
+    touchDeltaY.current = 0;
+  };
+
+  const handleTouchMove = (e) => {
+    touchDeltaX.current = e.touches[0].clientX - touchStartX.current;
+    touchDeltaY.current = e.touches[0].clientY - touchStartY.current;
+  };
+
+  const handleTouchEnd = () => {
+    const dx = touchDeltaX.current;
+    const dy = touchDeltaY.current;
+    if (Math.abs(dx) > 30 && Math.abs(dx) > Math.abs(dy)) {
+      if (dx < 0) {
+        handleNext();
+      } else {
+        handlePrev();
+      }
+    }
   };
 
   const getCardStyle = (offset, index) => {
@@ -212,8 +254,13 @@ export default function WhatArgusDetects() {
         </div>
       </div>
 
-      {/* ─── FANNED DECK ARC SHOWCASE (Matching Reference Layout & Hover) ─── */}
-      <div className={styles.fanDeckSectionWrapper}>
+      {/* ─── FANNED DECK ARC SHOWCASE (With Touch Swipe & Drag Support) ─── */}
+      <div
+        className={styles.fanDeckSectionWrapper}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
         <div className={styles.fanDeckStage}>
           {HAZARDS.map((hazard, index) => {
             const offset = index - activeIndex;
@@ -226,6 +273,10 @@ export default function WhatArgusDetects() {
                 onClick={() => setActiveIndex(index)}
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(null)}
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.18}
+                onDragEnd={handleDragEnd}
                 animate={{
                   x: cardStyle.x,
                   y: cardStyle.y,
@@ -249,6 +300,7 @@ export default function WhatArgusDetects() {
                   alt={hazard.title}
                   className={styles.cardBgImage}
                   loading="lazy"
+                  draggable="false"
                 />
 
                 {/* Vignette Overlay for Text Legibility */}
