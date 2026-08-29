@@ -394,34 +394,28 @@ const MODES = {
 
 const SOCIALS = [
   {
-    mode: "github",
-    name: "GitHub",
-    shimmer: "Committing…",
-    href: "https://github.com",
-  },
-  {
     mode: "x",
     name: "Twitter / X",
     shimmer: "Posting…",
-    href: "https://x.com",
-  },
-  {
-    mode: "instagram",
-    name: "Instagram",
-    shimmer: "Sharing…",
-    href: "https://instagram.com",
+    href: "https://x.com/argus_intel_",
   },
   {
     mode: "linkedin",
     name: "LinkedIn",
     shimmer: "Connecting…",
-    href: "https://linkedin.com",
+    href: "https://www.linkedin.com/in/argus-intelligence-16742b427/",
+  },
+  {
+    mode: "instagram",
+    name: "Instagram",
+    shimmer: "Sharing…",
+    href: "https://www.instagram.com/argusintelligence.ai?igsi=MXZsaGVrd2RsdzIwbg==",
   },
   {
     mode: "email",
     name: "Email",
     shimmer: "Sending…",
-    href: "mailto:contact@argus.safety",
+    href: "mailto:argusintelligence.ai@gmail.com",
   },
 ];
 
@@ -487,22 +481,31 @@ export default function SocialOrbs() {
   return (
     <div className={styles.wrapper} ref={containerRef}>
       <div className={styles.orbsRow}>
-        {SOCIALS.map((soc) => (
-          <a
-            key={soc.mode}
-            href={soc.href}
-            target={soc.href.startsWith("mailto:") ? "_self" : "_blank"}
-            rel="noopener noreferrer"
-            className={styles.socialOrb}
-            aria-label={soc.name}
-            title={soc.name}
-          >
-            <canvas
-              data-mode={soc.mode}
-              className={styles.orbCanvas}
-            />
-          </a>
-        ))}
+        {SOCIALS.map((soc) => {
+          const isMail = soc.href.startsWith("mailto:");
+          return (
+            <a
+              key={soc.mode}
+              href={soc.href}
+              target={isMail ? "_self" : "_blank"}
+              rel={isMail ? undefined : "noopener noreferrer"}
+              className={styles.socialOrb}
+              aria-label={soc.name}
+              title={soc.name}
+              onClick={(e) => {
+                if (isMail) {
+                  e.preventDefault();
+                  window.location.href = soc.href;
+                }
+              }}
+            >
+              <canvas
+                data-mode={soc.mode}
+                className={styles.orbCanvas}
+              />
+            </a>
+          );
+        })}
       </div>
     </div>
   );

@@ -291,7 +291,11 @@ const R_DEFAULTS = {
 export default function LiquidMetalButton({
   label = "Launch",
   onClick,
-  href = label.toLowerCase() === "launch" ? "https://argus-live-umber.vercel.app/" : undefined,
+  href = label.toLowerCase() === "launch"
+    ? "https://argus-dun.vercel.app/"
+    : label.toLowerCase() === "get in touch"
+    ? "mailto:argusintelligence.ai@gmail.com"
+    : undefined,
   target = "_blank",
   style,
   className,
@@ -306,7 +310,9 @@ export default function LiquidMetalButton({
       onClick(e);
     } else if (href) {
       if (typeof window !== "undefined") {
-        if (target === "_blank") {
+        if (href.startsWith("mailto:")) {
+          window.location.href = href;
+        } else if (target === "_blank") {
           window.open(href, "_blank", "noopener,noreferrer");
         } else {
           window.location.href = href;
@@ -463,7 +469,8 @@ export default function LiquidMetalButton({
     // ─── event handlers ───
     const onEnter = (e) => {
       if (e.pointerType !== "mouse") return;
-      [ptr.x, ptr.y] = localPt(e);
+      const pt = localPt(e);
+      ptr.x = pt[0]; ptr.y = pt[1];
       ptrS.x = ptr.x; ptrS.y = ptr.y; ptrSpeed = 0;
       on.over = true; sync();
     };
@@ -472,10 +479,12 @@ export default function LiquidMetalButton({
     };
     const onMove = (e) => {
       if (!on.over && !on.press) return;
-      [ptr.x, ptr.y] = localPt(e);
+      const pt = localPt(e);
+      ptr.x = pt[0]; ptr.y = pt[1];
     };
     const onDown = (e) => {
-      [ptr.x, ptr.y] = localPt(e);
+      const pt = localPt(e);
+      ptr.x = pt[0]; ptr.y = pt[1];
       on.press = true; sync();
       addRipple(ptr.x, ptr.y);
     };
