@@ -37,6 +37,8 @@ export default function CCTVFrame({
         <div
           className={styles.cameraFeed}
           style={{ backgroundImage: `url(${image})` }}
+          role="img"
+          aria-label={`CCTV camera feed showing ${title} — industrial safety monitoring visualization`}
         />
 
         {/* Scanlines / CRT Overlay */}

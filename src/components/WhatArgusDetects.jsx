@@ -7,6 +7,7 @@ const HAZARDS = [
   {
     id: "fire-smoke",
     title: "Fire & Smoke",
+    altText: "AI-powered fire and smoke detection identifying thermal anomalies in an industrial facility using computer vision",
     subtitle: "Thermal & Flame Detection",
     tags: ["Thermal Vision", "0.2s Alert"],
     cctvLabel: "CAM_04 // ZONE_B",
@@ -15,6 +16,7 @@ const HAZARDS = [
   {
     id: "falls",
     title: "Falls",
+    altText: "AI fall detection system using pose estimation to identify a fallen worker on a construction site",
     subtitle: "Pose Estimation & Scaffolding",
     tags: ["Pose Estimation", "High Altitude"],
     cctvLabel: "CAM_12 // SCAFFOLD_03",
@@ -23,6 +25,7 @@ const HAZARDS = [
   {
     id: "no-helmet",
     title: "No Helmet",
+    altText: "AI PPE compliance monitoring detecting a missing safety helmet on an active factory floor",
     subtitle: "PPE Compliance Monitoring",
     tags: ["PPE Inspection", "Active Floor"],
     cctvLabel: "CAM_08 // ASSEMBLY_L2",
@@ -39,6 +42,7 @@ const HAZARDS = [
   {
     id: "blocked-exits",
     title: "Blocked Exits",
+    altText: "AI monitoring system identifying blocked emergency exit in an industrial facility",
     subtitle: "Egress & Obstacle Tracking",
     tags: ["Egress Safety", "Fire Code"],
     cctvLabel: "CAM_09 // CORRIDOR_EAST",
@@ -63,6 +67,7 @@ const HAZARDS = [
   {
     id: "smoking",
     title: "Smoking",
+    altText: "AI detecting a worker smoking near flammable materials in a restricted industrial zone",
     subtitle: "Hazardous Area Compliance",
     tags: ["Vapor Detection", "Zero Tolerance"],
     cctvLabel: "CAM_11 // SILO_BAY_04",
@@ -297,7 +302,7 @@ export default function WhatArgusDetects() {
                 {/* Full Background Image */}
                 <img
                   src={hazard.image}
-                  alt={hazard.title}
+                  alt={hazard.altText || hazard.title}
                   className={styles.cardBgImage}
                   loading="lazy"
                   draggable="false"

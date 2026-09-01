@@ -368,7 +368,7 @@ export default function Home() {
   };
 
   return (
-    <>
+    <main id="top" role="main">
       {showLoadingScreen && <LoadingScreen duration={2000} />}
 
 
@@ -523,6 +523,9 @@ export default function Home() {
                   <h1 className={styles.pitch}>
                     The hundred-eyed watchman for industrial safety &amp;
                     operational resilience.
+                    <span className={styles.srOnly}>
+                      — AI-powered industrial safety monitoring using computer vision to detect workplace hazards, PPE violations, falls, fire and restricted zone breaches in real time.
+                    </span>
                   </h1>
                 </motion.div>
                 <motion.div
@@ -592,6 +595,6 @@ export default function Home() {
       <ChooseYourPace />
       <FAQ />
       <Footer />
-    </>
+    </main>
   );
 }
