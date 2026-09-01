@@ -463,7 +463,7 @@ export default function LiquidMetalButton({
     // ─── event handlers ───
     const onEnter = (e) => {
       if (e.pointerType !== "mouse") return;
-      [ptr.x, ptr.y] = localPt(e);
+      const _pt = localPt(e); ptr.x = _pt[0]; ptr.y = _pt[1];
       ptrS.x = ptr.x; ptrS.y = ptr.y; ptrSpeed = 0;
       on.over = true; sync();
     };
@@ -472,10 +472,10 @@ export default function LiquidMetalButton({
     };
     const onMove = (e) => {
       if (!on.over && !on.press) return;
-      [ptr.x, ptr.y] = localPt(e);
+      const _pt = localPt(e); ptr.x = _pt[0]; ptr.y = _pt[1];
     };
     const onDown = (e) => {
-      [ptr.x, ptr.y] = localPt(e);
+      const _pt = localPt(e); ptr.x = _pt[0]; ptr.y = _pt[1];
       on.press = true; sync();
       addRipple(ptr.x, ptr.y);
     };

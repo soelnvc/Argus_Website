@@ -148,10 +148,13 @@
   pointer-events: auto;
 }
 
-.buttonWrapper {
+.desktopLaunchWrapper {
   display: inline-flex;
   align-items: center;
   margin-right: -64px;
+}
+.mobileLaunchWrapper {
+  display: none;
 }
 
 /* Center and Lower content placement */
@@ -396,11 +399,14 @@
     z-index: 50;
     pointer-events: auto;
   }
-  .buttonWrapper {
-    margin: 0;
-    display: inline-flex;
-    justify-content: center;
+  .desktopLaunchWrapper {
+    display: none !important;
+  }
+  .mobileLaunchWrapper {
+    display: inline-flex !important;
     align-items: center;
+    justify-content: center;
+    z-index: 50;
   }
 
   /* 3) Text center aligned and positioned in the 5.0 to 8.5 zone (from bottom) */

@@ -9,6 +9,7 @@ import {
 import Nav from "@/components/Nav";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import LiquidMetalButton from "@/components/LiquidMetalButton";
+import RocketLaunchButton from "@/components/RocketLaunchButton";
 import WaveGlow from "@/components/WaveGlow";
 import ScrollCue from "@/components/ScrollCue";
 import LoadingScreen from "@/components/LoadingScreen";
@@ -476,8 +477,11 @@ export default function Home() {
                 </div>
                 <div className={styles.centerSlotSpacer} />
                 <div className={styles.ctaSlot}>
-                  <div className={styles.buttonWrapper}>
+                  <div className={styles.desktopLaunchWrapper}>
                     <LiquidMetalButton label="Launch" />
+                  </div>
+                  <div className={styles.mobileLaunchWrapper}>
+                    <RocketLaunchButton label="Launch" />
                   </div>
                 </div>
               </motion.div>

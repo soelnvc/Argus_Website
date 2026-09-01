@@ -67,7 +67,7 @@
   opacity: 0.75;
 }
 
-/* ─── ATMOSPHERIC PURPLE AURA GLOW (100% Matching Reference with Purple Theme) ─── */
+/* ─── ATMOSPHERIC PURPLE AURA GLOW ─── */
 .purpleGlowBg {
   position: absolute;
   inset: 0;
@@ -110,7 +110,7 @@
   mix-blend-mode: overlay;
 }
 
-/* ─── CONTENT CONTAINER & HEADLINE (100% Matching Reference) ─── */
+/* ─── CONTENT CONTAINER & HEADLINE ─── */
 .contentContainer {
   position: relative;
   z-index: 2;
@@ -137,13 +137,13 @@
   font-weight: 500;
 }
 
-/* ─── CTA BUTTONS GROUP (LiquidMetalButton) ─── */
-.buttonGroup {
+/* ─── DESKTOP CTA BUTTONS GROUP (LiquidMetalButton) ─── */
+.desktopButtonGroup {
   display: flex;
   align-items: center;
   gap: 0px;
   margin-top: 22px;
-  margin-left: -90px; /* offset the canvas padding on the first button */
+  margin-left: -90px;
   flex-wrap: nowrap;
 }
 
@@ -151,7 +151,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-right: -100px; /* collapse the canvas padding between buttons */
+  margin-right: -100px;
+}
+
+/* ─── MOBILE CTA BUTTONS GROUP ─── */
+.mobileButtonGroup {
+  display: none;
 }
 
 /* Responsive adjustments */
@@ -170,18 +175,24 @@
     font-size: clamp(30px, 8vw, 42px);
     line-height: 1.08;
   }
-  .buttonGroup {
+  .desktopButtonGroup {
+    display: none !important;
+  }
+  .mobileButtonGroup {
+    display: flex !important;
     flex-direction: column;
     align-items: flex-start;
     margin-top: 4px;
+    gap: 12px;
+    width: 100%;
+  }
+  .mobileLiquidWrap {
     margin-left: -90px;
-    gap: 0;
+    margin-bottom: -56px;
   }
-  .liquidBtnWrap {
-    margin-right: 0;
-    margin-bottom: -50px;
-  }
-  .launchBtnWrap {
-    display: none !important;
+  .mobileRocketWrap {
+    margin-left: 0;
+    margin-top: 0;
+    z-index: 5;
   }
 }
