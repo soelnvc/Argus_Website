@@ -1,7 +1,9 @@
+import { getAllPostSlugs } from "@/lib/posts";
+
 export default function sitemap() {
   const baseUrl = "https://argusintelligence.in";
   
-  const routes = [
+  const staticRoutes = [
     "",
     "/solutions",
     "/solutions/ppe-detection",
@@ -10,13 +12,25 @@ export default function sitemap() {
     "/solutions/restricted-zone-monitoring",
     "/solutions/machinery-safety",
     "/industries/manufacturing",
-    "/industries/warehousing"
+    "/industries/warehousing",
+    "/resources"
   ];
 
-  return routes.map((route) => ({
+  const staticUrls = staticRoutes.map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
     changeFrequency: route === "" ? "weekly" : "monthly",
-    priority: route === "" ? 1 : 0.8,
+    priority: route === "" ? 1 : (route === "/resources" ? 0.9 : 0.8),
   }));
+
+  // Dynamic Blog Routes
+  const posts = getAllPostSlugs();
+  const dynamicUrls = posts.map((post) => ({
+    url: `${baseUrl}/resources/${post.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly",
+    priority: 0.7,
+  }));
+
+  return [...staticUrls, ...dynamicUrls];
 }
