@@ -1,10 +1,22 @@
 export default function sitemap() {
-  return [
-    {
-      url: "https://argusintelligence.in",
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 1,
-    },
+  const baseUrl = "https://argusintelligence.in";
+  
+  const routes = [
+    "",
+    "/solutions",
+    "/solutions/ppe-detection",
+    "/solutions/fall-detection",
+    "/solutions/fire-smoke-detection",
+    "/solutions/restricted-zone-monitoring",
+    "/solutions/machinery-safety",
+    "/industries/manufacturing",
+    "/industries/warehousing"
   ];
+
+  return routes.map((route) => ({
+    url: `${baseUrl}${route}`,
+    lastModified: new Date(),
+    changeFrequency: route === "" ? "weekly" : "monthly",
+    priority: route === "" ? 1 : 0.8,
+  }));
 }
