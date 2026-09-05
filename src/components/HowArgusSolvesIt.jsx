@@ -9,6 +9,8 @@ import {
   useMotionValueEvent,
 } from "framer-motion";
 import styles from "./HowArgusSolvesIt.module.css";
+import LiquidMetalHowBG from "./LiquidMetalHowBG";
+import GlassSurface from "./GlassSurface";
 
 const STEPS = [
   {
@@ -394,7 +396,17 @@ function ContinuousScrollCard({ step, idx, progress }) {
 
 export default function HowArgusSolvesIt() {
   const [activeStep, setActiveStep] = useState(0);
+  const [isDesktop, setIsDesktop] = useState(false);
   const containerRef = useRef(null);
+
+  useEffect(() => {
+    const updateMedia = () => {
+      setIsDesktop(typeof window !== "undefined" && window.innerWidth > 768);
+    };
+    updateMedia();
+    window.addEventListener("resize", updateMedia);
+    return () => window.removeEventListener("resize", updateMedia);
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -444,7 +456,9 @@ export default function HowArgusSolvesIt() {
         <motion.div
           className={styles.bgParallaxLayer}
           style={{ y: bgParallaxY }}
-        />
+        >
+          <LiquidMetalHowBG />
+        </motion.div>
 
         <motion.div
           className={styles.sectionContainer}
@@ -477,7 +491,33 @@ export default function HowArgusSolvesIt() {
                           stiffness: 350,
                           damping: 30,
                         }}
-                      />
+                      >
+                        {isDesktop && (
+                          <GlassSurface
+                            width="100%"
+                            height="100%"
+                            borderRadius={10}
+                            borderWidth={0.08}
+                            brightness={60}
+                            opacity={0.94}
+                            blur={10}
+                            distortionScale={-180}
+                            redOffset={0}
+                            greenOffset={10}
+                            blueOffset={20}
+                            backgroundOpacity={0.06}
+                            saturation={1.2}
+                            style={{
+                              position: "absolute",
+                              inset: 0,
+                              width: "100%",
+                              height: "100%",
+                              pointerEvents: "none",
+                            }}
+                            className={styles.desktopGlassPill}
+                          />
+                        )}
+                      </motion.div>
                     )}
                     <span className={styles.pillText}>{step.tag}</span>
                   </button>

@@ -403,7 +403,7 @@ const SOCIALS = [
     mode: "x",
     name: "Twitter / X",
     shimmer: "Posting…",
-    href: "https://x.com",
+    href: "https://x.com/argus_intel_",
   },
   {
     mode: "instagram",

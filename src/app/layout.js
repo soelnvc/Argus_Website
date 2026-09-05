@@ -79,6 +79,7 @@ const jsonLdOrganization = {
   sameAs: [
     "https://www.linkedin.com/in/argus-intelligence-16742b427/",
     "https://www.instagram.com/argusintelligence.ai?igsi=MXZsaGVrd2RsdzIwbg==",
+    "https://x.com/argus_intel_",
   ],
 };
 
