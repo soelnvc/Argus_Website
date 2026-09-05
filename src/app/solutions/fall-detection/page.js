@@ -14,7 +14,7 @@ export default function FallDetectionPage() {
       title="AI Fall Detection"
       pitch="Detect worker falls instantly. Provide immediate medical response and track slip and trip hazards using your existing security cameras."
       seoText="— Argus uses AI pose estimation and industrial computer vision to detect fallen workers in real time, reducing emergency response times."
-      heroImage="/images/fall.png"
+      heroImage="/images/fall.webp"
       cameraLabel="CAM-FALL [FALL HAZARD]"
       solutionDetails={{ shortDesc: "Fall Detection Active" }}
     />

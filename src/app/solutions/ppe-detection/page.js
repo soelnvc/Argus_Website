@@ -14,7 +14,7 @@ export default function PPEDetectionPage() {
       title="AI PPE Detection"
       pitch="Automate safety compliance by detecting missing helmets, vests, and safety goggles in real time using your existing CCTV cameras."
       seoText="— Argus uses advanced industrial computer vision to ensure 100% Personal Protective Equipment (PPE) compliance on the factory floor, preventing injuries and regulatory fines."
-      heroImage="/images/helmet.png"
+      heroImage="/images/helmet.webp"
       cameraLabel="CAM-PPE [HELMET COMPLIANCE]"
       solutionDetails={{
         shortDesc: "PPE Compliance Check Active"

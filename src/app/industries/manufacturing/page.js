@@ -14,7 +14,7 @@ export default function ManufacturingPage() {
       title="Safety for Manufacturing"
       pitch="Protect your factory floors and assembly lines. Monitor heavy machinery, ensure PPE compliance, and prevent industrial fires without adding new cameras."
       seoText="— Argus is built for the manufacturing sector, providing AI CCTV monitoring for factories to reduce accidents and ensure OSHA/DGFASLI compliance."
-      heroImage="/images/machine.png"
+      heroImage="/images/machine.webp"
       cameraLabel="CAM-MFG [FACTORY FLOOR]"
       solutionDetails={{ shortDesc: "Factory Monitoring Active" }}
     />

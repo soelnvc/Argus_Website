@@ -166,7 +166,7 @@ export default function WaveGlow({ text = "ARGUS" }) {
     const fgProg = createProgram(glFg);
 
     function resizeCanvas(canvas, gl) {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = typeof window !== 'undefined' && window.innerWidth <= 768 ? 1 : Math.min(window.devicePixelRatio || 1, 2);
       const w = Math.floor(canvas.clientWidth * dpr);
       const h = Math.floor(canvas.clientHeight * dpr);
       if (canvas.width !== w || canvas.height !== h) {

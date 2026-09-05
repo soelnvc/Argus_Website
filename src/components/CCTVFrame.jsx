@@ -8,7 +8,7 @@ export default function CCTVFrame({
   bigStat = "2,101",
   title = "fatal injuries caused by persons falling in India.",
   stat = "DGFASLI's 2024 data records 2,101 fatal and 11,848 non-fatal injuries caused by persons falling.",
-  image = "/cctv_fire.jpg",
+  image = "/cctv_fire.webp",
   camLabel = "CAM-01",
   side = "left",
 }) {

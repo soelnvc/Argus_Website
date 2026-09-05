@@ -14,7 +14,7 @@ export default function WarehousingPage() {
       title="Safety for Warehousing"
       pitch="Ensure warehouse and logistics safety. Detect forklift hazards, blocked emergency exits, and slip/trip incidents across massive distribution centers."
       seoText="— Argus optimizes safety in warehouses by using AI to monitor logistics operations, loading docks, and worker safety in real time."
-      heroImage="/images/fall.png"
+      heroImage="/images/fall.webp"
       cameraLabel="CAM-WHS [DISTRIBUTION]"
       solutionDetails={{ shortDesc: "Warehouse Monitoring" }}
     />

@@ -12,7 +12,7 @@ const HAZARDS = [
     subtitle: "Thermal & Flame Detection",
     tags: ["Thermal Vision", "0.2s Alert"],
     cctvLabel: "CAM_04 // ZONE_B",
-    image: "/hazard images/fire.jpg",
+    image: "/hazard images/fire.webp",
   },
   {
     id: "falls",
@@ -21,7 +21,7 @@ const HAZARDS = [
     subtitle: "Pose Estimation & Scaffolding",
     tags: ["Pose Estimation", "High Altitude"],
     cctvLabel: "CAM_12 // SCAFFOLD_03",
-    image: "/hazard images/fall.png",
+    image: "/hazard images/fall.webp",
   },
   {
     id: "no-helmet",
@@ -30,7 +30,7 @@ const HAZARDS = [
     subtitle: "PPE Compliance Monitoring",
     tags: ["PPE Inspection", "Active Floor"],
     cctvLabel: "CAM_08 // ASSEMBLY_L2",
-    image: "/hazard images/nohelmet.png",
+    image: "/hazard images/nohelmet.webp",
   },
   {
     id: "restricted-zones",
@@ -38,7 +38,7 @@ const HAZARDS = [
     subtitle: "Perimeter & Geo-Fence Breach",
     tags: ["Geo-Fence", "Access Control"],
     cctvLabel: "CAM_01 // HAZMAT_SECTOR",
-    image: "/hazard images/restrictedzone.png",
+    image: "/hazard images/restrictedzone.webp",
   },
   {
     id: "blocked-exits",
@@ -47,7 +47,7 @@ const HAZARDS = [
     subtitle: "Egress & Obstacle Tracking",
     tags: ["Egress Safety", "Fire Code"],
     cctvLabel: "CAM_09 // CORRIDOR_EAST",
-    image: "/hazard images/blockedexit.png",
+    image: "/hazard images/blockedexit.webp",
   },
   {
     id: "unattended-machinery",
@@ -55,7 +55,7 @@ const HAZARDS = [
     subtitle: "Robotics & Heavy Press Unit",
     tags: ["Robotics Cell", "Auto-Halt"],
     cctvLabel: "CAM_03 // PRESS_UNIT_B",
-    image: "/hazard images/unattendedmech.png",
+    image: "/hazard images/unattendedmech.webp",
   },
   {
     id: "spills",
@@ -63,7 +63,7 @@ const HAZARDS = [
     subtitle: "Surface Scan & Liquid Leak",
     tags: ["Surface Scan", "Slip Hazard"],
     cctvLabel: "CAM_07 // LOGISTICS_DOCK",
-    image: "/hazard images/spilledhazard.png",
+    image: "/hazard images/spilledhazard.webp",
   },
   {
     id: "smoking",
@@ -72,7 +72,7 @@ const HAZARDS = [
     subtitle: "Hazardous Area Compliance",
     tags: ["Vapor Detection", "Zero Tolerance"],
     cctvLabel: "CAM_11 // SILO_BAY_04",
-    image: "/hazard images/smoking.png",
+    image: "/hazard images/smoking.webp",
   },
 ];
 
@@ -99,7 +99,7 @@ function ExpandingEvidenceShowcase() {
         }}
       >
         <img
-          src="/images/restricted.png"
+          src="/images/restricted.webp"
           alt="Argus Evidence Incident Visualizer"
           className={styles.evidenceImage}
           loading="lazy"

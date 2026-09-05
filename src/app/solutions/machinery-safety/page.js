@@ -14,7 +14,7 @@ export default function MachinerySafetyPage() {
       title="Machinery Safety Monitoring"
       pitch="Monitor heavy machinery safely. Detect dangerous human proximity to moving parts and identify unattended running equipment."
       seoText="— Argus prevents factory accidents by using computer vision to monitor the interaction between workers and heavy mechanical equipment."
-      heroImage="/images/machine.png"
+      heroImage="/images/machine.webp"
       cameraLabel="CAM-MACH [EQUIPMENT]"
       solutionDetails={{ shortDesc: "Machinery Safety Active" }}
     />

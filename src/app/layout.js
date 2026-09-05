@@ -28,7 +28,7 @@ export const metadata = {
     siteName: "Argus",
     images: [
       {
-        url: "/og-image.png",
+        url: "/og-image.webp",
         width: 1200,
         height: 630,
         alt: "Argus — AI-Powered Industrial Safety Monitoring",
@@ -40,7 +40,7 @@ export const metadata = {
     title: "AI-Powered Industrial Safety Monitoring | Argus",
     description:
       "Real-time AI-powered industrial safety monitoring using computer vision.",
-    images: ["/og-image.png"],
+    images: ["/og-image.webp"],
   },
   robots: {
     index: true,

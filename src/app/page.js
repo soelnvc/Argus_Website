@@ -7,20 +7,22 @@ import {
   AnimatePresence,
 } from "framer-motion";
 import Nav from "@/components/Nav";
-import MobileBottomNav from "@/components/MobileBottomNav";
-import LiquidMetalButton from "@/components/LiquidMetalButton";
-import RocketLaunchButton from "@/components/RocketLaunchButton";
 import WaveGlow from "@/components/WaveGlow";
 import ScrollCue from "@/components/ScrollCue";
 import LoadingScreen from "@/components/LoadingScreen";
 import CCTVFrame from "@/components/CCTVFrame";
-import ScrollToKnow from "@/components/ScrollToKnow";
-import HowArgusSolvesIt from "@/components/HowArgusSolvesIt";
-import WhatArgusDetects from "@/components/WhatArgusDetects";
-import ResponsibleSurveillance from "@/components/ResponsibleSurveillance";
-import ChooseYourPace from "@/components/ChooseYourPace";
-import FAQ from "@/components/FAQ";
-import Footer from "@/components/Footer";
+import dynamic from "next/dynamic";
+
+const MobileBottomNav = dynamic(() => import("@/components/MobileBottomNav"), { ssr: false });
+const LiquidMetalButton = dynamic(() => import("@/components/LiquidMetalButton"), { ssr: false });
+const RocketLaunchButton = dynamic(() => import("@/components/RocketLaunchButton"), { ssr: false });
+const ScrollToKnow = dynamic(() => import("@/components/ScrollToKnow"), { ssr: false });
+const HowArgusSolvesIt = dynamic(() => import("@/components/HowArgusSolvesIt"), { ssr: false });
+const WhatArgusDetects = dynamic(() => import("@/components/WhatArgusDetects"), { ssr: false });
+const ResponsibleSurveillance = dynamic(() => import("@/components/ResponsibleSurveillance"), { ssr: false });
+const ChooseYourPace = dynamic(() => import("@/components/ChooseYourPace"), { ssr: false });
+const FAQ = dynamic(() => import("@/components/FAQ"), { ssr: false });
+const Footer = dynamic(() => import("@/components/Footer"), { ssr: false });
 import styles from "./page.module.css";
 
 const SLIDES_DATA = [
@@ -30,7 +32,7 @@ const SLIDES_DATA = [
     bigStat: "2,101",
     title: "fatal injuries caused by persons falling in India.",
     stat: "DGFASLI's 2024 data records 2,101 fatal and 11,848 non-fatal injuries caused by persons falling.",
-    image: "/images/fall.png",
+    image: "/images/fall.webp",
     camLabel: "CAM-01 [FALL HAZARD]",
   },
   {
@@ -39,7 +41,7 @@ const SLIDES_DATA = [
     bigStat: "1,231",
     title: "fatal injuries involving powered machinery in India.",
     stat: "DGFASLI's 2024 data records 1,231 fatal and 9,386 non-fatal injuries involving machinery moved by mechanical power.",
-    image: "/images/machine.png",
+    image: "/images/machine.webp",
     camLabel: "CAM-02 [MACHINERY]",
   },
   {
@@ -48,7 +50,7 @@ const SLIDES_DATA = [
     bigStat: "₹15,000 Cr+",
     title: "economic toll inflicted each year across Indian factories.",
     stat: "Chemical units, textile mills, and factories bear direct property losses topping ₹2,500 crore, with electrical short circuits driving over 70% of all workplace fire incidents.",
-    image: "/cctv_fire.jpg",
+    image: "/cctv_fire.webp",
     camLabel: "CAM-03 [FIRE HAZARD]",
   },
 ];

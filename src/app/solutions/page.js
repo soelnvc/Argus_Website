@@ -14,7 +14,7 @@ export default function SolutionsHubPage() {
       title="Industrial Safety Solutions"
       pitch="Explore our suite of AI-powered safety monitoring tools designed to protect workers and operations in the world’s most demanding environments."
       seoText="— Argus provides a comprehensive computer vision platform for industrial safety, including PPE detection, fall detection, and fire monitoring."
-      heroImage="/cctv_fire.jpg"
+      heroImage="/cctv_fire.webp"
       cameraLabel="CAM-HUB [ALL HAZARDS]"
       solutionDetails={{ shortDesc: "Comprehensive Monitoring" }}
     />

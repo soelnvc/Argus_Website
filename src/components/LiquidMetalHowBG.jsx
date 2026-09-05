@@ -127,9 +127,26 @@ export default function LiquidMetalHowBG({ className = "" }) {
     let animId;
     let startTime = performance.now();
 
-    const resize = () => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) {
+          if (animId) cancelAnimationFrame(animId);
+          animId = null;
+        } else {
+          startTime = performance.now();
+          if (!animId) render(performance.now());
+        }
+      },
+      { threshold: 0 }
+    );
+    observer.observe(canvas);
+
+    // Dynamic DPR: 1 on mobile, 2 on desktop to save mobile GPU
+    const dpr = typeof window !== 'undefined' && window.innerWidth <= 768 ? 1 : Math.min(window.devicePixelRatio || 1, 2);
+
+    function resize() {
+      if (!canvas || !gl) return;
       const rect = canvas.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       const w = Math.floor(rect.width * dpr);
       const h = Math.floor(rect.height * dpr);
       if (canvas.width !== w || canvas.height !== h) {
@@ -137,7 +154,7 @@ export default function LiquidMetalHowBG({ className = "" }) {
         canvas.height = h;
         gl.viewport(0, 0, w, h);
       }
-    };
+    }
 
     resize();
     window.addEventListener("resize", resize);
@@ -153,7 +170,8 @@ export default function LiquidMetalHowBG({ className = "" }) {
     animId = requestAnimationFrame(render);
 
     return () => {
-      cancelAnimationFrame(animId);
+      observer.disconnect();
+      if (animId) cancelAnimationFrame(animId);
       window.removeEventListener("resize", resize);
       gl.deleteProgram(prog);
       gl.deleteShader(vs);
