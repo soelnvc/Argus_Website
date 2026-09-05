@@ -48,7 +48,12 @@ const HOVER_SMOKE_PARTICLES = [
   },
 ];
 
-export default function RocketLaunchButton({ onClick, label = "Launch" }) {
+export default function RocketLaunchButton({
+  onClick,
+  label = "Launch",
+  href = "https://argus-dun.vercel.app/",
+  target = "_blank",
+}) {
   const prefersReducedMotion = useReducedMotion();
   const [status, setStatus] = useState("idle"); // 'idle' | 'launching' | 'launched'
   const [isHovered, setIsHovered] = useState(false);
@@ -79,8 +84,15 @@ export default function RocketLaunchButton({ onClick, label = "Launch" }) {
     const rocketDurationMs = (prefersReducedMotion ? 0.4 : LAUNCH_DURATION) * 1000;
     rocketTimeoutRef.current = setTimeout(() => {
       setShowRocket(false);
+      if (href && typeof window !== "undefined") {
+        if (target === "_blank") {
+          window.open(href, "_blank", "noopener,noreferrer");
+        } else {
+          window.location.href = href;
+        }
+      }
     }, rocketDurationMs);
-  }, [status, prefersReducedMotion, onClick]);
+  }, [status, prefersReducedMotion, onClick, href, target]);
 
   const isIdle = status === "idle";
   const isLaunching = status === "launching";
