@@ -2,6 +2,7 @@
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform, animate } from "framer-motion";
 import styles from "./WhatArgusDetects.module.css";
+import RoundCarousel from "./RoundCarousel";
 
 const HAZARDS = [
   {
@@ -109,117 +110,7 @@ function ExpandingEvidenceShowcase() {
 }
 
 export default function WhatArgusDetects() {
-  const [activeIndex, setActiveIndex] = React.useState(2);
-  const [hoveredIndex, setHoveredIndex] = React.useState(null);
-
-  const touchStartX = useRef(0);
-  const touchStartY = useRef(0);
-  const touchDeltaX = useRef(0);
-  const touchDeltaY = useRef(0);
-
-  const handlePrev = () => {
-    setActiveIndex((prev) => Math.max(0, prev - 1));
-  };
-
-  const handleNext = () => {
-    setActiveIndex((prev) => Math.min(HAZARDS.length - 1, prev + 1));
-  };
-
-  const handleDragEnd = (event, info) => {
-    const swipeThreshold = 30;
-    const velocityThreshold = 180;
-    const offset = info.offset.x;
-    const velocity = info.velocity.x;
-
-    if (offset < -swipeThreshold || velocity < -velocityThreshold) {
-      handleNext();
-    } else if (offset > swipeThreshold || velocity > velocityThreshold) {
-      handlePrev();
-    }
-  };
-
-  const handleTouchStart = (e) => {
-    touchStartX.current = e.touches[0].clientX;
-    touchStartY.current = e.touches[0].clientY;
-    touchDeltaX.current = 0;
-    touchDeltaY.current = 0;
-  };
-
-  const handleTouchMove = (e) => {
-    touchDeltaX.current = e.touches[0].clientX - touchStartX.current;
-    touchDeltaY.current = e.touches[0].clientY - touchStartY.current;
-  };
-
-  const handleTouchEnd = () => {
-    const dx = touchDeltaX.current;
-    const dy = touchDeltaY.current;
-    if (Math.abs(dx) > 30 && Math.abs(dx) > Math.abs(dy)) {
-      if (dx < 0) {
-        handleNext();
-      } else {
-        handlePrev();
-      }
-    }
-  };
-
-  const getCardStyle = (offset, index) => {
-    const absOffset = Math.abs(offset);
-    if (absOffset > 3) {
-      return {
-        x: offset > 0 ? 520 : -520,
-        y: 180,
-        rotate: offset > 0 ? 30 : -30,
-        scale: 0.72,
-        opacity: 0,
-        filter: "blur(10px) brightness(0.3)",
-        zIndex: 0,
-        pointerEvents: "none",
-      };
-    }
-
-    const isHovered = hoveredIndex === index;
-
-    // ─── SNEAK PEEK FOR INCOMING / OUTGOING CARDS (absOffset === 3) ───
-    if (absOffset === 3) {
-      return {
-        x: offset * 130,
-        y: 125,
-        rotate: offset * 8.2,
-        scale: 0.8,
-        zIndex: 2,
-        opacity: 0.32,
-        filter: "blur(6px) brightness(0.45)",
-        pointerEvents: "auto",
-      };
-    }
-
-    // ─── 5 VISIBLE MAIN DECK CARDS (absOffset <= 2) ───
-    const xOffset = offset * 132;
-    let yOffset = absOffset === 0 ? 0 : absOffset === 1 ? 22 : 68;
-    let rotation = offset * 8.2;
-    let scale = absOffset === 0 ? 1 : absOffset === 1 ? 0.95 : 0.88;
-    let zIndex = 10 - absOffset * 2;
-    let filter = "blur(0px) brightness(1)";
-
-    // Hover state: lift up, straighten angle, enlarge, and bring to front
-    if (isHovered) {
-      yOffset -= 38;
-      rotation = rotation * 0.4;
-      scale = scale * 1.05;
-      zIndex = 30;
-    }
-
-    return {
-      x: xOffset,
-      y: yOffset,
-      rotate: rotation,
-      scale,
-      zIndex,
-      opacity: 1,
-      filter,
-      pointerEvents: "auto",
-    };
-  };
+  const carouselRef = useRef(null);
 
   return (
     <section className={styles.detectsSection} id="safety">
@@ -259,121 +150,21 @@ export default function WhatArgusDetects() {
         </div>
       </div>
 
-      {/* ─── FANNED DECK ARC SHOWCASE (With Touch Swipe & Drag Support) ─── */}
-      <div
-        className={styles.fanDeckSectionWrapper}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-      >
-        <div className={styles.fanDeckStage}>
-          {HAZARDS.map((hazard, index) => {
-            const offset = index - activeIndex;
-            const cardStyle = getCardStyle(offset, index);
-
-            return (
-              <motion.div
-                key={hazard.id}
-                className={`${styles.hazardCard} ${offset === 0 ? styles.activeCenterCard : ""}`}
-                onClick={() => setActiveIndex(index)}
-                onMouseEnter={() => setHoveredIndex(index)}
-                onMouseLeave={() => setHoveredIndex(null)}
-                drag="x"
-                dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={0.18}
-                onDragEnd={handleDragEnd}
-                animate={{
-                  x: cardStyle.x,
-                  y: cardStyle.y,
-                  rotate: cardStyle.rotate,
-                  scale: cardStyle.scale,
-                  opacity: cardStyle.opacity,
-                  filter: cardStyle.filter,
-                  zIndex: cardStyle.zIndex,
-                }}
-                transition={{
-                  duration: 0.45,
-                  ease: [0.16, 1, 0.3, 1], // Fluid quintic deceleration
-                }}
-                style={{
-                  pointerEvents: cardStyle.pointerEvents,
-                }}
-              >
-                {/* Full Background Image */}
-                <img
-                  src={hazard.image}
-                  alt={hazard.altText || hazard.title}
-                  className={styles.cardBgImage}
-                  loading="lazy"
-                  draggable="false"
-                />
-
-                {/* Vignette Overlay for Text Legibility */}
-                <div className={styles.cardVignette} />
-
-                {/* Spacer so bottom row stays pinned cleanly at the bottom */}
-                <div style={{ flex: 1 }} />
-
-                {/* Bottom Row: Title and Subtitle */}
-                <div className={styles.cardBottomRow}>
-                  <div className={styles.cardTextContent}>
-                    <h3 className={styles.hazardTitle}>{hazard.title}</h3>
-                    <p className={styles.hazardSubtitle}>{hazard.subtitle}</p>
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
-
-        {/* Carousel Navigation Arrows */}
-        <div className={styles.navArrowsWrapper}>
-          <button
-            type="button"
-            className={`${styles.navArrowBtn} ${activeIndex === 0 ? styles.disabledArrow : ""}`}
-            onClick={handlePrev}
-            disabled={activeIndex === 0}
-            aria-label="Previous hazard card"
-          >
-            <svg
-              className={styles.arrowIcon}
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="19" y1="12" x2="5" y2="12" />
-              <polyline points="12 19 5 12 12 5" />
-            </svg>
-          </button>
-
-          <button
-            type="button"
-            className={`${styles.navArrowBtn} ${activeIndex === HAZARDS.length - 1 ? styles.disabledArrow : ""}`}
-            onClick={handleNext}
-            disabled={activeIndex === HAZARDS.length - 1}
-            aria-label="Next hazard card"
-          >
-            <svg
-              className={styles.arrowIcon}
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="5" y1="12" x2="19" y2="12" />
-              <polyline points="12 5 19 12 12 19" />
-            </svg>
-          </button>
-        </div>
+      {/* ─── 3D CYLINDRICAL ROUND CAROUSEL SHOWCASE ─── */}
+      <div className={styles.carouselSectionWrapper}>
+        <RoundCarousel
+          ref={carouselRef}
+          images={HAZARDS}
+          imageWidth={350}
+          imageHeight={450}
+          spacing={2.4}
+          tilt={-7}
+          perspective={3000}
+          speed={3.0}
+          cornerRadius={28}
+          innerDim={3.5}
+          pauseOnHover={false}
+        />
       </div>
 
       {/* Evidence Block (Under cards on same black background) */}

@@ -409,13 +409,13 @@ const SOCIALS = [
     mode: "instagram",
     name: "Instagram",
     shimmer: "Sharing…",
-    href: "https://instagram.com",
+    href: "https://www.instagram.com/argusintelligence.ai?igsi=MXZsaGVrd2RsdzIwbg==",
   },
   {
     mode: "linkedin",
     name: "LinkedIn",
     shimmer: "Connecting…",
-    href: "https://linkedin.com",
+    href: "https://www.linkedin.com/in/argus-intelligence-16742b427/",
   },
   {
     mode: "email",
