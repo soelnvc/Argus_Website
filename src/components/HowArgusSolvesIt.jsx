@@ -9,7 +9,10 @@ import {
   useMotionValueEvent,
 } from "framer-motion";
 import styles from "./HowArgusSolvesIt.module.css";
-import LiquidMetalHowBG from "./LiquidMetalHowBG";
+import dynamic from "next/dynamic";
+const LiquidMetalHowBG = dynamic(() => import("./LiquidMetalHowBG"), {
+  ssr: false,
+});
 import GlassSurface from "./GlassSurface";
 
 const STEPS = [

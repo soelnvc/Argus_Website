@@ -1,6 +1,7 @@
 "use client";
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform, animate } from "framer-motion";
+import Image from "next/image";
 import styles from "./WhatArgusDetects.module.css";
 import RoundCarousel from "./RoundCarousel";
 
@@ -98,11 +99,14 @@ function ExpandingEvidenceShowcase() {
           y,
         }}
       >
-        <img
+        <Image
           src="/images/restricted.webp"
           alt="Argus Evidence Incident Visualizer"
           className={styles.evidenceImage}
-          loading="lazy"
+          width={1200}
+          height={800}
+          style={{ width: "100%", height: "auto" }}
+          priority={true}
         />
       </motion.div>
     </div>

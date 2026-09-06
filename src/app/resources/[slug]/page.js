@@ -4,6 +4,7 @@ import MobileBottomNav from "@/components/MobileBottomNav";
 import Footer from "@/components/Footer";
 import { getPostData, getAllPostSlugs } from "@/lib/posts";
 import { marked } from "marked";
+import Image from "next/image";
 import styles from "@/components/SolutionTemplate.module.css";
 
 export async function generateMetadata({ params }) {
@@ -75,8 +76,8 @@ export default async function ArticlePage({ params }) {
         </header>
 
         {postData.image && (
-          <div style={{ width: "100%", aspectRatio: "16/9", borderRadius: "16px", overflow: "hidden", marginBottom: "4rem", border: "1px solid rgba(255,255,255,0.1)" }}>
-            <img src={postData.image} alt={postData.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          <div style={{ position: "relative", width: "100%", aspectRatio: "16/9", borderRadius: "16px", overflow: "hidden", marginBottom: "4rem", border: "1px solid rgba(255,255,255,0.1)" }}>
+            <Image src={postData.image} alt={postData.title} fill style={{ objectFit: "cover" }} priority={true} />
           </div>
         )}
 
