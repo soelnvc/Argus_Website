@@ -16,20 +16,12 @@ const nextConfig = {
     removeConsole: { exclude: ['error', 'warn'] },
   },
 
-  // Aggressive caching headers for static assets
+  // Cache-control headers for static assets in production only
   async headers() {
+    if (process.env.NODE_ENV !== 'production') return [];
     return [
       {
         source: '/:all*(svg|jpg|jpeg|png|webp|avif|gif|ico|woff|woff2)',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-        ],
-      },
-      {
-        source: '/_next/static/:path*',
         headers: [
           {
             key: 'Cache-Control',

@@ -18,7 +18,7 @@ const LiquidMetalButton = dynamic(() => import("@/components/LiquidMetalButton")
 const RocketLaunchButton = dynamic(() => import("@/components/RocketLaunchButton"), { ssr: false });
 const ScrollToKnow = dynamic(() => import("@/components/ScrollToKnow"), { ssr: false });
 const HowArgusSolvesIt = dynamic(() => import("@/components/HowArgusSolvesIt"), { ssr: false });
-const WhatArgusDetects = dynamic(() => import("@/components/WhatArgusDetects"), { ssr: false });
+import WhatArgusDetects from "@/components/WhatArgusDetects";
 const ResponsibleSurveillance = dynamic(() => import("@/components/ResponsibleSurveillance"), { ssr: false });
 const ChooseYourPace = dynamic(() => import("@/components/ChooseYourPace"), { ssr: false });
 const FAQ = dynamic(() => import("@/components/FAQ"), { ssr: false });

@@ -92,21 +92,7 @@
   text-align: right;
 }
 
-/* ─── 3D CYLINDRICAL ROUND CAROUSEL SHOWCASE ─── */
-.carouselSectionWrapper {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  overflow: visible;
-  padding: 0;
-  box-sizing: border-box;
-  margin-top: 8px;
-  margin-bottom: 24px;
-}
-
-/* ─── FANNED DECK ARC STAGE (Legacy) ─── */
+/* ─── FANNED DECK ARC STAGE (Matching Reference Layout & Hover) ─── */
 .fanDeckSectionWrapper {
   width: 100%;
   display: flex;
