@@ -5,8 +5,8 @@
 }
 
 .glass-surface--svg {
-  backdrop-filter: var(--filter-id) saturate(var(--glass-saturation, 1));
-  -webkit-backdrop-filter: var(--filter-id) saturate(var(--glass-saturation, 1));
+  backdrop-filter: var(--filter-id);
+  -webkit-backdrop-filter: var(--filter-id);
   background-color: hsl(0 0% 100% / var(--glass-frost, 0));
 }
 

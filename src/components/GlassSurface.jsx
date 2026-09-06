@@ -57,11 +57,14 @@ const GlassSurface = ({
             <stop offset="0%" stop-color="transparent"/>
             <stop offset="100%" stop-color="blue"/>
           </linearGradient>
+          <filter id="inner-blur">
+            <feGaussianBlur stdDeviation="${blur}" />
+          </filter>
         </defs>
         <rect x="0" y="0" width="${actualWidth}" height="${actualHeight}" fill="black"></rect>
         <rect x="0" y="0" width="${actualWidth}" height="${actualHeight}" rx="${borderRadius}" fill="url(#${redGradId})" />
         <rect x="0" y="0" width="${actualWidth}" height="${actualHeight}" rx="${borderRadius}" fill="url(#${blueGradId})" style="mix-blend-mode: ${mixBlendMode}" />
-        <rect x="${edgeSize}" y="${edgeSize}" width="${actualWidth - edgeSize * 2}" height="${actualHeight - edgeSize * 2}" rx="${borderRadius}" fill="hsl(0 0% ${brightness}% / ${opacity})" style="filter:blur(${blur}px)" />
+        <rect x="${edgeSize}" y="${edgeSize}" width="${actualWidth - edgeSize * 2}" height="${actualHeight - edgeSize * 2}" rx="${borderRadius}" fill="hsl(0, 0%, ${brightness}%)" fill-opacity="${opacity}" filter="url(#inner-blur)" />
       </svg>
     `;
 
@@ -72,7 +75,11 @@ const GlassSurface = ({
     const mapUrl = generateDisplacementMap();
     if (feImageRef.current) {
       feImageRef.current.setAttribute("href", mapUrl);
-      feImageRef.current.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", mapUrl);
+      feImageRef.current.setAttributeNS(
+        "http://www.w3.org/1999/xlink",
+        "xlink:href",
+        mapUrl,
+      );
     }
   };
 
@@ -84,7 +91,10 @@ const GlassSurface = ({
       { ref: blueChannelRef, offset: blueOffset },
     ].forEach(({ ref, offset }) => {
       if (ref.current) {
-        ref.current.setAttribute("scale", (distortionScale + offset).toString());
+        ref.current.setAttribute(
+          "scale",
+          (distortionScale + offset).toString(),
+        );
         ref.current.setAttribute("xChannelSelector", xChannel);
         ref.current.setAttribute("yChannelSelector", yChannel);
       }
@@ -154,7 +164,8 @@ const GlassSurface = ({
     ...style,
     width: typeof width === "number" ? `${width}px` : width,
     height: typeof height === "number" ? `${height}px` : height,
-    borderRadius: typeof borderRadius === "number" ? `${borderRadius}px` : borderRadius,
+    borderRadius:
+      typeof borderRadius === "number" ? `${borderRadius}px` : borderRadius,
     "--glass-frost": backgroundOpacity,
     "--glass-saturation": saturation,
     "--filter-id": `url(#${filterId})`,
@@ -239,7 +250,13 @@ const GlassSurface = ({
 
             <feBlend in="red" in2="green" mode="screen" result="rg" />
             <feBlend in="rg" in2="blue" mode="screen" result="output" />
-            <feGaussianBlur ref={gaussianBlurRef} in="output" stdDeviation="0.7" />
+            <feGaussianBlur
+              ref={gaussianBlurRef}
+              in="output"
+              stdDeviation="0.7"
+              result="blurred"
+            />
+            <feColorMatrix type="saturate" values={saturation} in="blurred" />
           </filter>
         </defs>
       </svg>

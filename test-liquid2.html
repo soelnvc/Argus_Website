@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    background: repeating-linear-gradient(45deg, #111, #111 20px, #333 20px, #333 40px);
+    height: 100vh; display: flex; align-items: center; justify-content: center;
+  }
+  .glass {
+    width: 300px; height: 150px; border-radius: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: url(#liquid);
+    -webkit-backdrop-filter: url(#liquid);
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+</style>
+</head>
+<body>
+  <div class="glass"></div>
+  <svg width="0" height="0">
+    <defs>
+      <filter id="liquid" color-interpolation-filters="sRGB">
+        <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" result="noise" />
+        <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" in="noise" result="coloredNoise" />
+        <feDisplacementMap in="SourceGraphic" in2="coloredNoise" scale="20" xChannelSelector="R" yChannelSelector="G" result="displaced" />
+        <feGaussianBlur in="displaced" stdDeviation="4" result="blurred" />
+      </filter>
+    </defs>
+  </svg>
+</body>
+</html>
