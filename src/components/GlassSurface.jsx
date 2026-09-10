@@ -42,9 +42,16 @@ const GlassSurface = ({
 
   const generateDisplacementMap = () => {
     const rect = containerRef.current?.getBoundingClientRect();
-    const actualWidth = Math.max(1, Math.round(rect?.width || 200));
-    const actualHeight = Math.max(1, Math.round(rect?.height || 60));
-    const edgeSize = Math.min(actualWidth, actualHeight) * (borderWidth * 0.5);
+    const parent = containerRef.current?.parentElement;
+    const fallbackW = parent?.clientWidth || (typeof width === "number" ? width : 200);
+    const fallbackH = parent?.clientHeight || (typeof height === "number" ? height : 60);
+    const rawW = rect && rect.width > 5 ? rect.width : fallbackW;
+    const rawH = rect && rect.height > 5 ? rect.height : fallbackH;
+    const actualWidth = Math.max(20, Math.round(rawW || 200));
+    const actualHeight = Math.max(20, Math.round(rawH || 60));
+    const edgeSize = Math.max(1, Math.min(actualWidth, actualHeight) * (borderWidth * 0.5));
+    const innerW = Math.max(1, actualWidth - edgeSize * 2);
+    const innerH = Math.max(1, actualHeight - edgeSize * 2);
 
     const svgContent = `
       <svg viewBox="0 0 ${actualWidth} ${actualHeight}" xmlns="http://www.w3.org/2000/svg">
@@ -64,7 +71,7 @@ const GlassSurface = ({
         <rect x="0" y="0" width="${actualWidth}" height="${actualHeight}" fill="black"></rect>
         <rect x="0" y="0" width="${actualWidth}" height="${actualHeight}" rx="${borderRadius}" fill="url(#${redGradId})" />
         <rect x="0" y="0" width="${actualWidth}" height="${actualHeight}" rx="${borderRadius}" fill="url(#${blueGradId})" style="mix-blend-mode: ${mixBlendMode}" />
-        <rect x="${edgeSize}" y="${edgeSize}" width="${actualWidth - edgeSize * 2}" height="${actualHeight - edgeSize * 2}" rx="${borderRadius}" fill="hsl(0, 0%, ${brightness}%)" fill-opacity="${opacity}" filter="url(#inner-blur)" />
+        <rect x="${edgeSize}" y="${edgeSize}" width="${innerW}" height="${innerH}" rx="${borderRadius}" fill="hsl(0, 0%, ${brightness}%)" fill-opacity="${opacity}" filter="url(#inner-blur)" />
       </svg>
     `;
 

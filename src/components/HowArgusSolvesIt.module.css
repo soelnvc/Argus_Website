@@ -8,8 +8,6 @@
   font-family:
     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
     sans-serif;
-  content-visibility: auto;
-  contain-intrinsic-size: 320vh;
 }
 
 .bgParallaxLayer {
@@ -160,6 +158,7 @@
   position: relative;
   width: 100%;
   height: 520px;
+  overflow: hidden;
   display: flex;
   justify-content: center;
 }

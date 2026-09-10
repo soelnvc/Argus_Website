@@ -127,28 +127,19 @@ export default function LiquidMetalHowBG({ className = "" }) {
     let animId;
     let startTime = performance.now();
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) {
-          if (animId) cancelAnimationFrame(animId);
-          animId = null;
-        } else {
-          startTime = performance.now();
-          if (!animId) render(performance.now());
-        }
-      },
-      { threshold: 0 }
-    );
-    observer.observe(canvas);
-
     // Dynamic DPR: 1 on mobile, 2 on desktop to save mobile GPU
     const dpr = typeof window !== 'undefined' && window.innerWidth <= 768 ? 1 : Math.min(window.devicePixelRatio || 1, 2);
 
     function resize() {
       if (!canvas || !gl) return;
       const rect = canvas.getBoundingClientRect();
-      const w = Math.floor(rect.width * dpr);
-      const h = Math.floor(rect.height * dpr);
+      const parent = canvas.parentElement;
+      const fallbackW = parent?.clientWidth || (typeof window !== 'undefined' ? window.innerWidth : 1200);
+      const fallbackH = parent?.clientHeight || (typeof window !== 'undefined' ? window.innerHeight : 800);
+      const rawW = rect && rect.width > 10 ? rect.width : fallbackW;
+      const rawH = rect && rect.height > 10 ? rect.height : fallbackH;
+      const w = Math.max(10, Math.floor(rawW * dpr));
+      const h = Math.max(10, Math.floor(rawH * dpr));
       if (canvas.width !== w || canvas.height !== h) {
         canvas.width = w;
         canvas.height = h;
@@ -159,9 +150,38 @@ export default function LiquidMetalHowBG({ className = "" }) {
     resize();
     window.addEventListener("resize", resize);
 
+    let resizeObserver = null;
+    if (typeof ResizeObserver !== 'undefined') {
+      resizeObserver = new ResizeObserver(() => {
+        resize();
+      });
+      if (canvas.parentElement) {
+        resizeObserver.observe(canvas.parentElement);
+      }
+      resizeObserver.observe(canvas);
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) {
+          if (animId) cancelAnimationFrame(animId);
+          animId = null;
+        } else {
+          startTime = performance.now();
+          resize();
+          if (!animId) render(performance.now());
+        }
+      },
+      { threshold: 0 }
+    );
+    observer.observe(canvas);
+
     const render = (now) => {
+      if (canvas.width <= 10 || canvas.height <= 10) {
+        resize();
+      }
       const elapsed = (now - startTime) / 1000;
-      gl.uniform2f(uRes, canvas.width, canvas.height);
+      gl.uniform2f(uRes, Math.max(1, canvas.width), Math.max(1, canvas.height));
       gl.uniform1f(uTime, elapsed);
       gl.drawArrays(gl.TRIANGLES, 0, 6);
       animId = requestAnimationFrame(render);
@@ -171,6 +191,7 @@ export default function LiquidMetalHowBG({ className = "" }) {
 
     return () => {
       observer.disconnect();
+      if (resizeObserver) resizeObserver.disconnect();
       if (animId) cancelAnimationFrame(animId);
       window.removeEventListener("resize", resize);
       gl.deleteProgram(prog);
