@@ -495,31 +495,7 @@ export default function HowArgusSolvesIt() {
                           damping: 30,
                         }}
                       >
-                        {isDesktop && (
-                          <GlassSurface
-                            width="100%"
-                            height="100%"
-                            borderRadius={10}
-                            borderWidth={0.08}
-                            brightness={60}
-                            opacity={0.94}
-                            blur={10}
-                            distortionScale={-180}
-                            redOffset={0}
-                            greenOffset={10}
-                            blueOffset={20}
-                            backgroundOpacity={0.06}
-                            saturation={1.2}
-                            style={{
-                              position: "absolute",
-                              inset: 0,
-                              width: "100%",
-                              height: "100%",
-                              pointerEvents: "none",
-                            }}
-                            className={styles.desktopGlassPill}
-                          />
-                        )}
+                        
                       </motion.div>
                     )}
                     <span className={styles.pillText}>{step.tag}</span>
