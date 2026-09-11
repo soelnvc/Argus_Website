@@ -330,8 +330,8 @@ function ContinuousScrollCard({ step, idx, progress }) {
 
   if (idx === 0) {
     yTransformConfig = {
-      input: [0, 0.22],
-      output: ["0%", "-140%"],
+      input: [0, 0.15, 0.30],
+      output: ["0%", "0%", "-140%"],
     };
     opacityTransformConfig = {
       input: [0, 1],
@@ -339,30 +339,30 @@ function ContinuousScrollCard({ step, idx, progress }) {
     };
   } else if (idx === 1) {
     yTransformConfig = {
-      input: [0, 0.22, 0.44],
+      input: [0.15, 0.35, 0.55],
       output: ["140%", "0%", "-140%"],
     };
     opacityTransformConfig = {
-      input: [0, 0.22, 1],
+      input: [0.15, 0.35, 1],
       output: [0, 1, 1],
     };
   } else if (idx === 2) {
     yTransformConfig = {
-      input: [0.22, 0.44, 0.66],
+      input: [0.40, 0.60, 0.80],
       output: ["140%", "0%", "-140%"],
     };
     opacityTransformConfig = {
-      input: [0.22, 0.44, 1],
+      input: [0.40, 0.60, 1],
       output: [0, 1, 1],
     };
   } else {
     // idx === 3
     yTransformConfig = {
-      input: [0.44, 0.66, 1.0],
+      input: [0.65, 0.85, 1.0],
       output: ["140%", "0%", "0%"],
     };
     opacityTransformConfig = {
-      input: [0.44, 0.66, 1.0],
+      input: [0.65, 0.85, 1.0],
       output: [0, 1, 1],
     };
   }
@@ -421,9 +421,9 @@ export default function HowArgusSolvesIt() {
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     let nextStep = 0;
-    if (latest < 0.25) nextStep = 0;
-    else if (latest < 0.50) nextStep = 1;
-    else if (latest < 0.75) nextStep = 2;
+    if (latest < 0.225) nextStep = 0;
+    else if (latest < 0.475) nextStep = 1;
+    else if (latest < 0.725) nextStep = 2;
     else nextStep = 3;
     setActiveStep((prev) => (prev !== nextStep ? nextStep : prev));
   });
@@ -439,7 +439,7 @@ export default function HowArgusSolvesIt() {
     const windowHeight = window.innerHeight;
     const scrollableDistance = containerHeight - windowHeight;
 
-    const stepProgress = [0.05, 0.30, 0.55, 0.80];
+    const stepProgress = [0.10, 0.35, 0.60, 0.85];
     const targetScrollY = containerTop + stepProgress[idx] * scrollableDistance;
 
     if (window.__lenis) {
